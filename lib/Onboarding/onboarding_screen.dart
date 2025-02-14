@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gdm_app/Register/login_screen.dart';
+import 'package:gdm_app/Register/personal_info_screen.dart';
 import '../utils/onboarding_data_model.dart';
 import '../utils/pref_data.dart';
 import '../utils/screen_size.dart';
@@ -109,7 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             PrefData.setIntro(true);
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              MaterialPageRoute(builder: (context) => const PersonalInfoScreen()),
             );
           } else {
             controller.nextPage(
