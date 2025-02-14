@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gdm_app/Home/home_main_screen.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/progress_bar.dart';
 import '../widgets/custom_button.dart';
@@ -89,7 +90,7 @@ class _MeasurementScheduleScreenState extends State<MeasurementScheduleScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
                 );
               },
               buttonText: 'Submit',
