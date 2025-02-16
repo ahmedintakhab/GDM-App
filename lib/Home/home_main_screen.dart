@@ -1,6 +1,7 @@
 // home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Home/add_pillscreen.dart';
+import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
 
 import 'bottom_navigation_bar.dart';
 import 'gulcose_chart.dart';
@@ -178,7 +179,7 @@ class HomeScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AddPillScreen(), // Replace with your target screen
+                            builder: (context) => const GlucoseDetailsScreen(), // Replace with your target screen
                           ),
                         );
                       },
