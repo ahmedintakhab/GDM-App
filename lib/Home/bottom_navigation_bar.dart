@@ -20,30 +20,30 @@ class BottomNavigation extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: '',
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications),
-          label: '',
+          label: 'Notification',
         ),
-        BottomNavigationBarItem(
-          icon: Container(
-            decoration: BoxDecoration(
-              color: Color(0xFF5AA189),
-              shape: BoxShape.circle,
-            ),
-            padding: EdgeInsets.all(12),
-            child: Icon(Icons.add, color: Colors.white),
-          ),
-          label: '',
-        ),
+        // BottomNavigationBarItem(
+        //   icon: Container(
+        //     decoration: BoxDecoration(
+        //       color: Color(0xFF5AA189),
+        //       shape: BoxShape.circle,
+        //     ),
+        //     padding: EdgeInsets.all(12),
+        //     child: Icon(Icons.add, color: Colors.white),
+        //   ),
+        //   label: '',
+        // ),
         BottomNavigationBarItem(
           icon: Icon(Icons.file_copy),
-          label: '',
+          label: 'Reports',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
-          label: '',
+          label: 'Profile',
         ),
       ],
       selectedItemColor: Color(0xFF5AA189),

@@ -27,10 +27,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 5), () {
       if (!mounted) return;
-      if (isIntro == true) {
+      if (isIntro == false) {
         Get.off(const OnboardingScreen());
       } else if (isLogin == false) {
-        Get.off(const LoginScreen());
+        Get.off(const OnboardingScreen());
       } else {
         Get.off(const HomeScreen());
       }

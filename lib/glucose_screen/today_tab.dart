@@ -99,13 +99,13 @@ class TodayTab extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Row(
-                children: [
-                  Icon(Icons.list, color: Colors.grey),
-                  SizedBox(width: 16),
-                  Icon(Icons.bar_chart, color: Colors.grey),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Icon(Icons.list, color: Colors.grey),
+              //     SizedBox(width: 16),
+              //     Icon(Icons.bar_chart, color: Colors.grey),
+              //   ],
+              // ),
             ],
           ),
           SizedBox(height: 20),
@@ -116,7 +116,24 @@ class TodayTab extends StatelessWidget {
                 gridData: FlGridData(show: false),
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: 1, // Interval for each point on the X-axis
+                      getTitlesWidget: (value, meta) {
+                        switch (value.toInt()) {
+                          case 0:
+                            return Text('2h');
+                          case 1:
+                            return Text('4h');
+                          case 2:
+                            return Text('6h');
+                          case 3:
+                            return Text('8h');
+                          default:
+                            return Text('');
+                        }
+                      },
+                    ),
                   ),
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
@@ -134,6 +151,7 @@ class TodayTab extends StatelessWidget {
                     sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
+
                 borderData: FlBorderData(show: false),
                 minX: 0,
                 maxX: 4,

@@ -1,276 +1,265 @@
-// home_screen.dart
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Home/add_pillscreen.dart';
+import 'package:gdm_app/Home/chat_container.dart';
+import 'package:gdm_app/Home/doctor_visit_container.dart';
+import 'package:gdm_app/Home/heart_blood_container.dart';
+import 'package:gdm_app/Home/linear_progress_container.dart';
+import 'package:gdm_app/Home/progress_and_stepscount.dart';
+import 'package:gdm_app/Home/user_reports_screen.dart';
 import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
-
+import 'User_profile_screen.dart';
 import 'bottom_navigation_bar.dart';
 import 'gulcose_chart.dart';
+import 'notification_screen.dart';
+// Import ProfileScreen
 
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0; // Track the selected index
+
+  // List of screens to display based on the selected index
+  final List<Widget> _screens = [
+    HomeContent(), // Home content
+    NotificationsScreen(), // Notifications screen
+    ReportsScreen(), // Reports screen
+    ProfileScreen(), // Profile screen
+  ];
+
+  // Function to handle bottom navigation item taps
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
+        child: _screens[_selectedIndex], // Display the selected screen
+      ),
+      bottomNavigationBar: Container(
+        height: 75,
+        decoration: BoxDecoration(
+            boxShadow: [
+        BoxShadow(
+        color: Colors.black.withOpacity(0.1),
+        blurRadius: 15,
+        spreadRadius: 3,
+        offset: Offset(0, -3),)
+        ],
+      ),
+      child: BottomNavigation(
+        selectedIndex: _selectedIndex,
+        onItemSelected: _onItemTapped,
+      ),
+
+    ),
+    );
+  }
+}
+
+// Home content (moved from the original HomeScreen)
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          // Fixed Header Row (Text and CircleAvatar)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Header Row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Hi, Ahmed',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.grey[300],
-                    child: Icon(Icons.person),
-                  ),
-                ],
-              ),
-              SizedBox(height: 24),
-
-              // Progress Container
-              Container(
-                height: 150,
-                width: double.infinity,
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 90,
-                      height: 90,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          CircularProgressIndicator(
-                            value: 0.55,
-                            strokeWidth: 12,
-                            backgroundColor: Colors.grey[200],
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Color(0xFF5AA189),
-                            ),
-                          ),
-                          Center(
-                            child: Text(
-                              '55%',
-                              style: TextStyle(
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF5AA189),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 50),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Eaten',
-                          style: TextStyle(
-                            color: Color(0xFF5AA189),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '48 GL of 64 GL',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          '32 GL is left',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+              Text(
+                'Hi, Ahmed',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-
-              SizedBox(height: 16),
-
-              // Pills and Glucose Row
-              Row(
-                children: [
-                  // First Container
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddPillScreen(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Pills',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Icon(Icons.medication, color: Colors.blue[800]),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              '2 taken',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16), // Spacer between the two containers
-
-                  // Second Container
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const GlucoseDetailsScreen(), // Replace with your target screen
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.red[50],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Glucose',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Icon(Icons.water_drop, color: Colors.red[800]),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              '143 mg/dl',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),              SizedBox(height: 16),
-
-              // Weekly Graph Container
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Glucose, week avg',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    SizedBox(
-                      height: 200,
-                      child: WeeklyGlucoseChart(),
-                    ),
-                  ],
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  );
+                },
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.grey[300],
+                  child: Icon(Icons.person),
                 ),
               ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 15,
-            spreadRadius: 3,
-            offset: Offset(0, -3)
-          )]
+          SizedBox(height: 24),
 
-        ),
-        child: BottomNavigation(
-          selectedIndex: 0,
-          onItemSelected: (index) {
-            // Handle navigation
-          },
-        ),
+          // Scrollable Content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Chat Container
+                  ChatContainer(),
+                  SizedBox(height: 16),
+
+                  // Progress and Steps Count
+                  ProgressAndStepscount(),
+                  SizedBox(height: 16),
+                  //Linear percentage bar container function calling
+                  LinearProgressContainer(),
+                  SizedBox(height: 16),
+
+
+                  // Pills and Glucose Row
+                  Row(
+                    children: [
+                      // First Container (Pills)
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AddPillScreen(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.blue[50],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Pills',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Icon(Icons.medication, color: Colors.blue[800]),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '2 taken',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16), // Spacer between the two containers
+
+                      // Second Container (Glucose)
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const GlucoseDetailsScreen(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.red[50],
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Glucose',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Icon(Icons.water_drop, color: Colors.red[800]),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '143 mg/dl',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+
+                  // Health Metrics Row
+                  HealthMetricsRow(),
+                  SizedBox(height: 16),
+                  //Doctor checkup container function calling
+                  DoctorVisitContainer(),
+                  SizedBox(height: 16),
+
+                  // Weekly Graph Container
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Glucose, week avg',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        SizedBox(
+                          height: 150,
+                          child: WeeklyGlucoseChart(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

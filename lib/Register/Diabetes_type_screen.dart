@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gdm_app/Register/pregnancy_question_screen.dart';
 import 'package:gdm_app/Register/progress_bar.dart';
-import 'package:gdm_app/Register/therapy_screen.dart';
 import '../widgets/custom_button.dart';
+import 'diagnosis_option.dart'; // Import the reusable widget
 
 class DiabetesTypeScreen extends StatefulWidget {
   const DiabetesTypeScreen({Key? key}) : super(key: key);
@@ -11,7 +12,19 @@ class DiabetesTypeScreen extends StatefulWidget {
 }
 
 class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
-  String? _selectedType; // To store the selected diabetes type
+  // List of all diagnosis options
+  final List<String> _diagnosisOptions = [
+    'Diabetes (Type 2)',
+    'Diabetes (Type 1)',
+    'Prediabetes',
+    'Hypertension',
+    'Heart disease',
+    'Obesity',
+    'Lipid/ Cholesterol disorders',
+  ];
+
+  // Set to store selected diagnoses
+  final Set<String> _selectedDiagnoses = {};
 
   @override
   Widget build(BuildContext context) {
@@ -21,82 +34,87 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            const ProgressBar(currentStep: 2, totalSteps: 6),
+            const ProgressBar(currentStep: 2, totalSteps: 3),
             const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'What diabetes type do you have?',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Outside pregnancy, I have been diagnosed with',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      // Display all diagnosis options
+                      ..._diagnosisOptions.map((option) {
+                        return Column(
+                          children: [
+                            DiagnosisOption(
+                              title: option,
+                              isSelected: _selectedDiagnoses.contains(option),
+                              onTap: () {
+                                setState(() {
+                                  if (_selectedDiagnoses.contains(option)) {
+                                    _selectedDiagnoses.remove(option); // Deselect
+                                  } else {
+                                    _selectedDiagnoses.add(option); // Select
+                                  }
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                        );
+                      }).toList(),
+                    ],
                   ),
-                  const SizedBox(height: 32),
-                  _buildTypeOption('Type 1', _selectedType == 'Type 1'),
-                  const SizedBox(height: 16),
-                  _buildTypeOption('Type 2', _selectedType == 'Type 2'),
-                  const SizedBox(height: 16),
-                  _buildTypeOption('Gestational', _selectedType == 'Gestational'),
-                ],
+                ),
               ),
             ),
-            const Spacer(),
-            CustomButton(
-              onTap: () {
-                if (_selectedType == null) {
-                  // Show a message if no option is selected
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please select a diabetes type')),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TherapyScreen()),
-                  );
-                }
-              },
-              buttonText: 'Next',
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Build a selectable diabetes type option
-  Widget _buildTypeOption(String type, bool selected) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedType = type; // Update the selected type
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: selected ? const Color(0xFFE8F5E9) : Colors.transparent,
-          border: Border.all(
-            color: selected ? const Color(0xFF4CAF50) : Colors.grey.shade300,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              selected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-              color: selected ? const Color(0xFF4CAF50) : Colors.grey,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              type,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+            // Back and Next Buttons in a Row
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 20),
+              child: Row(
+                children: [
+                  // Back Button
+                  Expanded(
+                    child: CustomButton(
+                      onTap: () {
+                        // Navigate back
+                        Navigator.pop(context);
+                      },
+                      buttonText: 'Back',
+                      // backgroundColor: Colors.grey, // Custom color for Back button
+                    ),
+                  ),
+                  // const SizedBox(width: 6), // Spacing between buttons
+                  // Next Button
+                  Expanded(
+                    child: CustomButton(
+                      onTap: () {
+                        if (_selectedDiagnoses.isEmpty) {
+                          // Show a message if no option is selected
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Please select at least one option')),
+                          );
+                        } else {
+                          // Navigate to the next screen
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => PregnancyQuestionScreen1()),
+                          );
+                        }
+                      },
+                      buttonText: 'Next',
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

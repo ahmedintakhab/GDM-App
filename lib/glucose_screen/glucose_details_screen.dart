@@ -36,6 +36,9 @@ class GlucoseDetailsScreen extends StatelessWidget {
             unselectedLabelColor: Colors.grey,
             indicatorColor: Color(0XFF5AA189),
             indicatorSize: TabBarIndicatorSize.label,
+            indicatorWeight: 7.0,
+            labelStyle: TextStyle(fontSize: 16,
+            fontWeight: FontWeight.bold),
             tabs: [
               Tab(text: 'Today'),
               Tab(text: 'Week'),
