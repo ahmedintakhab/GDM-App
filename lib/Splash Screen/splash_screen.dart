@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     bool isIntro = await PrefData.getIntro();
     bool isLogin = await PrefData.getLogin();
 
-    Future.delayed(const Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
       if (isIntro == false) {
         Get.off(const OnboardingScreen());

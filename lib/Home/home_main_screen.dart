@@ -26,8 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
   // List of screens to display based on the selected index
   final List<Widget> _screens = [
     HomeContent(), // Home content
-    NotificationsScreen(), // Notifications screen
-    ReportsScreen(), // Reports screen
+    NotificationScreen(), // Notifications screen
+    MealsScreen(), // Reports screen
     ProfileScreen(), // Profile screen
   ];
 

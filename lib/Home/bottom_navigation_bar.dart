@@ -38,8 +38,8 @@ class BottomNavigation extends StatelessWidget {
         //   label: '',
         // ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.file_copy),
-          label: 'Reports',
+          icon: Icon(Icons.no_meals),
+          label: 'Meals',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),

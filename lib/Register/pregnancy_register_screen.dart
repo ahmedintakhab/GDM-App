@@ -29,6 +29,19 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
   String? _diabetesTest;
   bool _showDiabetesTestDate = false;
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _lmpController.text = "${picked.toLocal()}".split(' ')[0];
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +73,11 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _lmpController,
                   hintText: 'Last Menstrual Period (LMP)',
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter LMP' : null,
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.calendar_today),
+                    color: Color(0XFF5AA189),
+                    onPressed: () => _selectDate(context),
+                  ),
                 ),
                 SizedBox(height: 16.h),
 
