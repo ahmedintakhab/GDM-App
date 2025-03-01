@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "618746563893",
+    "project_id": "gdm-app-85a42",
+    "storage_bucket": "gdm-app-85a42.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618746563893:android:327fc5314763ec759e107c",
+        "android_client_info": {
+          "package_name": "com.codiro.gdm_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDguh1JkrA4u3yTHeoNB3k_0uuBLOalOlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

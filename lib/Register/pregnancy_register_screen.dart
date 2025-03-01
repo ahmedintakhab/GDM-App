@@ -4,6 +4,7 @@ import 'package:gdm_app/Register/Diabetes_type_screen.dart';
 
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
+import '../widgets/intl_phone_field.dart';
 
 class PregnancyRegistrationScreen extends StatefulWidget {
   @override
@@ -16,6 +17,8 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
   // Controllers for text fields
   final _lmpController = TextEditingController();
   final _diabetesTestDateController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
@@ -141,32 +144,59 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 ],
 
                 SizedBox(height: 16.h),
+                CustomTextFormField(
+                  controller: _emailController,
+                  hintText: 'Enter your email',
+                  validator: (value) => value?.isEmpty ?? true ? 'Please enter email' : null,
+                ),
+                SizedBox(height: 16.h),
+                CustomTextFormField(
+                  controller: _passwordController,
+                  hintText: 'Enter your password',
+                  validator: (value) => value?.isEmpty ?? true ? 'Please enter password' : null,
+                ),
+                SizedBox(height: 16.h),
+                phone_number_field(
+                  onPhoneNumberChanged: (String phone) {
+                    setState(() {
+                      // phoneNumber = phone; // Store the phone number
+                    });
+                  },
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter phone number';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16.h),
+
 
                 // Other Fields
                 CustomTextFormField(
                   controller: _ageController,
-                  hintText: 'Age',
+                  hintText: 'Enter your age',
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter age' : null,
                 ),
                 SizedBox(height: 16.h),
 
                 CustomTextFormField(
                   controller: _weightController,
-                  hintText: 'Weight (kg)',
+                  hintText: ' Enter your weight (kg)',
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter weight' : null,
                 ),
                 SizedBox(height: 16.h),
 
                 CustomTextFormField(
                   controller: _heightController,
-                  hintText: 'Height (cm)',
+                  hintText: 'Enter your height (cm)',
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter height' : null,
                 ),
                 SizedBox(height: 16.h),
 
                 CustomTextFormField(
                   controller: _ethnicityController,
-                  hintText: 'Ethnicity',
+                  hintText: 'Enter your ethnicity',
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter ethnicity' : null,
                 ),
                 SizedBox(height: 16.h),
@@ -212,47 +242,43 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter number of children alive' : null,
                 ),
                 SizedBox(height: 24.h),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric( vertical: 20),
-                  child: Row(
-                    children: [
-                      // Back Button
-                      Expanded(
-                        child: CustomButton(
-                          onTap: () {
-                            // Navigate back
-                            Navigator.pop(context);
-                          },
-                          buttonText: 'Back',
-                          // backgroundColor: Colors.grey, // Custom color for Back button
-                        ),
-                      ),
-                      // const SizedBox(width: 6), // Spacing between buttons
-                      // Next Button
-                      Expanded(
-                        child: CustomButton(
-                          onTap: () {
-
-                              // Navigate to the next screen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => DiabetesTypeScreen()),
-                              );
-                          },
-                          buttonText: 'Next',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                SizedBox(height: 24.h),
               ],
             ),
           ),
         ),
       ),
+      bottomNavigationBar: Padding(
+    padding: const EdgeInsets.symmetric( vertical: 20),
+    child: Row(
+    children: [
+    // Back Button
+    Expanded(
+    child: CustomButton(
+    onTap: () {
+    // Navigate back
+    Navigator.pop(context);
+    },
+    buttonText: 'Back',
+    ),
+    ),
+    // Next Button
+    Expanded(
+    child: CustomButton(
+    onTap: () {
+      if(_formKey.currentState!.validate()) {
+        // Navigate to the next screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DiabetesTypeScreen()),
+        );
+      }
+    },
+    buttonText: 'Next',
+    ),
+    ),
+    ],
+    ),
+    ),
     );
   }
 }

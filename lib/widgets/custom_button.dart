@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final double? borderRadius;
   final Color? textColor;
   final String buttonText;
+  final bool loading;
 
   const CustomButton({
     Key? key,
@@ -15,6 +16,7 @@ class CustomButton extends StatelessWidget {
     this.borderRadius,
     required this.buttonText,
     this.textColor,
+    this.loading = false,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class CustomButton extends StatelessWidget {
           color: buttonColor ?? const Color(0xFF5AA189),
         ),
         child: Center(
-          child: Text(
+          child: loading ? CircularProgressIndicator(strokeWidth: 3,color: Colors.white,): Text(
             buttonText,
             style: TextStyle(
               color: textColor ?? Colors.white,
