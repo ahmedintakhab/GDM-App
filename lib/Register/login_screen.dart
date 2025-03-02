@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gdm_app/Register/forgot_password_screen.dart';
+import 'package:gdm_app/Register/reset_password_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
 
@@ -206,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget forgotpassword() {
     return GestureDetector(
       onTap: () {
-        Get.to(const HomeScreen());
+        Get.to(const ForgotPassword());
       },
       child: Align(
         alignment: Alignment.topRight,

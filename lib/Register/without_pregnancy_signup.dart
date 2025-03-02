@@ -10,7 +10,8 @@ import '../widgets/custom_button.dart';
 import '../widgets/intl_phone_field.dart';
 
 class WithoutPregnancySignup extends StatefulWidget {
-  const WithoutPregnancySignup({Key? key}) : super(key: key);
+  final String selectedOption;
+  const WithoutPregnancySignup({Key? key, required this.selectedOption}): super (key: key);
 
   @override
   State<WithoutPregnancySignup> createState() => _WithoutPregnancySignupState();
@@ -34,6 +35,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
 
   @override
   Widget build(BuildContext context) {
+    print("Check the selected option: ${widget.selectedOption}");
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -207,6 +209,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                     await _firestore.collection('user').doc(
                         userCredential.user!.uid).set({
 
+                      'selectedOption': widget.selectedOption,
                       'email': _emailController.text,
                       'phone Number': phoneNumber,
                       'gender': _genderController.text,

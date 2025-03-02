@@ -1,0 +1,150 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gdm_app/Register/login_screen.dart';
+import 'package:gdm_app/Register/reset_password_screen.dart';
+import 'package:get/get.dart';
+
+import '../utils/screen_size.dart';
+import '../widgets/intl_phone_field.dart';
+
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({Key? key}) : super(key: key);
+
+  @override
+  State<ForgotPassword> createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<ForgotPassword> {
+  @override
+  Widget build(BuildContext context) {
+    initializeScreenSize(context);
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: WillPopScope(
+        onWillPop: (){
+          return Future.value(false);
+        },
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                    height: 36.h
+                ),
+                // backbutton(),
+
+                Center(
+                  child: Text(
+                    "Forgot Password",
+                    style: TextStyle(
+                        fontSize: 24.sp,
+                        fontFamily: 'Gilroy',
+                        color: const Color(0XFF000000),
+                        fontWeight: FontWeight.w700),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      Padding(
+                        padding:  const EdgeInsets.only(left:40,right: 40),
+                        child:  Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Enter your registered phone number to reset password.",
+                            style: TextStyle(
+                                color:const Color(0XFF000000),
+                                fontSize: 15.sp,
+                                fontFamily: 'Gilroy',
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.normal),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 54.h),
+                      phone_number_field(onPhoneNumberChanged: (String ) {  }),
+                      SizedBox(height: 30.h),
+                      submitbutton(),
+                      SizedBox(height: 30.h),
+                      back_login_button(),
+
+                    ],
+                  ),
+                ),
+
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget submitbutton() {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          Get.to(ResetPassword());
+        },
+        child: Container(
+          height: 56.h,
+          width: 374.w,
+          //color: Color(0XFF23408F),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: const Color(0XFF5AA189),
+          ),
+          child:  Center(
+            child: Text("Submit",
+                style: TextStyle(
+                    color: Color(0XFFFFFFFF),
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Gilroy')),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget back_login_button() {
+    return Center(
+      child: RichText(
+          text: TextSpan(
+              text: 'Back to login?',
+              style:  TextStyle(color: Colors.black, fontSize: 15.sp, fontFamily: 'Gilroy',fontWeight: FontWeight.w400),
+              children: [
+                TextSpan(
+                  recognizer: TapGestureRecognizer()..onTap = () {
+                    Get.off( LoginScreen());
+                  },
+                  text: ' Login',
+                  style:  TextStyle(
+                      fontFamily: 'Gilroy',
+                      color: Color(0XFF000000),
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w700
+                  ),
+                )
+              ])),
+    );
+  }
+  //
+  // Widget backbutton() {
+  //   return GestureDetector(
+  //     onTap: (){Get.back();},
+  //     child:  Image(
+  //       image: const AssetImage("assets/back_arrow.png"),
+  //       height: 24.h,
+  //       width: 24.w,
+  //     ),
+  //   );
+  // }
+}
