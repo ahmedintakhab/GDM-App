@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gdm_app/Home/home_main_screen.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/weight_input_field.dart';
 import 'package:gdm_app/utils/utils.dart';

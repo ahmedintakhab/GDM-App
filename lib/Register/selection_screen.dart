@@ -34,7 +34,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
       case 'Pregnant':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PregnancyRegistrationScreen()),
+          MaterialPageRoute(builder: (context) => PregnancyRegistrationScreen(selectedOption: _selectedOption!)),
         );
         break;
       case 'Not Pregnant':

@@ -5,7 +5,8 @@ import '../widgets/custom_button.dart';
 import 'diagnosis_option.dart'; // Import the reusable widget
 
 class DiabetesTypeScreen extends StatefulWidget {
-  const DiabetesTypeScreen({Key? key}) : super(key: key);
+ final Map<String , dynamic> pregnancyData;
+  const DiabetesTypeScreen({Key? key, required this.pregnancyData}) : super(key: key);
 
   @override
   State<DiabetesTypeScreen> createState() => _DiabetesTypeScreenState();
@@ -28,6 +29,7 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // print('Check the Saving data in form: ${widget.pregnancyData}');
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -107,7 +109,10 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
                           // Navigate to the next screen
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => PregnancyQuestionScreen1()),
+                            MaterialPageRoute(builder: (context) => PregnancyQuestionScreen1(
+                              pregnancyData: widget.pregnancyData,
+                              selectedDiagnoses : _selectedDiagnoses
+                            )),
                           );
                         }
                       },

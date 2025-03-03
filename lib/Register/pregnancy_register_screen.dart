@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/Diabetes_type_screen.dart';
-
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/intl_phone_field.dart';
 
 class PregnancyRegistrationScreen extends StatefulWidget {
+  final String selectedOption;
+  const PregnancyRegistrationScreen({Key? key, required this.selectedOption}): super (key: key);
+
   @override
   _PregnancyRegistrationScreenState createState() => _PregnancyRegistrationScreenState();
 }
@@ -32,6 +35,9 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
   String? _diabetesTest;
   bool _showDiabetesTestDate = false;
+  String phoneNumber = '';
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -159,7 +165,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 phone_number_field(
                   onPhoneNumberChanged: (String phone) {
                     setState(() {
-                      // phoneNumber = phone; // Store the phone number
+                      phoneNumber = phone; // Store the phone number
                     });
                   },
                   validator: (String? value) {
@@ -266,10 +272,29 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
     child: CustomButton(
     onTap: () {
       if(_formKey.currentState!.validate()) {
+        Map<String, dynamic> pregnancyData = {
+          'selectedOption': widget.selectedOption,
+          'lmp': _lmpController.text,
+          'diabetesTest': _diabetesTest,
+          'diabetesTestDate': _diabetesTestDateController.text,
+          'email': _emailController.text,
+          'password': _passwordController.text,
+          'phone': phoneNumber,
+          'age': _ageController.text,
+          'weight': _weightController.text,
+          'height': _heightController.text,
+          'ethnicity': _ethnicityController.text,
+          'familyHistory': _familyHistoryController.text,
+          'pregnancies': _pregnanciesController.text,
+          'deliveries': _deliveriesController.text,
+          'miscarriages': _miscarriagesController.text,
+          'stillbirths': _stillbirthsController.text,
+          'childrenAlive': _childrenAliveController.text,
+        };
         // Navigate to the next screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DiabetesTypeScreen()),
+          MaterialPageRoute(builder: (context) => DiabetesTypeScreen(pregnancyData : pregnancyData)),
         );
       }
     },

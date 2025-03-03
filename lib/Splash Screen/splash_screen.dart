@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (isIntro == false) {
         Get.off(const OnboardingScreen());
       } else if (isLogin == false) {
-        Get.off(const OnboardingScreen());
+        Get.off( LoginScreen());
       } else {
         Get.off(const HomeScreen());
       }
