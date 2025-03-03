@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gdm_app/Register/doctor_signup_screen.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/pregnancy_register_screen.dart';
 import 'package:gdm_app/Register/without_pregnancy_signup.dart';
@@ -46,7 +47,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
       case 'Doctor':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => DoctorSignupScreen()),
         );
         break;
     }

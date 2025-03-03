@@ -26,7 +26,7 @@ Widget phone_number_field({
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: Color(0XFF23408F), width: 1.0),
+                borderSide: BorderSide(color: Color(0XFF5AA189), width: 1.0),
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0XFFDEDEDE), width: 1.0),

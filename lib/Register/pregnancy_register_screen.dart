@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/Diabetes_type_screen.dart';
@@ -37,7 +36,6 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
   bool _showDiabetesTestDate = false;
   String phoneNumber = '';
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,

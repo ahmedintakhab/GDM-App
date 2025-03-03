@@ -77,8 +77,8 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
 
   @override
   Widget build(BuildContext context) {
-    print('Check first: ${widget.pregnancyData}');
-    print('Check second: ${widget.selectedDiagnoses}');
+    // print('Check first: ${widget.pregnancyData}');
+    // print('Check second: ${widget.selectedDiagnoses}');
     return Scaffold(
       body: SafeArea(
         child: Column(
