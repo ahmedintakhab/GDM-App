@@ -1,6 +1,7 @@
 // stats_row_widget.dart
 
 import 'package:flutter/material.dart';
+import 'package:gdm_app/Home/step_count_container.dart';
 
 class ProgressAndStepscount extends StatelessWidget {
   const ProgressAndStepscount({Key? key}) : super(key: key);
@@ -96,61 +97,62 @@ class ProgressAndStepscount extends StatelessWidget {
         SizedBox(width: 12), // Spacing between containers
 
         // Right Container (Steps Count)
-        Expanded(
-          flex: 2,
-          child: Container(
-            height: 100,
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.directions_walk,
-                      color: Color(0xFF5AA189),
-                      size: 20,
-                    ),
-                    SizedBox(width: 4),
-                    Text(
-                      'Steps Count',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '3,343',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  'steps',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+        StepsCountContainer()
+        // Expanded(
+        //   flex: 2,
+        //   child: Container(
+        //     height: 100,
+        //     padding: EdgeInsets.all(12),
+        //     decoration: BoxDecoration(
+        //       color: Colors.white,
+        //       borderRadius: BorderRadius.circular(12),
+        //       boxShadow: [
+        //         BoxShadow(
+        //           color: Colors.black.withOpacity(0.05),
+        //           blurRadius: 8,
+        //         ),
+        //       ],
+        //     ),
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         Row(
+        //           children: [
+        //             Icon(Icons.directions_walk,
+        //               color: Color(0xFF5AA189),
+        //               size: 20,
+        //             ),
+        //             SizedBox(width: 4),
+        //             Text(
+        //               'Steps Count',
+        //               style: TextStyle(
+        //                 fontSize: 14,
+        //                 color: Colors.grey[600],
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //         SizedBox(height: 8),
+        //         Text(
+        //           '3,343',
+        //           style: TextStyle(
+        //             fontSize: 24,
+        //             fontWeight: FontWeight.bold,
+        //             color: Colors.black,
+        //           ),
+        //         ),
+        //         Text(
+        //           'steps',
+        //           style: TextStyle(
+        //             fontSize: 14,
+        //             color: Colors.grey[600],
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
