@@ -65,6 +65,7 @@ class _WeightInputFieldState extends State<WeightInputField> {
   Widget _buildWeightField() {
     return CustomTextFormField(
       controller: _weightController,
+      keyboardType: TextInputType.phone,
       hintText: _selectedUnit == 'kg'
           ? 'Enter your weight in kg'
           : 'Enter your weight in lbs',

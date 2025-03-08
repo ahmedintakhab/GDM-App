@@ -157,8 +157,16 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _passwordController,
                   hintText: 'Enter your password',
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter password' : null,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter password';
+                    } else if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
                 ),
+
                 SizedBox(height: 16.h),
                 phone_number_field(
                   onPhoneNumberChanged: (String phone) {
@@ -179,6 +187,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 // Other Fields
                 CustomTextFormField(
                   controller: _ageController,
+                  keyboardType: TextInputType.phone,
                   hintText: 'Enter your age',
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter age' : null,
                 ),
@@ -187,6 +196,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _weightController,
                   hintText: ' Enter your weight (kg)',
+                  keyboardType: TextInputType.phone,
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter weight' : null,
                 ),
                 SizedBox(height: 16.h),
@@ -194,6 +204,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _heightController,
                   hintText: 'Enter your height (cm)',
+                  keyboardType: TextInputType.phone,
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter height' : null,
                 ),
                 SizedBox(height: 16.h),
@@ -215,6 +226,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _pregnanciesController,
                   hintText: 'Number of Pregnancies',
+                  keyboardType: TextInputType.phone,
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter number of pregnancies' : null,
                 ),
                 SizedBox(height: 16.h),
@@ -222,6 +234,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _deliveriesController,
                   hintText: 'Number of Previous Deliveries',
+                  keyboardType: TextInputType.phone,
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter number of deliveries' : null,
                 ),
                 SizedBox(height: 16.h),
@@ -229,6 +242,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _miscarriagesController,
                   hintText: 'Number of Miscarriages',
+                  keyboardType: TextInputType.phone,
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter number of miscarriages' : null,
                 ),
                 SizedBox(height: 16.h),
@@ -236,6 +250,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _stillbirthsController,
                   hintText: 'Number of Stillbirths',
+                  keyboardType: TextInputType.phone,
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter number of stillbirths' : null,
                 ),
                 SizedBox(height: 16.h),
@@ -243,6 +258,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _childrenAliveController,
                   hintText: 'Number of Children Alive',
+                  keyboardType: TextInputType.phone,
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter number of children alive' : null,
                 ),
                 SizedBox(height: 24.h),

@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StepsCountContainer extends StatefulWidget {
   const StepsCountContainer({Key? key}) : super(key: key);
@@ -12,36 +13,27 @@ class StepsCountContainer extends StatefulWidget {
 }
 
 class _StepsCountContainerState extends State<StepsCountContainer> {
-  // Step counting
   int steps = 0;
-  final String _stepsKey = "steps_count";
-
-  // Stream subscription
   StreamSubscription<AccelerometerEvent>? _accelerometerSubscription;
-
-  // Step detection algorithm
   List<double> _magnitudeHistory = [];
   final int _historySize = 20;
   bool _isWalking = false;
-
-  // Calibrated thresholds for walking detection
-  final double _walkingThreshold = 2.0;  // Minimum variation needed for walking
-  final double _peakThreshold = 3.0;     // Threshold for detecting a step
-
-  // Timing for step detection
+  final double _walkingThreshold = 2.0;
+  final double _peakThreshold = 3.0;
   DateTime _lastStepTime = DateTime.now();
   final Duration _minStepInterval = Duration(milliseconds: 300);
   final Duration _walkingTimeout = Duration(seconds: 2);
   DateTime _lastWalkingTime = DateTime.now();
-
-  // Debugging
   String _debugText = "Initializing...";
   double _varianceValue = 0.0;
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
-    _loadSavedSteps();
+    _loadStepsFromFirestore();
     _startStepCounting();
   }
 
@@ -51,36 +43,71 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
     super.dispose();
   }
 
-  Future<void> _loadSavedSteps() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      if (mounted) {
+  Future<void> _loadStepsFromFirestore() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      String uid = user.uid;
+
+      // Check in which collection the user exists
+      DocumentSnapshot? userDoc;
+
+      userDoc = await _firestore.collection('user').doc(uid).get();
+      if (!userDoc.exists) {
+        userDoc = await _firestore.collection('users').doc(uid).get();
+        if (!userDoc.exists) {
+          userDoc = await _firestore.collection('doctor').doc(uid).get();
+        }
+      }
+
+      if (userDoc.exists) {
+        // Safely access the 'steps' field
+        Map<String, dynamic>? data = userDoc.data() as Map<String, dynamic>?;
+        if (data != null && data.containsKey('steps')) {
+          setState(() {
+            steps = data['steps'] ?? 0; // Use the steps value or default to 0
+          });
+        } else {
+          setState(() {
+            steps = 0; // Default value if 'steps' field is missing
+          });
+        }
+      } else {
         setState(() {
-          steps = prefs.getInt(_stepsKey) ?? 0;
+          steps = 0; // Default value if document does not exist
         });
       }
-    } catch (e) {
-      debugPrint('Error loading steps: $e');
     }
   }
 
-  Future<void> _saveSteps() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(_stepsKey, steps);
-    } catch (e) {
-      debugPrint('Error saving steps: $e');
+  Future<void> _updateFirestoreSteps() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      String uid = user.uid;
+
+      // Check in which collection the user exists
+      DocumentSnapshot? userDoc;
+
+      userDoc = await _firestore.collection('user').doc(uid).get();
+      if (!userDoc.exists) {
+        userDoc = await _firestore.collection('users').doc(uid).get();
+        if (!userDoc.exists) {
+          userDoc = await _firestore.collection('doctor').doc(uid).get();
+        }
+      }
+
+      if (userDoc.exists) {
+        await userDoc.reference.update({'steps': steps}); // Update steps in Firestore
+      } else {
+        // If the document does not exist, create it with the initial steps value
+        await _firestore.collection('user').doc(uid).set({'steps': steps});
+      }
     }
   }
-
   void _startStepCounting() {
     _accelerometerSubscription = accelerometerEventStream(samplingPeriod: SensorInterval.gameInterval)
         .listen((AccelerometerEvent event) {
       if (mounted) {
-        // Calculate the magnitude of acceleration
         final magnitude = sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
-
-        // Process the new reading
         _processAccelerometerReading(magnitude);
       }
     }, onError: (e) {
@@ -89,54 +116,43 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
   }
 
   void _processAccelerometerReading(double magnitude) {
-    // Add to history
     _magnitudeHistory.add(magnitude);
     if (_magnitudeHistory.length > _historySize) {
       _magnitudeHistory.removeAt(0);
     }
 
     if (_magnitudeHistory.length < _historySize) {
-      return; // Wait until we have enough data
+      return;
     }
 
-    // Calculate variance (how much the readings are changing)
     double mean = _magnitudeHistory.reduce((a, b) => a + b) / _magnitudeHistory.length;
     double variance = _magnitudeHistory.fold(0.0, (sum, item) =>
     sum + pow(item - mean, 2)) / _magnitudeHistory.length;
 
-    // Store for debugging
     _varianceValue = variance;
 
-    // Check if we're walking based on variance (a measure of how much acceleration is changing)
     bool previousWalkingState = _isWalking;
     _isWalking = variance > _walkingThreshold;
 
     if (_isWalking) {
       _lastWalkingTime = DateTime.now();
     } else if (DateTime.now().difference(_lastWalkingTime) < _walkingTimeout) {
-      // Still consider walking for a brief period after motion stops
-      // This prevents losing steps during natural pauses in walking
       _isWalking = true;
     }
 
-    // Look for step pattern in the signal
     if (_isWalking) {
-      // Get recent readings
       List<double> recentReadings = _magnitudeHistory.sublist(
           max(0, _magnitudeHistory.length - 5), _magnitudeHistory.length);
 
-      // Check for typical walking pattern - a peak followed by a trough
       if (recentReadings.length >= 3) {
         double current = recentReadings.last;
         double previous = recentReadings[recentReadings.length - 2];
         double beforePrevious = recentReadings[recentReadings.length - 3];
 
-        // Pattern: first rising then falling (peak)
         bool isPeak = previous > current &&
             previous > beforePrevious &&
             previous > mean + _peakThreshold;
 
-        // Respect minimum time between steps
         DateTime now = DateTime.now();
         if (isPeak && now.difference(_lastStepTime) > _minStepInterval) {
           if (mounted) {
@@ -147,15 +163,13 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
           }
           _lastStepTime = now;
 
-          // Save steps periodically
           if (steps % 10 == 0) {
-            _saveSteps();
+            _updateFirestoreSteps(); // Save steps to Firestore periodically
           }
         }
       }
     }
 
-    // Update debug info
     if (mounted && (_isWalking != previousWalkingState || steps % 5 == 0)) {
       setState(() {
         if (!_isWalking) {
@@ -206,7 +220,6 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
                     ),
                   ],
                 ),
-                // Walking indicator
                 Container(
                   width: 8,
                   height: 8,
@@ -233,7 +246,6 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
                 color: Colors.grey[600],
               ),
             ),
-            // Debug text
             const SizedBox(height: 4),
             Text(
               _debugText,

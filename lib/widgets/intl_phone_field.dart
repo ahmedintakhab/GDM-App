@@ -43,7 +43,7 @@ Widget phone_number_field({
               filled: true,
               fillColor: Color(0XFFF5F5F5)
             ),
-            initialCountryCode: 'IN', // Default country code
+            initialCountryCode: 'US', // Default country code
             onChanged: (phone) {
               onPhoneNumberChanged(phone.completeNumber);
               state.didChange(phone.completeNumber); // Update the FormField state

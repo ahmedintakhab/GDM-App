@@ -5,6 +5,7 @@ Widget CustomTextFormField({
   required TextEditingController controller,
   required String hintText,
   required String? Function(String?) validator,
+  TextInputType keyboardType = TextInputType.text, // Added keyboardType parameter
   bool isPasswordField = false,
   bool obscureText = false,
   Widget? suffixIcon,
@@ -12,6 +13,7 @@ Widget CustomTextFormField({
   return TextFormField(
     controller: controller,
     obscureText: isPasswordField && obscureText,
+    keyboardType: keyboardType, // Apply keyboardType
     cursorColor: const Color(0xFF5AA189),
     decoration: InputDecoration(
       hintText: hintText,

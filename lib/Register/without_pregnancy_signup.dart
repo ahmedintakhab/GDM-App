@@ -84,8 +84,16 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       CustomTextFormField(
                         controller: _passwordController,
                         hintText: 'Enter your password',
-                        validator: (value) => value?.isEmpty ?? true ? 'Please enter password' : null,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter password';
+                          } else if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                          return null;
+                        },
                       ),
+
                       SizedBox(height: 16),
                       phone_number_field(
                         onPhoneNumberChanged: (String phone) {
@@ -119,6 +127,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       CustomTextFormField(
                         controller: _ageController,
                         hintText: 'Enter your age',
+                        keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your age';
@@ -131,6 +140,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       CustomTextFormField(
                         controller: _heightController,
                         hintText: 'Enter your height',
+                        keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your height';
@@ -167,6 +177,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       CustomTextFormField(
                         controller: _waistController,
                         hintText: 'Enter your waist',
+                        keyboardType: TextInputType.phone,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your waist';
