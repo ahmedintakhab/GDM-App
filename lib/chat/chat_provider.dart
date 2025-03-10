@@ -1,3 +1,3 @@
 class APIKey {
-  static const apiKey = "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";
+  static const apiKey = "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"; // Replace with your DeepSeek API key
 }
