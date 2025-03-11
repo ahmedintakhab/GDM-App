@@ -1,6 +1,8 @@
 // tabs/today_tab.dart
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gdm_app/glucose_screen/add_glucose.dart';
+import 'package:gdm_app/widgets/custom_button.dart';
 
 class TodayTab extends StatelessWidget {
   @override
@@ -13,6 +15,10 @@ class TodayTab extends StatelessWidget {
           _buildAverageGlucoseCard(131, 'sad'),
           SizedBox(height: 24),
           _buildGlucoseLevelsCard(),
+          SizedBox(height: 25,),
+          CustomButton(onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>AddGlucoseScreen()));
+          }, buttonText: 'Add Glucose')
         ],
       ),
     );
@@ -185,6 +191,7 @@ class TodayTab extends StatelessWidget {
               ),
             ),
           ),
+
         ],
       ),
     );
