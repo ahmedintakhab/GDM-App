@@ -13,6 +13,8 @@ class ChatGPTScreen extends StatefulWidget {
 class _ChatGPTScreenState extends State<ChatGPTScreen> {
   final List<Message> _messages = [];
   final TextEditingController _textEditingController = TextEditingController();
+  bool _isLoading = false; // Flag to track loading state
+
 
   void onSendMessage() async {
     String userMessage = _textEditingController.text.trim();
@@ -26,17 +28,35 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
 
     setState(() {
       _messages.insert(0, message);
+      _isLoading = true; // Start loading
+
+    });
+    // Add a loading message that will be replaced with the actual response
+    Message loadingMessage = Message(text: "loading", isMe: false, isLoading: true);
+    setState(() {
+      _messages.insert(0, loadingMessage);
     });
 
     try {
       String response = await sendMessageToDeepSeek(message.text);
-      Message deepSeekResponse = Message(text: response, isMe: false);
 
       setState(() {
-        _messages.insert(0, deepSeekResponse);
+        // Remove the loading message
+        _messages.removeAt(0);
+        // Add the actual response
+        _messages.insert(0, Message(text: response, isMe: false));
+        _isLoading = false; // End loading
       });
     } catch (e) {
       // Handle errors and show a message to the user
+      setState(() {
+        // Remove the loading message
+        _messages.removeAt(0);
+        // Add an error message
+        _messages.insert(0, Message(text: "Error: Failed to get response", isMe: false));
+        _isLoading = false; // End loading
+      });
+
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to get response: $e')),
@@ -101,22 +121,42 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
           message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              message.isMe ? 'You' : 'DeepSeek',
+              message.isMe ? 'You' : 'GDM AI',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            Text(message.text),
+            message.isLoading
+                ? _buildLoadingIndicator()
+                : Text(message.text),
           ],
         ),
       ),
     );
   }
+  Widget _buildLoadingIndicator() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(
+          width: 16,
+          height: 16,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0XFF5AA189)),
+          ),
+        ),
+        SizedBox(width: 8),
+        Text("Typing...", style: TextStyle(fontStyle: FontStyle.italic)),
+      ],
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0XFF5AA189),
-        title: Text('DeepSeek Chat', style: TextStyle(color: Colors.white,
+        title: Text('GDM Assistant Chat', style: TextStyle(color: Colors.white,
             fontWeight: FontWeight.bold),),
       ),
       body: Column(
@@ -131,62 +171,62 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
             ),
           ),
           // Divider(height: 1.0),
-          // Padding(
-          //   padding: const EdgeInsets.all(12.0),
-          //   child: CustomTextFormField(
-          //     controller: _textEditingController,
-          //     hintText: 'Type a message...',
-          //     validator: (value) {
-          //       if (value == null || value.trim().isEmpty) {
-          //         return 'Please enter a question';
-          //       }
-          //       return null;
-          //     },
-          //      suffixIcon: IconButton(
-          //                    icon: Icon(Icons.send, color: Color(0XFF5AA189)),
-          //                   onPressed: onSendMessage,
-          //                  ),
-          //   ),
-          // )
-          Container(
-            padding: EdgeInsets.all( 15.0), // Bottom padding
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(15.0), // Rounded corners
-              // border: Border.all(color: Colors.grey.shade300, width: 1.5), // Border color & width
-            ),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _textEditingController,
-                    cursorColor: Color(0XFF5AA189), // Cursor color
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10.0),
-                      hintText: 'Type a message...',
-                      border: OutlineInputBorder( // Border when enabled
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: Colors.blue, width: 1.5),
-                      ),
-                      enabledBorder: OutlineInputBorder( // Default border
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: Colors.grey.shade400, width: 1.5),
-                      ),
-                      focusedBorder: OutlineInputBorder( // Border when focused
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(color: Color(0XFF5AA189), width: 2.0),
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.send, color: Color(0XFF5AA189)),
-                        onPressed: onSendMessage,
-                      ),
-                    ),
-                  ),
-                ),
-
-              ],
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: CustomTextFormField(
+              controller: _textEditingController,
+              hintText: 'Type a message...',
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter a question';
+                }
+                return null;
+              },
+               suffixIcon: IconButton(
+                             icon: Icon(Icons.send, color: Color(0XFF5AA189)),
+                            onPressed: onSendMessage,
+                           ),
             ),
           )
+          // Container(
+          //   padding: EdgeInsets.all( 15.0), // Bottom padding
+          //   decoration: BoxDecoration(
+          //     color: Theme.of(context).cardColor,
+          //     borderRadius: BorderRadius.circular(15.0), // Rounded corners
+          //     // border: Border.all(color: Colors.grey.shade300, width: 1.5), // Border color & width
+          //   ),
+          //   child: Row(
+          //     children: <Widget>[
+          //       Expanded(
+          //         child: TextField(
+          //           controller: _textEditingController,
+          //           cursorColor: Color(0XFF5AA189), // Cursor color
+          //           decoration: InputDecoration(
+          //             contentPadding: EdgeInsets.all(10.0),
+          //             hintText: 'Type a message...',
+          //             border: OutlineInputBorder( // Border when enabled
+          //               borderRadius: BorderRadius.circular(15.0),
+          //               borderSide: BorderSide(color: Colors.blue, width: 1.5),
+          //             ),
+          //             enabledBorder: OutlineInputBorder( // Default border
+          //               borderRadius: BorderRadius.circular(15.0),
+          //               borderSide: BorderSide(color: Colors.grey.shade400, width: 1.5),
+          //             ),
+          //             focusedBorder: OutlineInputBorder( // Border when focused
+          //               borderRadius: BorderRadius.circular(15.0),
+          //               borderSide: BorderSide(color: Color(0XFF5AA189), width: 2.0),
+          //             ),
+          //             suffixIcon: IconButton(
+          //               icon: Icon(Icons.send, color: Color(0XFF5AA189)),
+          //               onPressed: onSendMessage,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //
+          //     ],
+          //   ),
+          // )
 
         ],
       ),
@@ -197,6 +237,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
 class Message {
   final String text;
   final bool isMe;
+  final bool isLoading;
 
-  Message({required this.text, required this.isMe});
+  Message({required this.text, required this.isMe, this.isLoading = false});
 }

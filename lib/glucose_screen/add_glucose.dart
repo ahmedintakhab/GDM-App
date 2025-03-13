@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
+import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:intl/intl.dart';
 
 class AddGlucoseScreen extends StatefulWidget {
@@ -15,10 +16,12 @@ class AddGlucoseScreen extends StatefulWidget {
 
 class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
   final TextEditingController _glucoseController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+
   String _selectedMealOption = 'Before Meal';
   DateTime _selectedDateTime = DateTime.now();
   bool _isLoading = false; // Track loading state
-
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -26,8 +29,11 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
   @override
   void dispose() {
     _glucoseController.dispose();
+    _timeController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
+
   // Function to save glucose data to Firestore
   Future<void> _saveGlucoseData() async {
     setState(() {
@@ -55,9 +61,16 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
 
       // If the user exists in one of the collections, save the glucose data
       if (userDoc.exists) {
+        // Parse the date and time from the controllers
+        final date = _dateController.text;
+        final time = _timeController.text;
+
+        // Combine date and time into a single DateTime object
+        final dateTime = DateFormat('yyyy-MM-dd HH:mm').parse('$date $time');
+
         // Prepare the glucose data
         final glucoseData = {
-          'dateTime': _selectedDateTime,
+          'dateTime': Timestamp.fromDate(dateTime), // Save as Timestamp
           'glucoseLevel': int.parse(_glucoseController.text),
           'mealOption': _selectedMealOption,
         };
@@ -68,14 +81,6 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
             .doc(uid)
             .collection('glucoseEntries') // Subcollection for glucose entries
             .add(glucoseData);
-
-        // // Add the glucose data to the user's document
-        // await _firestore
-        //     .collection(userDoc.reference.parent.id) // Use the correct collection
-        //     .doc(uid)
-        //     .update({
-        //   'glucoseEntries': FieldValue.arrayUnion([glucoseData]), // Add to existing array
-        // });
 
         // Show success toast message
         Utils().toastMessage('Successfully added glucose data!');
@@ -93,12 +98,45 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
     } catch (e) {
       // Handle errors
       Utils().toastMessage('Error: $e');
-    } finally{
+      print('error:$e');
+    } finally {
       setState(() {
         _isLoading = false; // Hide loading indicator
       });
     }
   }
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _dateController.text = "${picked.toLocal()}".split(' ')[0];
+      });
+    }
+  }
+  Future<void> _selectTime() async {
+    // Show the time picker
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(), // Set the initial time to the current time
+    );
+
+    // If the user selects a time, update the text field
+    if (pickedTime != null) {
+      setState(() {
+        // Format the time as HH:mm
+        final hour = pickedTime.hour.toString().padLeft(2, '0');
+        final minute = pickedTime.minute.toString().padLeft(2, '0');
+        _timeController.text = '$hour:$minute';
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +156,6 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -126,35 +163,31 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             // Date & Time Selector
-              Container(
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.green[50],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Date & time',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    Text(
-                      'Today, ${DateFormat('HH:mm').format(DateTime.now())}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
+              SizedBox(height: 16),
+              CustomTextFormField(
+                controller: _timeController,
+                hintText: 'Select time (HH:mm)',
+                validator: (value) => value?.isEmpty ?? true ? 'Please select time' : null,
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.access_time,),
+                  color: Color(0XFF5AA189),
+                  onPressed: _selectTime, // Open the time picker when the icon is clicked
                 ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: 16),
+              CustomTextFormField(
+                controller: _dateController,
+                hintText: 'Select date (yyyy-MM-dd)',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.calendar_today),
+                  color: Color(0XFF5AA189),
+                  onPressed: () => _selectDate(context),
+                ),
+                validator: (value) => value?.isEmpty ?? true ? 'Please select date' : null,
+              ),
+
+              const SizedBox(height: 16),
 
               // Glucose Level Input Section
               Container(
@@ -211,7 +244,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
               // Meal Selection Section
               Container(

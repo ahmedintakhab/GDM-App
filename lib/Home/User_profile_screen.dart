@@ -7,6 +7,7 @@ import '../widgets/custom_text_form_field.dart';
 class ProfileScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   ProfileScreen({super.key});
 
@@ -53,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                 return null;
               },
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 16.h),
             // Email Text Field
             CustomTextFormField(
               controller: emailController,
@@ -64,6 +65,18 @@ class ProfileScreen extends StatelessWidget {
                 }
                 if (!value.contains('@')) {
                   return 'Please enter a valid email';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 16.h),
+
+            CustomTextFormField(
+              controller: phoneController,
+              hintText: 'Enter phone number',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter phone number';
                 }
                 return null;
               },

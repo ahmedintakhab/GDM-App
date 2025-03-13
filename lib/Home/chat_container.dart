@@ -32,7 +32,7 @@ class ChatContainer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     Text(
-                      'Chat with Doctor', // First larger text
+                      'Chat with GDM Assistant', // First larger text
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -40,7 +40,7 @@ class ChatContainer extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Personal AI assistant', // Second smaller text
+                      'Personal GDM assistant', // Second smaller text
                       style: TextStyle(
                         color: Colors.white70,
                         fontSize: 14,

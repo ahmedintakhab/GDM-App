@@ -14,7 +14,7 @@ class ProgressAndStepscount extends StatelessWidget {
         Expanded(
           flex: 3,
           child: Container(
-            height: 100,
+            height: 120,
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
