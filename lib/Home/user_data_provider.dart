@@ -17,13 +17,13 @@ class UserProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   UserProvider() {
-    fetchUserData();
+    // fetchUserData();
   }
 
   Future<void> fetchUserData() async {
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    // notifyListeners();
 
     try {
       final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -80,7 +80,7 @@ class UserProvider extends ChangeNotifier {
 
   Future<bool> updateUserProfile(String name, String email, String phone) async {
     _isLoading = true;
-    notifyListeners();
+    // notifyListeners();
 
     try {
       final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -139,4 +139,71 @@ class UserProvider extends ChangeNotifier {
       return false;
     }
   }
-}
+
+  //Code for fetch glucose data
+  List<Map<String, dynamic>> _glucoseData = [];
+
+  List<Map<String, dynamic>> get glucoseData => _glucoseData;
+
+  Future<void> fetchGlucoseData() async {
+  _isLoading = true;
+  _errorMessage = null;
+  print('Fetching glucose data...'); // Debugging
+
+  try {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  final String? uid = _auth.currentUser?.uid;
+
+  if (uid == null) {
+  _errorMessage = "No user logged in";
+  _isLoading = false;
+  notifyListeners();
+  return;
+  }
+
+  // Check in which collection the user exists
+  DocumentSnapshot? userDoc;
+
+  userDoc = await _firestore.collection('user').doc(uid).get();
+  if (!userDoc.exists) {
+  userDoc = await _firestore.collection('users').doc(uid).get();
+  if (!userDoc.exists) {
+  userDoc = await _firestore.collection('doctor').doc(uid).get();
+  }
+  }
+
+  if (userDoc.exists) {
+  // Fetch glucose data from the 'glucoseEntries' subcollection
+  final QuerySnapshot glucoseSnapshot = await _firestore
+      .collection(userDoc.reference.parent.id) // Use the correct collection
+      .doc(uid)
+      .collection('glucoseEntries')
+      .orderBy('dateTime', descending: true)
+      .get();
+
+  _glucoseData = glucoseSnapshot.docs.map((doc) {
+  final data = doc.data() as Map<String, dynamic>;
+  return {
+  'value': data['glucoseLevel'],
+  'timestamp': data['dateTime'],
+  };
+  }).toList();
+
+  _isLoading = false;
+  notifyListeners();
+  } else {
+  _errorMessage = "User not found in any collection";
+  _isLoading = false;
+  notifyListeners();
+  }
+  } catch (e) {
+  _errorMessage = "Error fetching glucose data: $e";
+  _isLoading = false;
+  notifyListeners();
+  print("Error fetching glucose data: $e");
+  }
+  }
+  }
+

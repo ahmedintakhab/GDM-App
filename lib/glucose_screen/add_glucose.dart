@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../Home/user_data_provider.dart'; // Import your UserProvider
 
 class AddGlucoseScreen extends StatefulWidget {
   const AddGlucoseScreen({Key? key}) : super(key: key);
@@ -20,7 +22,6 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
   final TextEditingController _dateController = TextEditingController();
 
   String _selectedMealOption = 'Before Meal';
-  DateTime _selectedDateTime = DateTime.now();
   bool _isLoading = false; // Track loading state
 
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -75,7 +76,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
           'mealOption': _selectedMealOption,
         };
 
-        // Add the glucose data to the user's document
+        // Add the glucose data to the user's document in the 'glucoseEntries' subcollection
         await _firestore
             .collection(userDoc.reference.parent.id) // Use the correct collection
             .doc(uid)
@@ -85,13 +86,12 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
         // Show success toast message
         Utils().toastMessage('Successfully added glucose data!');
 
-        // Navigate to the GlucoseDetailsScreen
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GlucoseDetailsScreen(),
-          ),
-        );
+        // Fetch updated glucose data in the UserProvider
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        await userProvider.fetchGlucoseData();
+
+        // Navigate back to the previous screen
+        Navigator.pop(context);
       } else {
         Utils().toastMessage('User not found in any collection!');
       }
@@ -105,6 +105,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
       });
     }
   }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -118,6 +119,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
       });
     }
   }
+
   Future<void> _selectTime() async {
     // Show the time picker
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -135,7 +137,6 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -339,11 +340,20 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
               ),
 
               const SizedBox(height: 20),
-              _isLoading
-                  ? Center(child: CircularProgressIndicator()) // Show loading indicator
-                  : CustomButton(
-                onTap: _saveGlucoseData, // Call _saveGlucoseData on button tap
-                buttonText: 'Save',
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  CustomButton(
+                    onTap: _saveGlucoseData, // Call _savePillsData on button tap
+                    buttonText: _isLoading ? '' : 'Save', // Hide text when loading
+                  ),
+                  if (_isLoading)
+                    Positioned(
+                      child: CircularProgressIndicator(
+                        color: Colors.white, // White color for the indicator
+                      ),
+                    ),
+                ],
               ),
 
             ],

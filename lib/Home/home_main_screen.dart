@@ -11,6 +11,7 @@ import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
 import 'package:provider/provider.dart';
 import 'User_profile_screen.dart';
 import 'bottom_navigation_bar.dart';
+import 'glucose_card_widget.dart';
 import 'gulcose_chart.dart';
 import 'notification_screen.dart';
 // Import ProfileScreen
@@ -75,7 +76,15 @@ class HomeContent extends StatelessWidget {
     return Consumer<UserProvider>(
         builder: (context, userProvider, child)
     {
-      return Padding(
+      // Calculate the latest glucose value or average glucose value
+      final averageGlucoseValue = userProvider.glucoseData.isNotEmpty
+          ? (userProvider.glucoseData)
+          .map((data) => data['value'] as int)
+          .reduce((a, b) => a + b) /
+          userProvider.glucoseData.length
+              : 0;
+
+          return Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -180,52 +189,17 @@ class HomeContent extends StatelessWidget {
                         // Spacer between the two containers
 
                         // Second Container (Glucose)
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (
-                                      context) => const GlucoseDetailsScreen(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.red[50],
-                                borderRadius: BorderRadius.circular(12),
+                        GlucoseCardWidget(
+                          title: 'Glucose',
+                          value: '$averageGlucoseValue mg/dl',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const GlucoseDetailsScreen(),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween,
-                                    children: [
-                                      const Text(
-                                        'Glucose',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Icon(Icons.water_drop,
-                                          color: Colors.red[800]),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    '143 mg/dl',
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
                       ],
                     ),

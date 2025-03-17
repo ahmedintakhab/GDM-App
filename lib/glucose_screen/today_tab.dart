@@ -1,30 +1,73 @@
-// tabs/today_tab.dart
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gdm_app/glucose_screen/add_glucose.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
+import 'package:provider/provider.dart';
 
-class TodayTab extends StatelessWidget {
+import '../Home/user_data_provider.dart';
+
+class TodayTab extends StatefulWidget {
+  @override
+  State<TodayTab> createState() => _TodayTabState();
+}
+
+class _TodayTabState extends State<TodayTab> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch glucose data when the widget is first created
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.fetchUserData();
+    userProvider.fetchGlucoseData();
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildAverageGlucoseCard(131, 'sad'),
-          SizedBox(height: 24),
-          _buildGlucoseLevelsCard(),
-          SizedBox(height: 25,),
-          CustomButton(onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>AddGlucoseScreen()));
-          }, buttonText: 'Add Glucose')
-        ],
-      ),
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, child) {
+        if (userProvider.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (userProvider.errorMessage != null) {
+          return Center(child: Text('Error: ${userProvider.errorMessage}'));
+        } else {
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildAverageGlucoseCard(userProvider),
+                SizedBox(height: 24),
+                _buildGlucoseLevelsCard(userProvider),
+                SizedBox(height: 25),
+                CustomButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AddGlucoseScreen()),
+                    );
+                  },
+                  buttonText: 'Add Glucose',
+                ),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
-  Widget _buildAverageGlucoseCard(int value, String mood) {
+  Widget _buildAverageGlucoseCard(UserProvider userProvider) {
+    final averageGlucose = userProvider.glucoseData.isNotEmpty
+        ? userProvider.glucoseData
+        .map((data) => data['value'] as int)
+        .reduce((a, b) => a + b) /
+        userProvider.glucoseData.length
+        : 0;
+    print("Average Glucose: $averageGlucose");
+
+    final mood = averageGlucose > 120 ? 'sad' : 'happy';
+
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -44,7 +87,7 @@ class TodayTab extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               color: Colors.black,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 8),
@@ -58,11 +101,11 @@ class TodayTab extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                '$value',
+                '${averageGlucose.toStringAsFixed(1)}',
                 style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
-                  color: value > 120 ? Colors.red : Colors.green,
+                  color: averageGlucose > 120 ? Colors.red : Colors.green,
                 ),
               ),
               Text(
@@ -79,7 +122,10 @@ class TodayTab extends StatelessWidget {
     );
   }
 
-  Widget _buildGlucoseLevelsCard() {
+  Widget _buildGlucoseLevelsCard(UserProvider userProvider) {
+    print("Glucose Data for Chart: ${userProvider.glucoseData}");
+    final glucoseData = userProvider.glucoseData;
+
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -105,13 +151,6 @@ class TodayTab extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // Row(
-              //   children: [
-              //     Icon(Icons.list, color: Colors.grey),
-              //     SizedBox(width: 16),
-              //     Icon(Icons.bar_chart, color: Colors.grey),
-              //   ],
-              // ),
             ],
           ),
           SizedBox(height: 20),
@@ -124,17 +163,17 @@ class TodayTab extends StatelessWidget {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      interval: 1, // Interval for each point on the X-axis
+                      interval: 1,
                       getTitlesWidget: (value, meta) {
                         switch (value.toInt()) {
                           case 0:
-                            return Text('2h');
-                          case 1:
-                            return Text('4h');
-                          case 2:
                             return Text('6h');
+                          case 1:
+                            return Text('12h');
+                          case 2:
+                            return Text('18h');
                           case 3:
-                            return Text('8h');
+                            return Text('24h');
                           default:
                             return Text('');
                         }
@@ -157,20 +196,18 @@ class TodayTab extends StatelessWidget {
                     sideTitles: SideTitles(showTitles: false),
                   ),
                 ),
-
                 borderData: FlBorderData(show: false),
                 minX: 0,
-                maxX: 4,
+                maxX: glucoseData.length > 0 ? glucoseData.length - 1 : 4,
                 minY: 0,
                 maxY: 200,
                 lineBarsData: [
                   LineChartBarData(
-                    spots: [
-                      FlSpot(0, 100),
-                      FlSpot(1, 120),
-                      FlSpot(2, 154),
-                      FlSpot(3, 125),
-                    ],
+                    spots: glucoseData.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final data = entry.value;
+                      return FlSpot(index.toDouble(), data['value'].toDouble());
+                    }).toList(),
                     isCurved: true,
                     color: Colors.indigo,
                     barWidth: 2,
@@ -191,7 +228,6 @@ class TodayTab extends StatelessWidget {
               ),
             ),
           ),
-
         ],
       ),
     );

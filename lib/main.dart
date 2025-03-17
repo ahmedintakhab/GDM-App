@@ -34,3 +34,9 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// Add the glucose data to the user's document
+// await _firestore
+//     .collection(userDoc.reference.parent.id) // Use the correct collection
+//     .doc(uid)
+//     .collection('glucoseEntries') // Subcollection for glucose entries
+//     .add(glucoseData);
