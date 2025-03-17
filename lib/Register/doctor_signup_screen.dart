@@ -19,6 +19,7 @@ class DoctorSignupScreen extends StatefulWidget {
 class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool loading = false ;
+  final  _nameController = TextEditingController();
   final  _emailController = TextEditingController();
   final  _passwordController = TextEditingController();
   bool isPasswordHidden = true;
@@ -48,13 +49,14 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
       //Save user data to firestore
       await _firestore.collection('doctor').doc(
           userCredential.user!.uid).set({
-
+        'name' : _nameController.text,
         'email': _emailController.text,
         'phone Number': phoneNumber,
         'password': _passwordController.text
 
       });
       //Clear all fields
+      _nameController.clear();
       _emailController.clear();
       _passwordController.clear();
       phoneNumber.trim();
@@ -134,6 +136,18 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                 child: Column(
                   children: [
                     CustomTextFormField(
+                      controller: _nameController,
+                      hintText: 'Name',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.h),
+
+                    CustomTextFormField(
                       controller: _emailController,
                       hintText: "Email",
                       validator: (val) {
@@ -148,7 +162,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 15.h),
+                    SizedBox(height: 16.h),
                     phone_number_field(
                       onPhoneNumberChanged: (String phone) {
                         setState(() {
