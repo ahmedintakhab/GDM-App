@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Register/personal_info_screen.dart';
 import 'package:gdm_app/Register/selection_screen.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import '../utils/onboarding_data_model.dart';
 import '../utils/pref_data.dart';
 import '../utils/screen_size.dart';
@@ -150,11 +152,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.only(top: 25, right: 20),
       child: GestureDetector(
           onTap: () {
-            setState(() {
-              controller.nextPage(
-                  duration: const Duration(milliseconds: 100),
-                  curve: Curves.bounceIn);
-            });
+            Get.to(SelectionScreen());
+            // setState(() {
+            //   controller.nextPage(
+            //       duration: const Duration(milliseconds: 100),
+            //       curve: Curves.bounceIn);
+            // });
           },
           child: Container(
               height: 32,

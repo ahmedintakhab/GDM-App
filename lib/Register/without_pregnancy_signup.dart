@@ -19,6 +19,7 @@ final _formKey = GlobalKey<FormState>();
 
 class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
   bool loading =false;
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final  _ageController = TextEditingController();
@@ -28,7 +29,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
   final  _diabetesController = TextEditingController();
   final  _waistController = TextEditingController();
   final  _hypertensionController = TextEditingController();
-  String phoneNumber = '';
+  // String phoneNumber = '';
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -74,6 +75,12 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      CustomTextFormField(
+                        controller: _nameController,
+                        hintText: 'Enter your name',
+                        validator: (value) => value?.isEmpty ?? true ? 'Please enter name' : null,
+                      ),
+                      SizedBox(height: 16),
                   
                       CustomTextFormField(
                         controller: _emailController,
@@ -95,19 +102,19 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       ),
 
                       SizedBox(height: 16),
-                      phone_number_field(
-                        onPhoneNumberChanged: (String phone) {
-                          setState(() {
-                             phoneNumber = phone; // Store the phone number
-                          });
-                        },
-                        validator: (String? value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter phone number';
-                          }
-                          return null;
-                        },
-                      ),
+                      // phone_number_field(
+                      //   onPhoneNumberChanged: (String phone) {
+                      //     setState(() {
+                      //        phoneNumber = phone; // Store the phone number
+                      //     });
+                      //   },
+                      //   validator: (String? value) {
+                      //     if (value == null || value.isEmpty) {
+                      //       return 'Please enter phone number';
+                      //     }
+                      //     return null;
+                      //   },
+                      // ),
                       // Gender Selection
                       CustomTextFormField(
                         controller: _genderController,
@@ -220,8 +227,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         userCredential.user!.uid).set({
 
                       'selectedOption': widget.selectedOption,
+                      'name': _nameController.text,
                       'email': _emailController.text,
-                      'phone Number': phoneNumber,
+                      // 'phone Number': phoneNumber,
                       'gender': _genderController.text,
                       'age': _ageController.text,
                       'height': _heightController.text,
@@ -231,6 +239,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       'hypertension': _hypertensionController.text,
                     });
                     //Clear all fields
+                    _nameController.clear();
                     _emailController.clear();
                     _passwordController.clear();
                     _genderController.clear();

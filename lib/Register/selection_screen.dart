@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Register/doctor_signup_screen.dart';
-import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/pregnancy_register_screen.dart';
 import 'package:gdm_app/Register/without_pregnancy_signup.dart';
 
@@ -56,15 +55,23 @@ class _SelectionScreenState extends State<SelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Please Select One'),
+      appBar: AppBar(backgroundColor: Colors.teal,
+        title: const Text('SignUp Selection',style:
+        TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Bold Text "I am"
+            const Text(
+              'Choose an option to navigate smoothly!',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            const SizedBox(height: 10),
             const Text(
               'I am',
               style: TextStyle(

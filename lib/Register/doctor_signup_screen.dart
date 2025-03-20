@@ -51,7 +51,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
           userCredential.user!.uid).set({
         'name' : _nameController.text,
         'email': _emailController.text,
-        'phone Number': phoneNumber,
+        // 'phone Number': phoneNumber,
         'password': _passwordController.text
 
       });
@@ -59,7 +59,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
       _nameController.clear();
       _emailController.clear();
       _passwordController.clear();
-      phoneNumber.trim();
+      // phoneNumber.trim();
       //Show success toast
       Utils().toastMessage('User successfully Regitered!');
       // Navigate only if validation is successful
@@ -162,20 +162,21 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16.h),
-                    phone_number_field(
-                      onPhoneNumberChanged: (String phone) {
-                        setState(() {
-                          phoneNumber = phone; // Store the phone number
-                        });
-                      },
-                      validator: (String? value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter phone number';
-                        }
-                        return null;
-                      },
-                    ),
+                     SizedBox(height: 16.h),
+
+                    // phone_number_field(
+                    //   onPhoneNumberChanged: (String phone) {
+                    //     setState(() {
+                    //       phoneNumber = phone; // Store the phone number
+                    //     });
+                    //   },
+                    //   validator: (String? value) {
+                    //     if (value == null || value.isEmpty) {
+                    //       return 'Please enter phone number';
+                    //     }
+                    //     return null;
+                    //   },
+                    // ),
 
                     // Password Field with Eye Icon Toggle
                     CustomTextFormField(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/Diabetes_type_screen.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
+import '../widgets/dropdown_widget.dart';
 import '../widgets/intl_phone_field.dart';
 
 class PregnancyRegistrationScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
   final _lmpController = TextEditingController();
   final _diabetesTestDateController = TextEditingController();
   final _emailController = TextEditingController();
+  final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
@@ -88,65 +90,24 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 ),
                 SizedBox(height: 16.h),
 
-                // Diabetes Test Radio Buttons
-                Text(
-                  'Did you have a test for diabetes during this pregnancy?',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black87,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Radio<String>(
-                      value: 'Yes',
-                      groupValue: _diabetesTest,
-                      onChanged: (value) {
-                        setState(() {
-                          _diabetesTest = value;
-                          _showDiabetesTestDate = value == 'Yes';
-                        });
-                      },
-                      activeColor: const Color(0xFF5AA189),
-                    ),
-                    Text('Yes'),
-                    Radio<String>(
-                      value: 'No',
-                      groupValue: _diabetesTest,
-                      onChanged: (value) {
-                        setState(() {
-                          _diabetesTest = value;
-                          _showDiabetesTestDate = false;
-                        });
-                      },
-                      activeColor: const Color(0xFF5AA189),
-                    ),
-                    Text('No'),
-                    Radio<String>(
-                      value: 'Not Sure',
-                      groupValue: _diabetesTest,
-                      onChanged: (value) {
-                        setState(() {
-                          _diabetesTest = value;
-                          _showDiabetesTestDate = false;
-                        });
-                      },
-                      activeColor: const Color(0xFF5AA189),
-                    ),
-                    Text('Not Sure'),
-                  ],
+                // Diabetes Test Dropdown
+                DropdownWidget(
+                  onChanged: (value) {
+                    setState(() {
+                      _diabetesTest = value;
+                      _showDiabetesTestDate = value == 'Yes';
+                    });
+                  },
+                  showDiabetesTestDate: _showDiabetesTestDate,
+                  diabetesTestDateController: _diabetesTestDateController,
                 ),
 
-                if (_showDiabetesTestDate) ...[
-                  SizedBox(height: 16.h),
-                  CustomTextFormField(
-                    controller: _diabetesTestDateController,
-                    hintText: 'When was the diabetes test done?',
-                    validator: (value) => value?.isEmpty ?? true ? 'Please enter test date' : null,
-                  ),
-                ],
-
+                SizedBox(height: 16.h),
+                CustomTextFormField(
+                  controller: _nameController,
+                  hintText: 'Enter your name',
+                  validator: (value) => value?.isEmpty ?? true ? 'Please enter name' : null,
+                ),
                 SizedBox(height: 16.h),
                 CustomTextFormField(
                   controller: _emailController,
@@ -167,20 +128,20 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   },
                 ),
 
-                SizedBox(height: 16.h),
-                phone_number_field(
-                  onPhoneNumberChanged: (String phone) {
-                    setState(() {
-                      phoneNumber = phone; // Store the phone number
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter phone number';
-                    }
-                    return null;
-                  },
-                ),
+                // SizedBox(height: 16.h),
+                // phone_number_field(
+                //   onPhoneNumberChanged: (String phone) {
+                //     setState(() {
+                //       phoneNumber = phone; // Store the phone number
+                //     });
+                //   },
+                //   validator: (String? value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please enter phone number';
+                //     }
+                //     return null;
+                //   },
+                // ),
                 SizedBox(height: 16.h),
 
 
@@ -287,13 +248,14 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
     onTap: () {
       if(_formKey.currentState!.validate()) {
         Map<String, dynamic> pregnancyData = {
+          'name': _nameController.text,
           'selectedOption': widget.selectedOption,
           'lmp': _lmpController.text,
           'diabetesTest': _diabetesTest,
           'diabetesTestDate': _diabetesTestDateController.text,
           'email': _emailController.text,
           'password': _passwordController.text,
-          'phone': phoneNumber,
+          // 'phone': phoneNumber,
           'age': _ageController.text,
           'weight': _weightController.text,
           'height': _heightController.text,
