@@ -16,9 +16,11 @@ class _TodayTabState extends State<TodayTab> {
   void initState() {
     super.initState();
     // Fetch glucose data when the widget is first created
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    userProvider.fetchUserData();
-    userProvider.fetchGlucoseData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.fetchUserData();
+      userProvider.fetchGlucoseData();
+    });
 
   }
 
@@ -167,13 +169,17 @@ class _TodayTabState extends State<TodayTab> {
                       getTitlesWidget: (value, meta) {
                         switch (value.toInt()) {
                           case 0:
-                            return Text('6h');
+                            return Text('6am');
                           case 1:
-                            return Text('12h');
+                            return Text('8am');
                           case 2:
-                            return Text('18h');
+                            return Text('12pm');
                           case 3:
-                            return Text('24h');
+                            return Text('2pm');
+                          case 4:
+                            return Text('8pm');
+                          case 5:
+                            return Text('10pm');
                           default:
                             return Text('');
                         }

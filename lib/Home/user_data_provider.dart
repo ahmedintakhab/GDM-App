@@ -209,18 +209,25 @@ class UserProvider extends ChangeNotifier {
           };
         }).toList();
 
-        _isLoading = false;
-        _safeNotifyListeners();
+        // Use addPostFrameCallback to defer notifyListeners
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _isLoading = false;
+          _safeNotifyListeners();
+        });
       } else {
         _errorMessage = "User not found in any collection";
-        _isLoading = false;
-        _safeNotifyListeners();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _isLoading = false;
+          _safeNotifyListeners();
+        });
       }
     } catch (e) {
       _errorMessage = "Error fetching glucose data: $e";
-      _isLoading = false;
-      _safeNotifyListeners();
-      print("Error fetching glucose data: $e");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _isLoading = false;
+        _safeNotifyListeners();
+      });
+        print("Error fetching glucose data: $e");
     }
   }
 }

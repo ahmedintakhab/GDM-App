@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ]
           ),
             body: userProvider.isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: Color(0XFF5AA189),))
                 : Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: SingleChildScrollView(

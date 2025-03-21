@@ -94,7 +94,7 @@ class HomeContent extends StatelessWidget {
               : 0;
 
           return Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(18.0),
         child: Column(
           children: [
             // Fixed Header Row (Text and CircleAvatar)

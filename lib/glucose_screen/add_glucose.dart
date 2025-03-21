@@ -7,7 +7,8 @@ import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../Home/user_data_provider.dart'; // Import your UserProvider
+import '../Home/user_data_provider.dart';
+import 'meal_selection_widget.dart'; // Import your UserProvider
 
 class AddGlucoseScreen extends StatefulWidget {
   const AddGlucoseScreen({Key? key}) : super(key: key);
@@ -86,9 +87,12 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
         // Show success toast message
         Utils().toastMessage('Successfully added glucose data!');
 
-        // Fetch updated glucose data in the UserProvider
-        final userProvider = Provider.of<UserProvider>(context, listen: false);
-        await userProvider.fetchGlucoseData();
+        // Fetch updated glucose data in the UserProvider after the current frame
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          final userProvider = Provider.of<UserProvider>(context, listen: false);
+          await userProvider.fetchGlucoseData();
+        });
+
 
         // Navigate back to the previous screen
         Navigator.pop(context);
@@ -254,87 +258,85 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                   color:  Colors.green[50],
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Row(
+                child: Column(
                   children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedMealOption = 'Before Meal';
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: _selectedMealOption == 'Before Meal'
-                                ? Colors.white
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                            border: _selectedMealOption == 'Before Meal'
-                                ? Border.all(color: Colors.green, width: 1)
-                                : null,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.apple,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'Before Meal',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
+                    Row(
+                      children: [
+                        MealSelection(
+                          onTap: () {
+                            setState(() {
+                              _selectedMealOption = 'Before Breakfast';
+                            });
+                          },
+                          icon: Icons.free_breakfast,
+                          label: 'Before Breakfast',
+                          selectedMealOption: _selectedMealOption,
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedMealOption = 'After Meal';
-                          });
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: _selectedMealOption == 'After Meal'
-                                ? Colors.white
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                            border: _selectedMealOption == 'After Meal'
-                                ? Border.all(color: Colors.green, width: 1)
-                                : null,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.restaurant,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                'After Meal',
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
+                        const SizedBox(width: 10),
+                        MealSelection(
+                          onTap: () {
+                            setState(() {
+                              _selectedMealOption = 'After Breakfast';
+                            });
+                          },
+                          icon: Icons.restaurant,
+                          label: 'After Breakfast',
+                          selectedMealOption: _selectedMealOption,
                         ),
+                      ],
+                       ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          MealSelection(
+                            onTap: () {
+                              setState(() {
+                                _selectedMealOption = 'Before Lunch';
+                              });
+                            },
+                            icon: Icons.lunch_dining,
+                            label: 'Before Lunch',
+                            selectedMealOption: _selectedMealOption,
+                          ),
+                          const SizedBox(width: 10),
+                          MealSelection(
+                            onTap: () {
+                              setState(() {
+                                _selectedMealOption = 'After Lunch';
+                              });
+                            },
+                            icon: Icons.restaurant,
+                            label: 'After Lunch',
+                            selectedMealOption: _selectedMealOption,
+                          ),
+                        ],
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          MealSelection(
+                            onTap: () {
+                              setState(() {
+                                _selectedMealOption = 'Before Dinner';
+                              });
+                            },
+                            icon: Icons.dinner_dining,
+                            label: 'Before Dinner',
+                            selectedMealOption: _selectedMealOption,
+                          ),
+                          const SizedBox(width: 10),
+                          MealSelection(
+                            onTap: () {
+                              setState(() {
+                                _selectedMealOption = 'After Dinner';
+                              });
+                            },
+                            icon: Icons.restaurant,
+                            label: 'After Dinner',
+                            selectedMealOption: _selectedMealOption,
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
