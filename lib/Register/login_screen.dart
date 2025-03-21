@@ -1,9 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/forgot_password_screen.dart';
-import 'package:gdm_app/Register/reset_password_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
 
@@ -24,6 +24,23 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordHidden = true;
   final _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen for authentication state changes
+    _auth.authStateChanges().listen((User? user) {
+      if (user != null) {
+        // User is signed in, navigate to HomeScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
+    });
+  }
+
+
 
   void togglePasswordVisibility() {
     setState(() {
@@ -49,9 +66,10 @@ class _LoginScreenState extends State<LoginScreen> {
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'An error occurred. Please try again.';
       if (e.code == 'user-not-found') {
-        errorMessage = 'No user found for this email.';
+        Utils().toastMessage('No user found for this email.');
+
       } else if (e.code == 'wrong-password') {
-        errorMessage = 'Incorrect password. Please try again.';
+        Utils().toastMessage('Incorrect password. Please try again.');
       } else {
         errorMessage = e.message ?? errorMessage;
       }

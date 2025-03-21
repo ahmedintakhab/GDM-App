@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Home/home_main_screen.dart';
@@ -16,7 +17,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   @override
   void initState() {
@@ -26,7 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       nameController.text = userProvider.name;
       emailController.text = userProvider.email;
-      phoneController.text = userProvider.phoneNumber;
     });
   }
 
@@ -93,17 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16.h),
-                    CustomTextFormField(
-                      controller: phoneController,
-                      hintText: 'Enter phone number',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter phone number';
-                        }
-                        return null;
-                      },
-                    ),
+
                     SizedBox(height: 30.h),
                     CustomButton(
                       onTap: () => _updateProfile(context, userProvider),
@@ -134,8 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // Update profile using provider
       bool success = await userProvider.updateUserProfile(
           nameController.text,
-          emailController.text,
-          phoneController.text
+          emailController.text
       );
 
       // Close loading dialog

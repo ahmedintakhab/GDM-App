@@ -210,7 +210,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                     Center(
                       child: RichText(
                         text: TextSpan(
-                          text: 'Don\'t have an account?  ',
+                          text: 'Already have an account?  ',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 15.sp,
