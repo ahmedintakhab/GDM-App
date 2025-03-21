@@ -23,7 +23,7 @@ class LogoutDialog extends StatelessWidget {
 
   Widget contentBox(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.r),
+      padding: EdgeInsets.all(40.r),
       decoration: BoxDecoration(
         shape: BoxShape.rectangle,
         color: Colors.white,
@@ -35,7 +35,7 @@ class LogoutDialog extends StatelessWidget {
           Text(
             'Are you sure you want to logout?',
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 20.sp,
               fontWeight: FontWeight.w600,
               fontFamily: 'Gilroy',
             ),
@@ -49,27 +49,26 @@ class LogoutDialog extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close dialog
                     onLogout(); // Execute logout function
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0XFF5AA189), // Teal color
                     foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                   ),
                   child: Text(
                     'Logout',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ),
-              SizedBox(width: 16.w),
+              SizedBox(width: 20.w),
               // Cancel button
               Expanded(
                 child: ElevatedButton(
@@ -79,15 +78,15 @@ class LogoutDialog extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[300], // Light grey
                     foregroundColor: Colors.black87,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                   ),
                   child: Text(
                     'Cancel',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

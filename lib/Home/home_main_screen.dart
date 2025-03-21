@@ -40,6 +40,15 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
     });
   }
+  @override
+  void initState() {
+    super.initState();
+    // Use addPostFrameCallback to defer the call to fetchUserData
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.fetchUserData(); // Fetch user data after the widget tree is built
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,53 +148,53 @@ class HomeContent extends StatelessWidget {
                     Row(
                       children: [
                         // First Container (Pills)
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const AddPillScreen(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[50],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween,
-                                    children: [
-                                      const Text(
-                                        'Pills',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Icon(Icons.medication,
-                                          color: Colors.blue[800]),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '2 taken',
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
+                        // Expanded(
+                        //   child: GestureDetector(
+                        //     onTap: () {
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => const AddPillScreen(),
+                        //         ),
+                        //       );
+                        //     },
+                        //     child: Container(
+                        //       padding: const EdgeInsets.all(12),
+                        //       decoration: BoxDecoration(
+                        //         color: Colors.blue[50],
+                        //         borderRadius: BorderRadius.circular(12),
+                        //       ),
+                        //       child: Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+                        //           Row(
+                        //             mainAxisAlignment: MainAxisAlignment
+                        //                 .spaceBetween,
+                        //             children: [
+                        //               const Text(
+                        //                 'Pills',
+                        //                 style: TextStyle(
+                        //                   fontSize: 16,
+                        //                   fontWeight: FontWeight.bold,
+                        //                 ),
+                        //               ),
+                        //               Icon(Icons.medication,
+                        //                   color: Colors.blue[800]),
+                        //             ],
+                        //           ),
+                        //           const SizedBox(height: 4),
+                        //           Text(
+                        //             '2 taken',
+                        //             style: TextStyle(
+                        //               color: Colors.grey[600],
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // const SizedBox(width: 16),
                         // Spacer between the two containers
 
                         // Second Container (Glucose)
@@ -203,11 +212,11 @@ class HomeContent extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 16),
 
                     // Health Metrics Row
-                    HealthMetricsRow(),
-                    SizedBox(height: 16),
+                    // HealthMetricsRow(),
+                    // SizedBox(height: 16),
                     //Doctor checkup container function calling
                     DoctorVisitContainer(),
                     SizedBox(height: 16),

@@ -164,19 +164,6 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                     ),
                      SizedBox(height: 16.h),
 
-                    // phone_number_field(
-                    //   onPhoneNumberChanged: (String phone) {
-                    //     setState(() {
-                    //       phoneNumber = phone; // Store the phone number
-                    //     });
-                    //   },
-                    //   validator: (String? value) {
-                    //     if (value == null || value.isEmpty) {
-                    //       return 'Please enter phone number';
-                    //     }
-                    //     return null;
-                    //   },
-                    // ),
 
                     // Password Field with Eye Icon Toggle
                     CustomTextFormField(

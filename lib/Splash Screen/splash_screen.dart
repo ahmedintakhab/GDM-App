@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:gdm_app/Onboarding/onboarding_screen.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance; // Firebase Auth instance
+
   @override
   void initState() {
     super.initState();
@@ -27,24 +30,33 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 3), () {
       if (!mounted) return;
-      if (isIntro == false) {
-        Get.off(const OnboardingScreen());
-      } else if (isLogin == false) {
-        Get.off( LoginScreen());
-      } else {
+
+      // Check if the user is already logged in
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        // User is already logged in, navigate to HomeScreen
         Get.off(const HomeScreen());
+      } else {
+        // User is not logged in, navigate based on intro and login status
+        if (isIntro == false) {
+          Get.off(const OnboardingScreen());
+        } else if (isLogin == false) {
+          Get.off(LoginScreen());
+        } else {
+          Get.off(const HomeScreen());
+        }
       }
     });
   }
 
   @override
-  Widget build(BuildContext context) {  // ✅ Add this build method
+  Widget build(BuildContext context) {
     initializeScreenSize(context);
     return Scaffold(
       backgroundColor: Color(0XFF5AA189),
       body: SafeArea(
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
@@ -54,7 +66,6 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Image.asset(
                   "assets/images/splash.png",
                   fit: BoxFit.cover,
-                   // color: const Color(0XFF5AA189),
                 ),
               ),
             ),

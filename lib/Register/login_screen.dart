@@ -6,8 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/forgot_password_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../Home/home_main_screen.dart';
+import '../Home/user_data_provider.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import 'selection_screen.dart';
@@ -23,24 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordHidden = true;
-  final _auth = FirebaseAuth.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    // Listen for authentication state changes
-    _auth.authStateChanges().listen((User? user) {
-      if (user != null) {
-        // User is signed in, navigate to HomeScreen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      }
-    });
-  }
-
-
+   final _auth = FirebaseAuth.instance;
 
   void togglePasswordVisibility() {
     setState(() {
@@ -61,6 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text.trim(),
       );
       Utils().toastMessage('User Login Successfully!');
+      // Fetch new user data after successful login
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      await userProvider.fetchUserData();
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomeScreen()));
     } on FirebaseAuthException catch (e) {

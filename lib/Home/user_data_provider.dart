@@ -16,7 +16,7 @@ class UserProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   UserProvider() {
-    fetchUserData();
+    // fetchUserData();
   }
 
   @override
@@ -30,6 +30,15 @@ class UserProvider extends ChangeNotifier {
     if (!_isDisposed) {
       notifyListeners();
     }
+  }
+  // Reset user data
+  void resetUserData() {
+    _name = '';
+    _email = '';
+    _isLoading = true;
+    _errorMessage = null;
+    _glucoseData = [];
+    _safeNotifyListeners();
   }
 
   Future<void> fetchUserData() async {

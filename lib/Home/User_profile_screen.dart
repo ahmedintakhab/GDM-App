@@ -5,7 +5,11 @@ import 'package:gdm_app/Home/home_main_screen.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart'; // Add this import
+import '../Register/login_screen.dart';
+import '../Register/logout_dialog_widget.dart';
 import '../widgets/custom_text_form_field.dart';
+import 'package:gdm_app/utils/utils.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({super.key});
@@ -28,8 +32,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       nameController.text = userProvider.name;
       emailController.text = userProvider.email;
+      userProvider.fetchUserData();
+
     });
   }
+  // Function to handle logout
+  void _handleLogout(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (context) => LogoutDialog(
+        onLogout: () async {
+          try {
+            await _auth.signOut(); // Sign out the user
+            userProvider.resetUserData(); // Reset user data in the provider
+            Navigator.of(context, rootNavigator: true).pop(); // Close the dialog using rootNavigator
+            Utils().toastMessage('User successfully Logout!');
+
+            // Add a small delay to ensure the dialog is fully dismissed
+            await Future.delayed(Duration.zero);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()), // Navigate to LoginScreen
+            );
+          } catch (e) {
+            Navigator.of(context, rootNavigator: true).pop(); // Close the dialog in case of error
+            print('Failed to logout: $e');
+            Utils().toastMessage('Failed to logout: $e');
+          }
+        },
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +84,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               centerTitle: true,
               backgroundColor: Colors.transparent,
               elevation: 0,
-            ),
+              actions: [
+                // Logout Icon with Text
+
+                    IconButton(
+                      icon: Icon(Icons.logout, color: Colors.black),
+                      onPressed: () => _handleLogout(context), // Show logout dialog
+                    ),
+          ]
+          ),
             body: userProvider.isLoading
                 ? Center(child: CircularProgressIndicator())
                 : Padding(
