@@ -19,6 +19,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
   // Controllers for text fields
   final _lmpController = TextEditingController();
+  final _dueDateController = TextEditingController();
   final _diabetesTestDateController = TextEditingController();
   final _emailController = TextEditingController();
   final _nameController = TextEditingController();
@@ -38,6 +39,13 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
   bool _showDiabetesTestDate = false;
   String phoneNumber = '';
 
+// Due Date Calculation Method (Naegele's rule)
+  String calculateDueDate(DateTime lmpDate) {
+    // Add 280 days (40 weeks) to LMP date
+    DateTime dueDate = lmpDate.add(Duration(days: 280));
+    return "${dueDate.toLocal()}".split(' ')[0];
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -48,6 +56,8 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
     if (picked != null) {
       setState(() {
         _lmpController.text = "${picked.toLocal()}".split(' ')[0];
+        // Calculate and set due date
+        _dueDateController.text = calculateDueDate(picked);
       });
     }
   }
@@ -78,6 +88,8 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 SizedBox(height: 20.h),
 
                 // LMP Field
+                //LMP due date calculated using Naegele's rule
+                // LMP Field
                 CustomTextFormField(
                   controller: _lmpController,
                   hintText: 'Last Menstrual Period (LMP)',
@@ -88,6 +100,20 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                     onPressed: () => _selectDate(context),
                   ),
                 ),
+                SizedBox(height: 16.h),
+
+                // Expected Due Date Field (read-only)
+                CustomTextFormField(
+                  controller: _dueDateController,
+                  hintText: 'Expected Due Date (Read only)',
+                  readOnly: true,
+                  validator: (value) => value?.isEmpty ?? true ? 'Please enter LMP to calculate' : null,
+                  suffixIcon: Icon(
+                    Icons.calendar_today,
+                    color: Color(0XFF5AA189),
+                  ),
+                ),
+
                 SizedBox(height: 16.h),
 
                 // Diabetes Test Dropdown
@@ -127,24 +153,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                     return null;
                   },
                 ),
-
-                // SizedBox(height: 16.h),
-                // phone_number_field(
-                //   onPhoneNumberChanged: (String phone) {
-                //     setState(() {
-                //       phoneNumber = phone; // Store the phone number
-                //     });
-                //   },
-                //   validator: (String? value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Please enter phone number';
-                //     }
-                //     return null;
-                //   },
-                // ),
                 SizedBox(height: 16.h),
-
-
                 // Other Fields
                 CustomTextFormField(
                   controller: _ageController,
@@ -251,6 +260,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
           'name': _nameController.text,
           'selectedOption': widget.selectedOption,
           'lmp': _lmpController.text,
+          'dueDate': _dueDateController.text, // Include due date in the data
           'diabetesTest': _diabetesTest,
           'diabetesTestDate': _diabetesTestDateController.text,
           'email': _emailController.text,

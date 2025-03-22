@@ -143,7 +143,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     CustomButton(
                       onTap: () => _updateProfile(context, userProvider),
                       buttonText: 'Update Profile',
-                    )
+                    ),
+                    // Spacer(),
+                    SizedBox(height: 130.h),
+                    CustomButton(onTap: (){}, buttonText: 'Set Remainder',)
                   ],
                 ),
               ),

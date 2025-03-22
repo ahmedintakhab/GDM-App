@@ -185,7 +185,7 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
       flex: 2,
       child: Container(
         height: 120,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -214,7 +214,7 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
                     Text(
                       'Steps Count',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: Colors.grey[600],
                       ),
                     ),

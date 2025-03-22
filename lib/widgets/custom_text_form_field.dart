@@ -8,12 +8,14 @@ Widget CustomTextFormField({
   TextInputType keyboardType = TextInputType.text, // Added keyboardType parameter
   bool isPasswordField = false,
   bool obscureText = false,
+  bool readOnly = false, // Add readOnly parameter with default value
   Widget? suffixIcon,
 }) {
   return TextFormField(
     controller: controller,
     obscureText: isPasswordField && obscureText,
     keyboardType: keyboardType, // Apply keyboardType
+    readOnly: readOnly, // Apply readOnly parameter
     cursorColor: const Color(0xFF5AA189),
     decoration: InputDecoration(
       hintText: hintText,

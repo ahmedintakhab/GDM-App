@@ -264,7 +264,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                               height: 20,
                               child: CircularProgressIndicator(
                                 color: Colors.white,
-                                strokeWidth: 2,
+                                strokeWidth: 4,
                             ),
                           ),
                       ],

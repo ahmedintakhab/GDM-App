@@ -15,7 +15,7 @@ class ProgressAndStepscount extends StatelessWidget {
           flex: 3,
           child: Container(
             height: 120,
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
@@ -74,7 +74,7 @@ class ProgressAndStepscount extends StatelessWidget {
                     Text(
                       '48 GL of 64 GL',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
