@@ -7,6 +7,7 @@ import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart'; // Add this import
 import '../Register/login_screen.dart';
 import '../Register/logout_dialog_widget.dart';
+import '../reminder/add_reminders_screen.dart';
 import '../widgets/custom_text_form_field.dart';
 import 'package:gdm_app/utils/utils.dart';
 
@@ -146,7 +147,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     // Spacer(),
                     SizedBox(height: 130.h),
-                    CustomButton(onTap: (){}, buttonText: 'Set Remainder',)
+                    CustomButton(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddReminders()),
+                        );
+                      },
+                      buttonText: 'Set Reminder',
+                    )
+
                   ],
                 ),
               ),

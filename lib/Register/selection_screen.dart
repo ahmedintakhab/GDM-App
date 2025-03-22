@@ -1,7 +1,13 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/doctor_signup_screen.dart';
 import 'package:gdm_app/Register/pregnancy_register_screen.dart';
 import 'package:gdm_app/Register/without_pregnancy_signup.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import 'login_screen.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -88,7 +94,38 @@ class _SelectionScreenState extends State<SelectionScreen> {
             const SizedBox(height: 16),
             // Custom Radio Button Box for "I am a doctor"
             _buildRadioButtonBox('Doctor'),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.only(left: 100.0 , right: 15),
+              child: Center(
+                child: RichText(
+                  text: TextSpan(
+                    text: 'Already have an account?  ',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.sp,
+                        fontFamily: 'Gilroy'),
+                    children: [
+                      TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Get.to( LoginScreen());
+                          },
+                        text: 'Login',
+                        style: TextStyle(
+                          color: Color(0XFF000000),
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Gilroy',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+
             // Show Next Button only if a radio button is selected
             if (_selectedOption != null)
               Center(

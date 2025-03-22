@@ -4,7 +4,6 @@ import 'package:gdm_app/Register/Diabetes_type_screen.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/dropdown_widget.dart';
-import '../widgets/intl_phone_field.dart';
 
 class PregnancyRegistrationScreen extends StatefulWidget {
   final String selectedOption;
@@ -126,7 +125,10 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   },
                   showDiabetesTestDate: _showDiabetesTestDate,
                   diabetesTestDateController: _diabetesTestDateController,
+                  items: ['Yes', 'No', 'Not Sure'], // Pass the items
+                  label: 'Did you have a test for diabetes during this pregnancy?', // Pass the label
                 ),
+
 
                 SizedBox(height: 16.h),
                 CustomTextFormField(

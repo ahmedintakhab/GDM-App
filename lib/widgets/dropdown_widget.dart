@@ -6,13 +6,17 @@ import 'custom_text_form_field.dart';
 class DropdownWidget extends StatefulWidget {
   final Function(String?) onChanged;
   final bool showDiabetesTestDate;
-  final TextEditingController diabetesTestDateController;
+  final TextEditingController diabetesTestDateController; // Non-nullable
+  final List<String> items; // List of dropdown items
+  final String label; // Label for the dropdown
 
   const DropdownWidget({
     Key? key,
     required this.onChanged,
     required this.showDiabetesTestDate,
-    required this.diabetesTestDateController,
+    required this.diabetesTestDateController, // Non-nullable
+    required this.items,
+    required this.label,
   }) : super(key: key);
 
   @override
@@ -20,7 +24,6 @@ class DropdownWidget extends StatefulWidget {
 }
 
 class _DropdownWidgetState extends State<DropdownWidget> {
-  final List<String> items = ['Yes', 'No', 'Not Sure'];
   String? selectedValue;
 
   @override
@@ -29,7 +32,7 @@ class _DropdownWidgetState extends State<DropdownWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Did you have a test for diabetes during this pregnancy?',
+          widget.label, // Use the label passed from the parent
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
@@ -47,7 +50,7 @@ class _DropdownWidgetState extends State<DropdownWidget> {
                 color: Theme.of(context).hintColor,
               ),
             ),
-            items: items
+            items: widget.items
                 .map((String item) => DropdownMenuItem<String>(
               value: item,
               child: Text(
@@ -72,9 +75,9 @@ class _DropdownWidgetState extends State<DropdownWidget> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12), // Rounded corners
                 border: Border.all(
-                  color: Colors.grey.shade400, // Border color
-                  width: 1, // Border width
+                  color:  Color(0XFFDEDEDE), width: 1 // Border width
                 ),
+                color: const Color(0xFFF5F5F5), // Filled color for dropdown
               ),
             ),
             menuItemStyleData: const MenuItemStyleData(
@@ -89,12 +92,14 @@ class _DropdownWidgetState extends State<DropdownWidget> {
               ),
             ),
           ),
-        ),        if (widget.showDiabetesTestDate) ...[
+        ),
+        if (widget.showDiabetesTestDate) ...[
           SizedBox(height: 16),
           CustomTextFormField(
             controller: widget.diabetesTestDateController,
-              hintText: 'When was the diabetes test done?',
-            validator: (value) => value?.isEmpty ?? true ? 'Please enter test date' : null,
+            hintText: 'When was the diabetes test done?',
+            validator: (value) =>
+            value?.isEmpty ?? true ? 'Please enter test date' : null,
           ),
         ],
       ],
