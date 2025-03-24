@@ -9,11 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:gdm_app/main.dart';
+import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    // // Build our app and trigger a frame.
+    // await tester.pumpWidget(const MyApp());
+    // Create a dummy instance of ReminderService for testing
+    final reminderService = ReminderService();
+    // Build MyApp with the dummy reminderService
+    await tester.pumpWidget(MyApp(reminderService: reminderService));
+
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

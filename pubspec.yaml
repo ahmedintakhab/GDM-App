@@ -49,8 +49,8 @@ dependencies:
   provider: ^6.1.2
   sensors_plus: ^6.1.1
   dropdown_button2: ^2.3.9
-#  flutter_local_notifications: ^19.0.0
-#  timezone: ^0.10.0
+  flutter_local_notifications: ^19.0.0
+  timezone: ^0.10.0
 
 
 dev_dependencies:

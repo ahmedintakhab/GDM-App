@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'Home/user_data_provider.dart';
@@ -8,18 +9,25 @@ import 'Splash Screen/splash_screen.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // Create a singleton instance of ReminderService
+  final ReminderService reminderService = ReminderService();
+
+  // Initialize the notification plugin
+  await reminderService.initNotifications();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
         // Add other providers if needed
       ],
-      child: MyApp(),
+      child: MyApp(reminderService: reminderService),
     ),
   );}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ReminderService reminderService;
+
+  const MyApp({Key? key, required this.reminderService}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +42,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-// Add the glucose data to the user's document
-// await _firestore
-//     .collection(userDoc.reference.parent.id) // Use the correct collection
-//     .doc(uid)
-//     .collection('glucoseEntries') // Subcollection for glucose entries
-//     .add(glucoseData);
+

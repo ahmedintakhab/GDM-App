@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Home/home_main_screen.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
+import 'package:gdm_app/reminder/all_reminders_screen.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart'; // Add this import
 import '../Register/login_screen.dart';
 import '../Register/logout_dialog_widget.dart';
 import '../reminder/add_reminders_screen.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_text_form_field.dart';
 import 'package:gdm_app/utils/utils.dart';
 
@@ -23,6 +25,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final reminderService = ReminderService();
+
 
 
   @override
@@ -146,12 +150,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       buttonText: 'Update Profile',
                     ),
                     // Spacer(),
+                    SizedBox(height: 30.h),
+                    CustomButton(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder:
+                            (context)=>AllReminders(reminderService: reminderService)));
+                      },
+                      buttonText: 'All Reminders',
+                    ),
                     SizedBox(height: 130.h),
                     CustomButton(
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AddReminders()),
+                          MaterialPageRoute(builder: (context) => AddReminders(reminderService: ReminderService())),
                         );
                       },
                       buttonText: 'Set Reminder',

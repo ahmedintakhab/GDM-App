@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/dropdown_widget.dart';
-import 'all_reminders_screen.dart'; // Import the AllReminders screen
+import 'all_reminders_screen.dart';
+import 'dart:math';
 
 class AddReminders extends StatefulWidget {
+  final ReminderService reminderService;
+
+  AddReminders({required this.reminderService});
+
   @override
   _AddRemindersState createState() => _AddRemindersState();
 }
@@ -16,6 +22,7 @@ class _AddRemindersState extends State<AddReminders> {
   String? _selectedDropdownValue;
   String _selectedFrequency = 'Everyday'; // Default frequency
   bool _showDiabetesTestDate = false;
+  bool _isLoading = false;
 
   // Add a list of frequency options
   final List<String> _frequencyOptions = [
@@ -31,7 +38,7 @@ class _AddRemindersState extends State<AddReminders> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
+      firstDate: DateTime.now(), // Start from today
       lastDate: DateTime(2100), // Allow future dates for reminders
     );
     if (picked != null) {
@@ -103,6 +110,68 @@ class _AddRemindersState extends State<AddReminders> {
         );
       },
     );
+  }
+
+  Future<void> _addReminder() async {
+    // Validate inputs
+    if (_timeController.text.isEmpty ||
+        _dateController.text.isEmpty ||
+        _selectedDropdownValue == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please fill all fields'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Create a new reminder
+      final newReminder = Reminder(
+        id: DateTime.now().millisecondsSinceEpoch.toString() + Random().nextInt(10000).toString(),
+        time: _timeController.text,
+        frequency: _selectedFrequency,
+        date: _dateController.text,
+        type: _selectedDropdownValue!,
+      );
+
+      // Add the reminder using the service
+      await widget.reminderService.addReminder(newReminder);
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Reminder added successfully'),
+          backgroundColor: Color(0XFF5AA189),
+        ),
+      );
+
+      // Navigate to AllReminders screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AllReminders(
+            reminderService: widget.reminderService,
+          ),
+        ),
+      );
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to add reminder: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -213,41 +282,10 @@ class _AddRemindersState extends State<AddReminders> {
             SizedBox(height: 24),
 
             // Set Reminder Button
-            CustomButton(
-              onTap: () {
-                // Validate inputs
-                if (_timeController.text.isEmpty ||
-                    _dateController.text.isEmpty ||
-                    _selectedDropdownValue == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please fill all fields'),
-                    ),
-                  );
-                  return;
-                }
-
-                // Create a new reminder
-                final newReminder = Reminder(
-                  id: DateTime.now().millisecondsSinceEpoch.toString(), // Generate unique ID
-                  time: _timeController.text,
-                  frequency: _selectedFrequency,
-                  date: _dateController.text,
-                  type: _selectedDropdownValue!,
-                );
-
-                // Navigate directly to AllReminders screen instead of going back
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AllReminders(),
-                  ),
-                );
-
-                // You might want to add the reminder to a database or state management solution here
-                // For example, if using Provider:
-                // Provider.of<ReminderProvider>(context, listen: false).addReminder(newReminder);
-              },
+            _isLoading
+                ? Center(child: CircularProgressIndicator(color: Color(0XFF5AA189)))
+                : CustomButton(
+              onTap: _addReminder,
               buttonText: 'Add Reminder',
             ),
           ],
