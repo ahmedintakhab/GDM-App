@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/doctor_signup_screen.dart';
 import 'package:gdm_app/Register/pregnancy_register_screen.dart';
+import 'package:gdm_app/Register/users_signup_screen.dart';
 import 'package:gdm_app/Register/without_pregnancy_signup.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -62,7 +63,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.teal,
-        title: const Text('SignUp Selection',style:
+        title: const Text('User Selection',style:
         TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
       ),
       body: Padding(
@@ -100,7 +101,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
               child: Center(
                 child: RichText(
                   text: TextSpan(
-                    text: 'Already have an account?  ',
+                    text: 'Dont have an account?  ',
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 15.sp,
@@ -109,9 +110,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Get.to( LoginScreen());
+                            Get.to( UsersSignupScreen());
                           },
-                        text: 'Login',
+                        text: 'SignUp',
                         style: TextStyle(
                           color: Color(0XFF000000),
                           fontSize: 17.sp,

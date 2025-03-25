@@ -3,67 +3,84 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gdm_app/Register/forgot_password_screen.dart';
+import 'package:gdm_app/Register/login_screen.dart';
+import 'package:gdm_app/Register/selection_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
 
-import '../Home/home_main_screen.dart';
-import '../Home/user_data_provider.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
-import 'selection_screen.dart';
 
-class LoginScreen extends StatefulWidget {
+class UsersSignupScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _UsersSignupScreenState createState() => _UsersSignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _UsersSignupScreenState extends State<UsersSignupScreen> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   bool loading = false ;
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final  _nameController = TextEditingController();
+  final  _emailController = TextEditingController();
+  final  _passwordController = TextEditingController();
+  final  _confirmpasswordController = TextEditingController();
   bool isPasswordHidden = true;
-   final _auth = FirebaseAuth.instance;
+  bool isConfirmPasswordHidden = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String phoneNumber = '';
 
   void togglePasswordVisibility() {
     setState(() {
       isPasswordHidden = !isPasswordHidden;
     });
   }
+  void toggleConfirmPasswordVisibility() {
+    setState(() {
+      isConfirmPasswordHidden = !isConfirmPasswordHidden;
+    });
+  }
 
-  void Login() async {
+  void Signup() async {
     if (!formkey.currentState!.validate()) {
+      return;
+    }
+    if (_passwordController.text != _confirmpasswordController.text) {
+      Utils().toastMessage("Passwords do not match!");
       return;
     }
     setState(() {
       loading = true;
     });
     try {
-      await _auth.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      Utils().toastMessage('User Login Successfully!');
-      // Fetch new user data after successful login
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      await userProvider.fetchUserData();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    } on FirebaseAuthException catch (e) {
-      String errorMessage = 'An error occurred. Please try again.';
-      if (e.code == 'user-not-found') {
-        Utils().toastMessage('No user found for this email.');
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(
+        email: _emailController.text.toString(),
+        password: _passwordController.text.toString(),);
 
-      } else if (e.code == 'wrong-password') {
-        Utils().toastMessage('Incorrect password. Please try again.');
-      } else {
-        errorMessage = e.message ?? errorMessage;
-      }
-      Utils().toastMessage(errorMessage);
-    } catch (e) {
-      Utils().toastMessage('Something went wrong. Please try again.');
+      //Save user data to firestore
+      await _firestore.collection('Users').doc(
+          userCredential.user!.uid).set({
+        'name' : _nameController.text,
+        'email': _emailController.text,
+        'password': _passwordController.text,
+        'confirm password': _confirmpasswordController.text
+
+      });
+      //Clear all fields
+      _nameController.clear();
+      _emailController.clear();
+      _passwordController.clear();
+      _confirmpasswordController.clear();
+      // phoneNumber.trim();
+      //Show success toast
+      Utils().toastMessage('User successfully Regitered!');
+      // Navigate only if validation is successful
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SelectionScreen()),
+      );
+    }catch (error){
+      Utils().toastMessage(error.toString());
     } finally {
       setState(() {
         loading = false;
@@ -96,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 38.0),
                         child: Text(
-                          "Login",
+                          "Sign Up",
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             fontSize: 28.sp,
@@ -111,24 +128,39 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: 30.h),
 
               // Added Image Above Email Field
               Center(
-                child: Image.asset(
-                  "assets/images/splash.png",
-                  height: 120.h,
-                ),
+                  child:Text("Create an Account!",style: TextStyle(fontSize: 22,
+                      fontWeight: FontWeight.w500),)
+
+                // Image.asset(
+                //   "assets/images/splash.png",
+                //   height: 120.h,
+                // ),
               ),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: 30.h),
 
               Form(
                 key: formkey,
                 child: Column(
                   children: [
                     CustomTextFormField(
-                      controller: emailController,
+                      controller: _nameController,
+                      hintText: 'Name',
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.h),
+
+                    CustomTextFormField(
+                      controller: _emailController,
                       hintText: "Email",
                       validator: (val) {
                         if (val!.isEmpty) {
@@ -142,11 +174,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 15.h),
-
+                    SizedBox(height: 16.h),
                     // Password Field with Eye Icon Toggle
                     CustomTextFormField(
-                      controller: passwordController,
+                      controller: _passwordController,
                       hintText: "Password",
                       isPasswordField: true,
                       obscureText: isPasswordHidden,
@@ -162,23 +193,41 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
+                    SizedBox(height: 16.h),
 
-                    SizedBox(height: 15.h),
-                    forgotpassword(),
-                    SizedBox(height: 20.h),
+                    // Confirm Password Field with Eye Icon Toggle
+                    CustomTextFormField(
+                      controller: _confirmpasswordController,
+                      hintText: "Password",
+                      isPasswordField: true,
+                      obscureText: isConfirmPasswordHidden,
+                      validator: (val) {
+                        if (val == null || val.isEmpty) return 'Enter the confirm password';
+                        return null;
+                      },
+                      suffixIcon: GestureDetector(
+                        onTap: toggleConfirmPasswordVisibility,
+                        child: Icon(
+                          isConfirmPasswordHidden ? Icons.visibility_off : Icons.visibility,
+                          color: isConfirmPasswordHidden ? Colors.grey : Color(0xFF5AA189),
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 30.h),
 
                     CustomButton(
-                      onTap: Login,
-                      buttonText: "Login",
+                      onTap: Signup,
+                      buttonText: "Sign Up",
                       loading: loading,
                     ),
 
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 25.h),
 
                     Center(
                       child: RichText(
                         text: TextSpan(
-                          text: "Did you enter personal information? (If No)",
+                          text: 'Already have an account?  ',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 15.sp,
@@ -187,12 +236,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Get.to(const SelectionScreen());
+                                  Get.to( LoginScreen());
                                 },
-                              text: ' Give Information',
+                              text: 'Login',
                               style: TextStyle(
                                 color: Color(0XFF000000),
-                                fontSize: 15.sp,
+                                fontSize: 17.sp,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Gilroy',
                               ),
@@ -211,23 +260,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget forgotpassword() {
-    return GestureDetector(
-      onTap: () {
-        Get.to(const ForgotPassword());
-      },
-      child: Align(
-        alignment: Alignment.topRight,
-        child: Text(
-          "Forgot password?",
-          style: TextStyle(
-            fontFamily: 'Gilroy',
-            fontWeight: FontWeight.w700,
-            fontSize: 15.sp,
-            color: Color(0XFF5AA189),
-          ),
-        ),
-      ),
-    );
-  }
 }

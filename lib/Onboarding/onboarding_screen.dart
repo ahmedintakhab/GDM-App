@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Register/personal_info_screen.dart';
 import 'package:gdm_app/Register/selection_screen.dart';
+import 'package:gdm_app/Register/users_signup_screen.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../utils/onboarding_data_model.dart';
@@ -112,7 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             PrefData.setIntro(true);
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const SelectionScreen()),
+              MaterialPageRoute(builder: (context) =>  UsersSignupScreen()),
             );
           } else {
             controller.nextPage(
@@ -152,7 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.only(top: 25, right: 20),
       child: GestureDetector(
           onTap: () {
-            Get.to(SelectionScreen());
+            Get.to(UsersSignupScreen());
             // setState(() {
             //   controller.nextPage(
             //       duration: const Duration(milliseconds: 100),
