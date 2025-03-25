@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz_init;
@@ -219,33 +219,58 @@ class ReminderService {
       String timeStr,
       ) async {
     try {
-      // Parse date and time
-      final dateParts = dateStr.split('-');
-      final timeParts = timeStr.split(':');
-
-      if (dateParts.length != 3 || timeParts.length != 2) {
-        throw Exception('Invalid date or time format');
+      // Parse date and time with better error handling
+      DateTime date;
+      TimeOfDay time;
+      try {
+        date = DateTime.parse(dateStr);
+      } catch (e) {
+        // Try alternative format if default parsing fails
+        final dateParts = dateStr.split('-');
+        if (dateParts.length != 3) throw Exception('Invalid date format');
+        date = DateTime(
+          int.parse(dateParts[0]),
+          int.parse(dateParts[1]),
+          int.parse(dateParts[2]),
+        );
+      }
+      try {
+        final timeParts = timeStr.split(':');
+        if (timeParts.length < 2) throw Exception('Invalid time format');
+        time = TimeOfDay(
+          hour: int.parse(timeParts[0]),
+          minute: int.parse(timeParts[1]),
+        );
+      } catch (e) {
+        throw Exception('Invalid time format');
       }
 
-      final year = int.parse(dateParts[0]);
-      final month = int.parse(dateParts[1]);
-      final day = int.parse(dateParts[2]);
 
-      final hour = int.parse(timeParts[0]);
-      final minute = int.parse(timeParts[1]);
+
+
+      // if (dateParts.length != 3 || timeParts.length != 2) {
+      //   throw Exception('Invalid date or time format');
+      // }
+      //
+      // final year = int.parse(dateParts[0]);
+      // final month = int.parse(dateParts[1]);
+      // final day = int.parse(dateParts[2]);
+      //
+      // final hour = int.parse(timeParts[0]);
+      // final minute = int.parse(timeParts[1]);
 
       final scheduledDate = tz.TZDateTime(
         tz.local,
-        year,
-        month,
-        day,
-        hour,
-        minute,
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
       );
 
-      // Check if the date is in the past
+      // More robust past date checking
       if (scheduledDate.isBefore(tz.TZDateTime.now(tz.local))) {
-        print('Skipping notification scheduling as the time is in the past');
+        print('Notification time is in the past - not scheduling');
         return;
       }
 

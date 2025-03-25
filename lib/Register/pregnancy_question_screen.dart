@@ -34,10 +34,10 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
       });
 
       // Validate if all questions are answered
-      if (_q1Value == null || _q2Value == null || _q3Value == null || _q4Value == null || _q5Value == null || _q6Value == null) {
-        Utils().toastMessage('Please answer all questions before submitting.');
-        return;
-      }
+      // if (_q1Value == null || _q2Value == null || _q3Value == null || _q4Value == null || _q5Value == null || _q6Value == null) {
+      //   Utils().toastMessage('Please answer all questions before submitting.');
+      //   return;
+      // }
 
       // Create user with email and password
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(

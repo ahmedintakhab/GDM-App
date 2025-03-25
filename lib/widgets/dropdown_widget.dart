@@ -98,8 +98,7 @@ class _DropdownWidgetState extends State<DropdownWidget> {
           CustomTextFormField(
             controller: widget.diabetesTestDateController,
             hintText: 'When was the diabetes test done?',
-            validator: (value) =>
-            value?.isEmpty ?? true ? 'Please enter test date' : null,
+            validator: (value) => null,
           ),
         ],
       ],

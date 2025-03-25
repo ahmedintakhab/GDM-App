@@ -120,9 +120,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         controller: _genderController,
                         hintText: 'Male or Female',
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your gender';
-                          }
+                          // if (value == null || value.isEmpty) {
+                          //   return 'Please enter your gender';
+                          // }
                           return null;
                         },
                       ),
@@ -136,9 +136,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         hintText: 'Enter your age',
                         keyboardType: TextInputType.phone,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your age';
-                          }
+                          // if (value == null || value.isEmpty) {
+                          //   return 'Please enter your age';
+                          // }
                           return null;
                         },
                       ),
@@ -149,9 +149,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         hintText: 'Enter your height',
                         keyboardType: TextInputType.phone,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your height';
-                          }
+                          // if (value == null || value.isEmpty) {
+                          //   return 'Please enter your height';
+                          // }
                           return null;
                         },
                       ),
@@ -161,9 +161,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         controller: _ethnicityController,
                         hintText: 'Enter your Ethnicity',
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your Ethnicity';
-                          }
+                          // if (value == null || value.isEmpty) {
+                          //   return 'Please enter your Ethnicity';
+                          // }
                           return null;
                         },
                       ),
@@ -173,9 +173,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         controller: _diabetesController,
                         hintText: 'Enter your Diabetes',
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your diabetes';
-                          }
+                          // if (value == null || value.isEmpty) {
+                          //   return 'Please enter your diabetes';
+                          // }
                           return null;
                         },
                       ),
@@ -186,9 +186,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         hintText: 'Enter your waist',
                         keyboardType: TextInputType.phone,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your waist';
-                          }
+                          // if (value == null || value.isEmpty) {
+                          //   return 'Please enter your waist';
+                          // }
                           return null;
                         },
                       ),
@@ -198,9 +198,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         controller: _hypertensionController,
                         hintText: 'History of hypertension',
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your hypertension';
-                          }
+                          // if (value == null || value.isEmpty) {
+                          //   return 'Please enter your hypertension';
+                          // }
                           return null;
                         },
                       ),

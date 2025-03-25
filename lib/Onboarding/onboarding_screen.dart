@@ -188,9 +188,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 40,),
               Image(image: AssetImage(pages[index].image!),
-                  height: 420, width: 450, fit: BoxFit.cover),
-              SizedBox(height: 50),
+                  height: 350, width: 350, fit: BoxFit.cover),
+              SizedBox(height: 30),
               Text(
                 pages[index].name!,
                 style: TextStyle(

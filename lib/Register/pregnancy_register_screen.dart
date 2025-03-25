@@ -161,7 +161,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _ageController,
                   keyboardType: TextInputType.phone,
                   hintText: 'Enter your age',
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter age' : null,
+                  validator: (value) =>  null,
                 ),
                 SizedBox(height: 16.h),
 
@@ -169,7 +169,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _weightController,
                   hintText: ' Enter your weight (kg)',
                   keyboardType: TextInputType.phone,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter weight' : null,
+                  validator: (value) =>  null,
                 ),
                 SizedBox(height: 16.h),
 
@@ -177,21 +177,21 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _heightController,
                   hintText: 'Enter your height (cm)',
                   keyboardType: TextInputType.phone,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter height' : null,
+                  validator: (value) => null,
                 ),
                 SizedBox(height: 16.h),
 
                 CustomTextFormField(
                   controller: _ethnicityController,
                   hintText: 'Enter your ethnicity',
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter ethnicity' : null,
+                  validator: (value) =>  null,
                 ),
                 SizedBox(height: 16.h),
 
                 CustomTextFormField(
                   controller: _familyHistoryController,
                   hintText: 'Family History of Type 2 Diabetes',
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter family history' : null,
+                  validator: (value) => null,
                 ),
                 SizedBox(height: 16.h),
 
@@ -199,7 +199,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _pregnanciesController,
                   hintText: 'Number of Pregnancies',
                   keyboardType: TextInputType.phone,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter number of pregnancies' : null,
+                  validator: (value) => null,
                 ),
                 SizedBox(height: 16.h),
 
@@ -207,7 +207,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _deliveriesController,
                   hintText: 'Number of Previous Deliveries',
                   keyboardType: TextInputType.phone,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter number of deliveries' : null,
+                  validator: (value) => null,
                 ),
                 SizedBox(height: 16.h),
 
@@ -215,7 +215,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _miscarriagesController,
                   hintText: 'Number of Miscarriages',
                   keyboardType: TextInputType.phone,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter number of miscarriages' : null,
+                  validator: (value) => null,
                 ),
                 SizedBox(height: 16.h),
 
@@ -223,7 +223,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _stillbirthsController,
                   hintText: 'Number of Stillbirths',
                   keyboardType: TextInputType.phone,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter number of stillbirths' : null,
+                  validator: (value) => null,
                 ),
                 SizedBox(height: 16.h),
 
@@ -231,7 +231,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   controller: _childrenAliveController,
                   hintText: 'Number of Children Alive',
                   keyboardType: TextInputType.phone,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter number of children alive' : null,
+                  validator: (value) => null,
                 ),
                 SizedBox(height: 24.h),
               ],
@@ -259,10 +259,10 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
     onTap: () {
       if(_formKey.currentState!.validate()) {
         Map<String, dynamic> pregnancyData = {
+          'lmp': _lmpController.text,
+          'dueDate': _dueDateController.text,
           'name': _nameController.text,
           'selectedOption': widget.selectedOption,
-          'lmp': _lmpController.text,
-          'dueDate': _dueDateController.text, // Include due date in the data
           'diabetesTest': _diabetesTest,
           'diabetesTestDate': _diabetesTestDateController.text,
           'email': _emailController.text,

@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
-import '../widgets/intl_phone_field.dart';
 
 class DoctorSignupScreen extends StatefulWidget {
   @override

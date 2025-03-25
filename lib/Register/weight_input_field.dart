@@ -70,9 +70,9 @@ class _WeightInputFieldState extends State<WeightInputField> {
           ? 'Enter your weight in kg'
           : 'Enter your weight in lbs',
       validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your weight';
-        }
+        // if (value == null || value.isEmpty) {
+        //   return 'Please enter your weight';
+        // }
         return null;
       },
     );
