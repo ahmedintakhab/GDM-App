@@ -8,7 +8,6 @@ import 'package:gdm_app/Register/without_pregnancy_signup.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import 'login_screen.dart';
 
 void main() {
   runApp(MaterialApp(

@@ -6,7 +6,6 @@ import 'package:gdm_app/Register/weight_input_field.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import '../widgets/custom_button.dart';
-import '../widgets/intl_phone_field.dart';
 
 class WithoutPregnancySignup extends StatefulWidget {
   final String selectedOption;
@@ -19,9 +18,9 @@ final _formKey = GlobalKey<FormState>();
 
 class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
   bool loading =false;
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  // final _nameController = TextEditingController();
+  // final _emailController = TextEditingController();
+  // final _passwordController = TextEditingController();
   final  _ageController = TextEditingController();
   final  _genderController = TextEditingController();
   final  _heightController = TextEditingController();
@@ -75,46 +74,33 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomTextFormField(
-                        controller: _nameController,
-                        hintText: 'Enter your name',
-                        validator: (value) => value?.isEmpty ?? true ? 'Please enter name' : null,
-                      ),
-                      SizedBox(height: 16),
-                  
-                      CustomTextFormField(
-                        controller: _emailController,
-                        hintText: 'Enter your email',
-                        validator: (value) => value?.isEmpty ?? true ? 'Please enter email' : null,
-                      ),
-                      SizedBox(height: 16),
-                      CustomTextFormField(
-                        controller: _passwordController,
-                        hintText: 'Enter your password',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter password';
-                          } else if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
-                      ),
-
-                      SizedBox(height: 16),
-                      // phone_number_field(
-                      //   onPhoneNumberChanged: (String phone) {
-                      //     setState(() {
-                      //        phoneNumber = phone; // Store the phone number
-                      //     });
-                      //   },
-                      //   validator: (String? value) {
+                      // CustomTextFormField(
+                      //   controller: _nameController,
+                      //   hintText: 'Enter your name',
+                      //   validator: (value) => value?.isEmpty ?? true ? 'Please enter name' : null,
+                      // ),
+                      // SizedBox(height: 16),
+                      //
+                      // CustomTextFormField(
+                      //   controller: _emailController,
+                      //   hintText: 'Enter your email',
+                      //   validator: (value) => value?.isEmpty ?? true ? 'Please enter email' : null,
+                      // ),
+                      // SizedBox(height: 16),
+                      // CustomTextFormField(
+                      //   controller: _passwordController,
+                      //   hintText: 'Enter your password',
+                      //   validator: (value) {
                       //     if (value == null || value.isEmpty) {
-                      //       return 'Please enter phone number';
+                      //       return 'Please enter password';
+                      //     } else if (value.length < 6) {
+                      //       return 'Password must be at least 6 characters';
                       //     }
                       //     return null;
                       //   },
                       // ),
+
+                      SizedBox(height: 16),
                       // Gender Selection
                       CustomTextFormField(
                         controller: _genderController,
@@ -218,46 +204,54 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                     loading = true;
                   });
                   try {
-                    UserCredential userCredential = await _auth
-                        .createUserWithEmailAndPassword(
-                      email: _emailController.text.toString(),
-                      password: _passwordController.text.toString(),);
-                    //Save user data to firestore
-                    await _firestore.collection('user').doc(
-                        userCredential.user!.uid).set({
+                    // UserCredential userCredential = await _auth
+                    //     .createUserWithEmailAndPassword(
+                    //   email: _emailController.text.toString(),
+                    //   password: _passwordController.text.toString(),);
+                    User? user = _auth.currentUser;
+                    if(user!= null) {
+                      // Save personal information under the current user's document
+                      await _firestore.collection('Users').
+                      doc(user.uid).collection('Personal Information').doc().set({
 
-                      'selectedOption': widget.selectedOption,
-                      'name': _nameController.text,
-                      'email': _emailController.text,
-                      // 'phone Number': phoneNumber,
-                      'gender': _genderController.text,
-                      'age': _ageController.text,
-                      'height': _heightController.text,
-                      'ethnicity': _ethnicityController.text,
-                      'diabetes': _diabetesController.text,
-                      'waist': _waistController.text,
-                      'hypertension': _hypertensionController.text,
-                    });
-                    //Clear all fields
-                    _nameController.clear();
-                    _emailController.clear();
-                    _passwordController.clear();
-                    _genderController.clear();
-                    _ageController.clear();
-                    _heightController.clear();
-                    _ethnicityController.clear();
-                    _diabetesController.clear();
-                    _waistController.clear();
-                    _hypertensionController.clear();
+                        'selectedOption': widget.selectedOption,
+                        // 'name': _nameController.text,
+                        // 'email': _emailController.text,
+                        // 'phone Number': phoneNumber,
+                        'gender': _genderController.text,
+                        'age': _ageController.text,
+                        'height': _heightController.text,
+                        'ethnicity': _ethnicityController.text,
+                        'diabetes': _diabetesController.text,
+                        'waist': _waistController.text,
+                        'hypertension': _hypertensionController.text,
+                        'timestamp': FieldValue.serverTimestamp(),
 
-                    //Show success toast
-                    Utils().toastMessage('User successfully Regitered!');
-                    // Navigate only if validation is successful
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  }catch (error){
+                      });
+                      //Clear all fields
+                      // _nameController.clear();
+                      // _emailController.clear();
+                      // _passwordController.clear();
+                      _genderController.clear();
+                      _ageController.clear();
+                      _heightController.clear();
+                      _ethnicityController.clear();
+                      _diabetesController.clear();
+                      _waistController.clear();
+                      _hypertensionController.clear();
+
+                      //Show success toast
+                      Utils().toastMessage('Personal information saved successfully!');
+                      // Navigate only if validation is successful
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    }
+                    else {
+                      Utils().toastMessage('No user is currently logged in');
+                    }
+                  } catch (error){
                     Utils().toastMessage(error.toString());
                   } finally {
                     setState(() {

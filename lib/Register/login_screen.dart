@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/forgot_password_screen.dart';
+import 'package:gdm_app/Register/users_signup_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +12,6 @@ import '../Home/home_main_screen.dart';
 import '../Home/user_data_provider.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
-import 'selection_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -178,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: RichText(
                         text: TextSpan(
-                          text: "Did you enter personal information? (If No)",
+                          text: 'Don\'t have an account? ',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 15.sp,
@@ -187,9 +186,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Get.to(const SelectionScreen());
+                                  Get.to(UsersSignupScreen());
                                 },
-                              text: ' Give Information',
+                              text: 'Sign up',
                               style: TextStyle(
                                 color: Color(0XFF000000),
                                 fontSize: 15.sp,
