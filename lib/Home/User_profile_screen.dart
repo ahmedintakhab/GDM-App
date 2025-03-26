@@ -35,12 +35,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Initialize controllers with data from provider
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      nameController.text = userProvider.name;
-      emailController.text = userProvider.email;
-      userProvider.fetchUserData();
+      if(mounted) {
+        setState(() {
+          nameController.text = userProvider.name;
+          emailController.text = userProvider.email;
+        });
+      }
+        userProvider.fetchUserData();
 
     });
   }
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
+
   // Function to handle logout
   void _handleLogout(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -158,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                       buttonText: 'All Reminders',
                     ),
-                    SizedBox(height: 130.h),
+                    SizedBox(height: 30.h),
                     CustomButton(
                       onTap: () {
                         Navigator.push(
@@ -196,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           nameController.text,
           emailController.text
       );
-
+      if (!mounted) return; // Ensure widget is still in the tree
       // Close loading dialog
       Navigator.pop(context);
 
@@ -218,6 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       }
     } catch (e) {
+      if (!mounted) return; // Ensure widget is still in the tree
       // Close loading dialog
       Navigator.pop(context);
 

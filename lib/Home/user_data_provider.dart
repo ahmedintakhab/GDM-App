@@ -60,21 +60,8 @@ class UserProvider extends ChangeNotifier {
         return;
       }
 
-      // Check in which collection the user exists
-      DocumentSnapshot? userDoc;
-
-      // Check 'user' collection
-      userDoc = await _firestore.collection('user').doc(uid).get();
-
-      // If not found, check 'users' collection
-      if (!userDoc.exists) {
-        userDoc = await _firestore.collection('users').doc(uid).get();
-
-        // If still not found, check 'doctor' collection
-        if (!userDoc.exists) {
-          userDoc = await _firestore.collection('doctor').doc(uid).get();
-        }
-      }
+      // Fetch user data from 'Users' collection
+      DocumentSnapshot userDoc = await _firestore.collection('Users').doc(uid).get();
 
       // If user document exists, populate the data
       if (userDoc.exists) {
@@ -86,11 +73,12 @@ class UserProvider extends ChangeNotifier {
 
         _safeNotifyListeners();
       } else {
-        _errorMessage = "User data not found";
+        _errorMessage = "User data not found in Users collection";
+      }
         _isLoading = false;
         _safeNotifyListeners();
       }
-    } catch (e) {
+     catch (e) {
       _errorMessage = "Error fetching user data: $e";
       _isLoading = false;
       _safeNotifyListeners();
@@ -115,32 +103,18 @@ class UserProvider extends ChangeNotifier {
         return false;
       }
 
-      // Determine which collection the user is in
-      String collection = 'user';
-      DocumentSnapshot doc = await _firestore.collection(collection).doc(uid).get();
-
-      if (!doc.exists) {
-        collection = 'users';
-        doc = await _firestore.collection(collection).doc(uid).get();
-
-        if (!doc.exists) {
-          collection = 'doctor';
-          doc = await _firestore.collection(collection).doc(uid).get();
-
-          if (!doc.exists) {
-            _errorMessage = "User not found in any collection";
-            _isLoading = false;
-            _safeNotifyListeners();
-            return false;
-          }
-        }
-      }
-
-      // Update user data in the appropriate collection
-      await _firestore.collection(collection).doc(uid).update({
+      // Update in 'Users' collection only
+      await _firestore.collection('Users').doc(uid).update({
         'name': name,
         'email': email,
       });
+
+
+      // // Update user data in the appropriate collection
+      // await _firestore.collection(collection).doc(uid).update({
+      //   'name': name,
+      //   'email': email,
+      // });
 
       // Update local state
       _name = name;
@@ -180,22 +154,13 @@ class UserProvider extends ChangeNotifier {
         _safeNotifyListeners();
         return;
       }
+      // Check if user exists in 'Users' collection
+      DocumentSnapshot userDoc = await _firestore.collection('user').doc(uid).get();
 
-      // Check in which collection the user exists
-      DocumentSnapshot? userDoc;
-
-      userDoc = await _firestore.collection('user').doc(uid).get();
-      if (!userDoc.exists) {
-        userDoc = await _firestore.collection('users').doc(uid).get();
-        if (!userDoc.exists) {
-          userDoc = await _firestore.collection('doctor').doc(uid).get();
-        }
-      }
 
       if (userDoc.exists) {
-        // Fetch glucose data from the 'glucoseEntries' subcollection
         final QuerySnapshot glucoseSnapshot = await _firestore
-            .collection(userDoc.reference.parent.id) // Use the correct collection
+            .collection('Users')
             .doc(uid)
             .collection('glucoseEntries')
             .orderBy('dateTime', descending: true)
@@ -208,20 +173,18 @@ class UserProvider extends ChangeNotifier {
             'timestamp': data['dateTime'],
           };
         }).toList();
+      }else {
+        _errorMessage = "User not found in Users collection";
+      }
 
-        // Use addPostFrameCallback to defer notifyListeners
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _isLoading = false;
-          _safeNotifyListeners();
-        });
-      } else {
-        _errorMessage = "User not found in any collection";
+
+      // Use addPostFrameCallback to defer notifyListeners
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _isLoading = false;
           _safeNotifyListeners();
         });
       }
-    } catch (e) {
+     catch (e) {
       _errorMessage = "Error fetching glucose data: $e";
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _isLoading = false;
