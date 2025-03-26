@@ -20,9 +20,9 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
   final _lmpController = TextEditingController();
   final _dueDateController = TextEditingController();
   final _diabetesTestDateController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _nameController = TextEditingController();
-  final _passwordController = TextEditingController();
+  // final _emailController = TextEditingController();
+  // final _nameController = TextEditingController();
+  // final _passwordController = TextEditingController();
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
@@ -130,31 +130,31 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 ),
 
 
-                SizedBox(height: 16.h),
-                CustomTextFormField(
-                  controller: _nameController,
-                  hintText: 'Enter your name',
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter name' : null,
-                ),
-                SizedBox(height: 16.h),
-                CustomTextFormField(
-                  controller: _emailController,
-                  hintText: 'Enter your email',
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter email' : null,
-                ),
-                SizedBox(height: 16.h),
-                CustomTextFormField(
-                  controller: _passwordController,
-                  hintText: 'Enter your password',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter password';
-                    } else if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
-                ),
+                // SizedBox(height: 16.h),
+                // CustomTextFormField(
+                //   controller: _nameController,
+                //   hintText: 'Enter your name',
+                //   validator: (value) => value?.isEmpty ?? true ? 'Please enter name' : null,
+                // ),
+                // SizedBox(height: 16.h),
+                // CustomTextFormField(
+                //   controller: _emailController,
+                //   hintText: 'Enter your email',
+                //   validator: (value) => value?.isEmpty ?? true ? 'Please enter email' : null,
+                // ),
+                // SizedBox(height: 16.h),
+                // CustomTextFormField(
+                //   controller: _passwordController,
+                //   hintText: 'Enter your password',
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'Please enter password';
+                //     } else if (value.length < 6) {
+                //       return 'Password must be at least 6 characters';
+                //     }
+                //     return null;
+                //   },
+                // ),
                 SizedBox(height: 16.h),
                 // Other Fields
                 CustomTextFormField(
@@ -260,13 +260,13 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
       if(_formKey.currentState!.validate()) {
         Map<String, dynamic> pregnancyData = {
           'lmp': _lmpController.text,
-          'dueDate': _dueDateController.text,
-          'name': _nameController.text,
+          'lmp dueDate': _dueDateController.text,
           'selectedOption': widget.selectedOption,
           'diabetesTest': _diabetesTest,
           'diabetesTestDate': _diabetesTestDateController.text,
-          'email': _emailController.text,
-          'password': _passwordController.text,
+          // 'name': _nameController.text,
+          // 'email': _emailController.text,
+          // 'password': _passwordController.text,
           // 'phone': phoneNumber,
           'age': _ageController.text,
           'weight': _weightController.text,

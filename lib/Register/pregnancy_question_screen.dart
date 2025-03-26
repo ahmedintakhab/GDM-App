@@ -40,13 +40,21 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
       // }
 
       // Create user with email and password
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: widget.pregnancyData['email'],
-        password: widget.pregnancyData['password'],
-      );
+      // UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      //   email: widget.pregnancyData['email'],
+      //   password: widget.pregnancyData['password'],
+      // );
+
+      // Get current user
+      User? user = _auth.currentUser;
+      if (user == null) {
+        Utils().toastMessage('No user is currently logged in');
+        return;
+      }
+
 
       // Combine all data from the three screens
-      Map<String, dynamic> userData = {
+      Map<String, dynamic> pregnancyInfo  = {
         ...widget.pregnancyData, // Data from PregnancyRegistrationScreen
         'selectedDiagnoses': widget.selectedDiagnoses.toList(), // Data from DiabetesTypeScreen
         'pregnancyQuestions': {
@@ -57,22 +65,21 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
           'q5': _q5Value,
           'q6': _q6Value,
         },
+        'timestamp': FieldValue.serverTimestamp(),
       };
 
       // Save the combined data to Firestore
-      await _firestore.collection('users').doc(userCredential.user?.uid).set(userData);
+      await _firestore.collection('Users').doc(user.uid).
+      collection('Personal Information').doc().set(pregnancyInfo );
 
       // Show success message
-      Utils().toastMessage('User successfully registered!');
+      Utils().toastMessage('Pregnancy information saved successfully!');
 
       // Navigate to the LoginScreen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),
       );
-    } on FirebaseAuthException catch (e) {
-      // Handle Firebase Auth errors
-      Utils().toastMessage('Error: ${e.message}');
     } catch (e) {
       // Handle other errors
       Utils().toastMessage('Error: $e');
