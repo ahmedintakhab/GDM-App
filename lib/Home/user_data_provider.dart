@@ -155,7 +155,7 @@ class UserProvider extends ChangeNotifier {
         return;
       }
       // Check if user exists in 'Users' collection
-      DocumentSnapshot userDoc = await _firestore.collection('user').doc(uid).get();
+      DocumentSnapshot userDoc = await _firestore.collection('Users').doc(uid).get();
 
 
       if (userDoc.exists) {

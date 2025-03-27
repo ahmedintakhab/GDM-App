@@ -22,7 +22,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
-  String _selectedMealOption = 'Before Meal';
+  String _selectedMealOption = 'Before Breakfast';
   bool _isLoading = false; // Track loading state
 
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -51,17 +51,8 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
       }
 
       // Check in which collection the user exists
-      DocumentSnapshot? userDoc;
+      DocumentSnapshot userDoc = await _firestore.collection('Users').doc(uid).get();
 
-      userDoc = await _firestore.collection('user').doc(uid).get();
-      if (!userDoc.exists) {
-        userDoc = await _firestore.collection('users').doc(uid).get();
-        if (!userDoc.exists) {
-          userDoc = await _firestore.collection('doctor').doc(uid).get();
-        }
-      }
-
-      // If the user exists in one of the collections, save the glucose data
       if (userDoc.exists) {
         // Parse the date and time from the controllers
         final date = _dateController.text;
@@ -79,7 +70,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
 
         // Add the glucose data to the user's document in the 'glucoseEntries' subcollection
         await _firestore
-            .collection(userDoc.reference.parent.id) // Use the correct collection
+            .collection('Users') // Use the correct collection
             .doc(uid)
             .collection('glucoseEntries') // Subcollection for glucose entries
             .add(glucoseData);

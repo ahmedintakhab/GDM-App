@@ -49,15 +49,9 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
       String uid = user.uid;
 
       // Check in which collection the user exists
-      DocumentSnapshot? userDoc;
-
-      userDoc = await _firestore.collection('user').doc(uid).get();
-      if (!userDoc.exists) {
-        userDoc = await _firestore.collection('users').doc(uid).get();
-        if (!userDoc.exists) {
-          userDoc = await _firestore.collection('doctor').doc(uid).get();
-        }
-      }
+      DocumentSnapshot userDoc = await _firestore.collection('Users')
+          .doc(uid)
+          .get();
 
       if (userDoc.exists) {
         // Safely access the 'steps' field
@@ -83,26 +77,13 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
     User? user = _auth.currentUser;
     if (user != null) {
       String uid = user.uid;
+      // Update or create steps in Users collection only
+        await _firestore.collection('Users').doc(uid).set({'steps': steps},
+        SetOptions(merge: true));
 
-      // Check in which collection the user exists
-      DocumentSnapshot? userDoc;
-
-      userDoc = await _firestore.collection('user').doc(uid).get();
-      if (!userDoc.exists) {
-        userDoc = await _firestore.collection('users').doc(uid).get();
-        if (!userDoc.exists) {
-          userDoc = await _firestore.collection('doctor').doc(uid).get();
-        }
-      }
-
-      if (userDoc.exists) {
-        await userDoc.reference.update({'steps': steps}); // Update steps in Firestore
-      } else {
-        // If the document does not exist, create it with the initial steps value
-        await _firestore.collection('user').doc(uid).set({'steps': steps});
-      }
     }
   }
+
   void _startStepCounting() {
     _accelerometerSubscription = accelerometerEventStream(samplingPeriod: SensorInterval.gameInterval)
         .listen((AccelerometerEvent event) {
