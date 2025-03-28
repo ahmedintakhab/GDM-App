@@ -94,30 +94,16 @@ class ReminderService {
     }
 
     String uid = currentUser.uid;
-    String userCollection = '';
 
-    // Check which collection the user belongs to
-    DocumentSnapshot? userDoc = await _firestore.collection('user').doc(uid).get();
+    // Check if user exists in 'Users' collection
+    DocumentSnapshot userDoc = await _firestore.collection('Users').doc(uid).get();
 
-    if (userDoc.exists) {
-      userCollection = 'user';
-    } else {
-      userDoc = await _firestore.collection('users').doc(uid).get();
-      if (userDoc.exists) {
-        userCollection = 'users';
-      } else {
-        userDoc = await _firestore.collection('doctor').doc(uid).get();
-        if (userDoc.exists) {
-          userCollection = 'doctor';
-        } else {
-          throw Exception('User does not exist in any collection');
-        }
-      }
+    if (!userDoc.exists) {
+      throw Exception('User does not exist in Users collection');
     }
 
-    return _firestore.collection(userCollection).doc(uid).collection('reminders');
+    return _firestore.collection('Users').doc(uid).collection('reminders');
   }
-
   // Add a new reminder
   Future<void> addReminder(Reminder reminder) async {
     try {
@@ -244,20 +230,6 @@ class ReminderService {
       } catch (e) {
         throw Exception('Invalid time format');
       }
-
-
-
-
-      // if (dateParts.length != 3 || timeParts.length != 2) {
-      //   throw Exception('Invalid date or time format');
-      // }
-      //
-      // final year = int.parse(dateParts[0]);
-      // final month = int.parse(dateParts[1]);
-      // final day = int.parse(dateParts[2]);
-      //
-      // final hour = int.parse(timeParts[0]);
-      // final minute = int.parse(timeParts[1]);
 
       final scheduledDate = tz.TZDateTime(
         tz.local,

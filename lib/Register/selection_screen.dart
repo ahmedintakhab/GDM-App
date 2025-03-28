@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gdm_app/Register/doctor_signup_screen.dart';
+import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/pregnancy_register_screen.dart';
 import 'package:gdm_app/Register/users_signup_screen.dart';
 import 'package:gdm_app/Register/without_pregnancy_signup.dart';
@@ -25,8 +27,29 @@ class SelectionScreen extends StatefulWidget {
 class _SelectionScreenState extends State<SelectionScreen> {
   String? _selectedOption; // To store the selected option
 
+  Future<void> saveSelectedOption(String selectedOption) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .set({
+          'userType': selectedOption,
+          'createdAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+        print('User type saved successfully');
+      } else {
+        print('No user is logged in');
+      }
+    } catch (e) {
+      print('Error saving user type: $e');
+    }
+  }
+
+
   // Function to handle navigation based on the selected option
-  void _navigateToNextScreen() {
+  void _navigateToNextScreen() async {
     if (_selectedOption == null) {
       // Show an error if no option is selected
       ScaffoldMessenger.of(context).showSnackBar(
@@ -34,6 +57,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
       );
       return;
     }
+    await saveSelectedOption(_selectedOption!);
 
     // Navigate to the respective screen based on the selected option
     switch (_selectedOption) {
@@ -52,7 +76,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
       case 'Doctor':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DoctorSignupScreen()),
+          MaterialPageRoute(builder: (context) => LoginScreen()),
         );
         break;
     }

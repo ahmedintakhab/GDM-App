@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'add_reminders_screen.dart';
 import 'reminder_item_widget.dart';
-import 'delete_reminder_dialog.dart';
 
 class AllReminders extends StatefulWidget {
   final ReminderService reminderService;
