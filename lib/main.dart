@@ -10,6 +10,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   // Create a singleton instance of ReminderService
+  // Create a singleton instance of ReminderService
   final ReminderService reminderService = ReminderService();
 
   // Initialize the notification plugin
