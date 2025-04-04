@@ -45,11 +45,14 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       userProvider.fetchUserData(); // Fetch user data after the widget tree is built
+      userProvider.fetchGlucoseData();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
       body: SafeArea(
         child: _screens[_selectedIndex], // Display the selected screen
@@ -196,17 +199,23 @@ class HomeContent extends StatelessWidget {
                         // Spacer between the two containers
 
                         // Second Container (Glucose)
-                        GlucoseCardWidget(
-                          title: 'Glucose',
-                          value: '$averageGlucoseValue mg/dl',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const GlucoseDetailsScreen(),
-                              ),
-                            );
-                          },
+                        Expanded(
+
+                          child:                       GlucoseCardWidget(
+                            title: 'Glucose',
+                            value: userProvider.isLoading
+                                ? 'Loading...'
+                                : '$averageGlucoseValue mg/dl',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GlucoseDetailsScreen(),
+                                ),
+                              );
+
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -245,7 +254,7 @@ class HomeContent extends StatelessWidget {
                           SizedBox(height: 16),
                           SizedBox(
                             height: 150,
-                            child: WeeklyGlucoseChart(),
+                            child: WeeklyGlucoseChart(weeklyData: userProvider.getWeeklyAverages()),
                           ),
                         ],
                       ),

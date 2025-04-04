@@ -5,7 +5,6 @@ import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:gdm_app/utils/utils.dart';
-
 import '../Home/user_data_provider.dart';
 
 class TodayTab extends StatefulWidget {
@@ -120,6 +119,13 @@ class _TodayTabState extends State<TodayTab> {
     );
   }
 
+  String _getMoodForValue(double value) {
+    if (value < 80) return 'low';
+    if (value <= 120) return 'happy';
+    if (value <= 180) return 'neutral';
+    return 'sad';
+  }
+
   Widget _buildAverageGlucoseCard(UserProvider userProvider) {
     final glucoseValues = userProvider.glucoseData
         .where((data) => data['value'] != null)
@@ -130,7 +136,32 @@ class _TodayTabState extends State<TodayTab> {
         ? glucoseValues.reduce((a, b) => a + b) / glucoseValues.length
         : 0;
 
-    final mood = averageGlucose > 120 ? 'sad' : 'happy';
+    final mood = _getMoodForValue(averageGlucose.toDouble());
+
+    IconData moodIcon;
+    Color moodColor;
+
+    switch (mood) {
+      case 'happy':
+        moodIcon = Icons.sentiment_satisfied;
+        moodColor = Colors.green;
+        break;
+      case 'neutral':
+        moodIcon = Icons.sentiment_neutral;
+        moodColor = Colors.amber;
+        break;
+      case 'sad':
+        moodIcon = Icons.sentiment_dissatisfied;
+        moodColor = Colors.red;
+        break;
+      case 'low':
+        moodIcon = Icons.sentiment_very_dissatisfied;
+        moodColor = Colors.blue;
+        break;
+      default:
+        moodIcon = Icons.sentiment_neutral;
+        moodColor = Colors.grey;
+    }
 
     return Container(
       padding: EdgeInsets.all(20),
@@ -147,11 +178,11 @@ class _TodayTabState extends State<TodayTab> {
       child: Column(
         children: [
           Text(
-            'Avg Blood Glucose',
+            'Today\'s Avg Blood Glucose',
             style: TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold
             ),
           ),
           SizedBox(height: 8),
@@ -159,17 +190,17 @@ class _TodayTabState extends State<TodayTab> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                mood == 'sad' ? Icons.sentiment_dissatisfied : Icons.sentiment_satisfied,
-                color: Colors.amber,
+                moodIcon,
+                color: moodColor,
                 size: 28,
               ),
               SizedBox(width: 8),
               Text(
                 '${averageGlucose.toStringAsFixed(1)}',
                 style: TextStyle(
-                  fontSize: 35,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  color: averageGlucose > 120 ? Colors.red : Colors.green,
+                  color: moodColor,
                 ),
               ),
               Text(
@@ -208,7 +239,7 @@ class _TodayTabState extends State<TodayTab> {
           child: Column(
             children: [
               Text(
-                'DAY GLUCOSE LEVELS',
+                'TODAY\'S GLUCOSE LEVELS',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -223,7 +254,7 @@ class _TodayTabState extends State<TodayTab> {
     }
 
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -238,13 +269,13 @@ class _TodayTabState extends State<TodayTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'DAY GLUCOSE LEVELS',
+            'TODAY\'S GLUCOSE LEVELS',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 16),
           SizedBox(
             height: 200,
             child: LineChart(
@@ -256,61 +287,40 @@ class _TodayTabState extends State<TodayTab> {
                       showTitles: true,
                       interval: 1,
                       getTitlesWidget: (value, meta) {
+                        if (value.toInt() >= validGlucoseData.length) return SizedBox();
                         final date = validGlucoseData[value.toInt()]['timestamp'].toDate();
                         final hour = date.hour > 12 ? date.hour - 12 : (date.hour == 0 ? 12 : date.hour);
                         final minute = date.minute.toString().padLeft(2, '0');
                         final period = date.hour >= 12 ? 'pm' : 'am';
 
-                        return SizedBox(
-                          width: 50, // Adjust width as needed
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             '$hour:$minute $period',
-                            textAlign: TextAlign.center, // Keeps text within bounds
-                            style: TextStyle(fontSize: 10), // Adjust font size as needed
-                          ),
-                        );
-
-                      },
-
-                      // switch (value.toInt()) {
-                        // case 0:
-                        // return Text('6am');
-                        // case 1:
-                        // return Text('8am');
-                        // case 2:
-                        // return Text('12pm');
-                        // case 3:
-                        // return Text('2pm');
-                        // case 4:
-                        // return Text('8pm');
-                        // case 5:
-                        // return Text('10pm');
-                        // default:
-                        // return Text('');
-                        // }
-                    ),
-                  ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      interval: 50,
-                      reservedSize: 30, // Space for Y-axis labels
-                      getTitlesWidget: (value, meta) {
-                        double fontSize = 10; // Define fontSize
-
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Text(
-                            '${value.toInt()}',
                             style: TextStyle(
-                              fontSize: fontSize.clamp(8, 12),
+                              fontSize: 10,
+                              color: Colors.grey[600],
                             ),
                           ),
                         );
                       },
                     ),
                   ),
-
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: 50,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          '${value.toInt()}',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[600],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                   rightTitles: AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
@@ -322,7 +332,7 @@ class _TodayTabState extends State<TodayTab> {
                 minX: 0,
                 maxX: validGlucoseData.length > 0 ? validGlucoseData.length - 1 : 4,
                 minY: 0,
-                maxY: 200,
+                maxY: _calculateMaxY(validGlucoseData),
                 lineBarsData: [
                   LineChartBarData(
                     spots: validGlucoseData.asMap().entries.map((entry) {
@@ -334,19 +344,23 @@ class _TodayTabState extends State<TodayTab> {
                       );
                     }).toList(),
                     isCurved: true,
-                    color: Colors.indigo,
+                    color: _getLineColor(validGlucoseData),
                     barWidth: 2,
                     isStrokeCapRound: true,
                     dotData: FlDotData(
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
-                          radius: 6,
+                          radius: 4,
                           color: Colors.white,
                           strokeWidth: 2,
-                          strokeColor: Colors.indigo,
+                          strokeColor: _getDotColor(spot.y),
                         );
                       },
+                    ),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      color: _getAreaColor(validGlucoseData),
                     ),
                   ),
                 ],
@@ -356,5 +370,41 @@ class _TodayTabState extends State<TodayTab> {
         ],
       ),
     );
+  }
+
+  double _calculateMaxY(List<dynamic> glucoseData) {
+    final maxValue = glucoseData
+        .map((data) => data['value'] as int)
+        .reduce((a, b) => a > b ? a : b);
+    return (maxValue * 1.2).ceilToDouble().clamp(100, 300).toDouble();
+  }
+
+  Color _getLineColor(List<dynamic> glucoseData) {
+    final avg = glucoseData
+        .map((data) => data['value'] as int)
+        .reduce((a, b) => a + b) /
+        glucoseData.length;
+    if (avg < 80) return Colors.blue;
+    if (avg <= 120) return Colors.green;
+    if (avg <= 180) return Colors.amber;
+    return Colors.red;
+  }
+
+  Color _getDotColor(double value) {
+    if (value < 80) return Colors.blue;
+    if (value <= 120) return Colors.green;
+    if (value <= 180) return Colors.amber;
+    return Colors.red;
+  }
+
+  Color _getAreaColor(List<dynamic> glucoseData) {
+    final avg = glucoseData
+        .map((data) => data['value'] as int)
+        .reduce((a, b) => a + b) /
+        glucoseData.length;
+    if (avg < 80) return Colors.blue.withOpacity(0.1);
+    if (avg <= 120) return Colors.green.withOpacity(0.1);
+    if (avg <= 180) return Colors.amber.withOpacity(0.1);
+    return Colors.red.withOpacity(0.1);
   }
 }

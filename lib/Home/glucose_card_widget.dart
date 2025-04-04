@@ -14,8 +14,7 @@ class GlucoseCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
+    return GestureDetector(
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(12),
@@ -49,7 +48,6 @@ class GlucoseCardWidget extends StatelessWidget {
             ],
           ),
         ),
-      ),
     );
   }
 }

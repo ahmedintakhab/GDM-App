@@ -193,4 +193,48 @@ class UserProvider extends ChangeNotifier {
         print("Error fetching glucose data: $e");
     }
   }
+  // Add this to your UserProvider class
+  Map<String, double> getWeeklyAverages() {
+    final weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final weeklyAverages = <String, double>{};
+
+    // Initialize with empty values
+    for (var day in weekDays) {
+      weeklyAverages[day] = 0;
+    }
+
+    // Group data by day of week
+    final dailyValues = <int, List<int>>{};
+    for (var data in _glucoseData) {
+      if (data['timestamp'] != null && data['value'] != null) {
+        final date = data['timestamp'].toDate();
+        final dayOfWeek = date.weekday % 7; // Sunday = 0, Monday = 1, etc.
+        final value = data['value'] as int;
+
+        dailyValues.putIfAbsent(dayOfWeek, () => []).add(value);
+      }
+    }
+
+    // Calculate averages
+    dailyValues.forEach((day, values) {
+      weeklyAverages[weekDays[day]] = values.reduce((a, b) => a + b) / values.length;
+    });
+
+    return weeklyAverages;
+  }
+
+  double getWeeklyAverage() {
+    final weeklyData = getWeeklyAverages();
+    final values = weeklyData.values.where((value) => value > 0);
+
+    return values.isEmpty ? 0 : values.reduce((a, b) => a + b) / values.length;
+  }
+
+  String getWeeklyMood() {
+    final average = getWeeklyAverage();
+    if (average < 80) return 'low';
+    if (average <= 120) return 'happy';
+    if (average <= 180) return 'neutral';
+    return 'sad';
+  }
 }

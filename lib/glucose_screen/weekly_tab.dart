@@ -1,19 +1,24 @@
 // tabs/weekly_tab.dart
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Home/gulcose_chart.dart';
+import 'package:provider/provider.dart';
+import 'package:gdm_app/Home/user_data_provider.dart';
 
 class WeeklyTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAverageGlucoseCard(108, 'happy'),
+          _buildAverageGlucoseCard(
+            userProvider.getWeeklyAverage().round(),
+            userProvider.getWeeklyMood(),
+          ),
           SizedBox(height: 24),
-          // _buildGlucoseLevelsCard(),
-          // Weekly Graph Container
           Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -39,7 +44,9 @@ class WeeklyTab extends StatelessWidget {
                 SizedBox(height: 16),
                 SizedBox(
                   height: 200,
-                  child: WeeklyGlucoseChart(),
+                  child: WeeklyGlucoseChart(
+                    weeklyData: userProvider.getWeeklyAverages(),
+                  ),
                 ),
               ],
             ),
@@ -50,6 +57,31 @@ class WeeklyTab extends StatelessWidget {
   }
 
   Widget _buildAverageGlucoseCard(int value, String mood) {
+    IconData moodIcon;
+    Color moodColor;
+
+    switch (mood) {
+      case 'happy':
+        moodIcon = Icons.sentiment_satisfied;
+        moodColor = Colors.green;
+        break;
+      case 'neutral':
+        moodIcon = Icons.sentiment_neutral;
+        moodColor = Colors.amber;
+        break;
+      case 'sad':
+        moodIcon = Icons.sentiment_dissatisfied;
+        moodColor = Colors.red;
+        break;
+      case 'low':
+        moodIcon = Icons.sentiment_very_dissatisfied;
+        moodColor = Colors.blue;
+        break;
+      default:
+        moodIcon = Icons.sentiment_neutral;
+        moodColor = Colors.grey;
+    }
+
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -65,11 +97,11 @@ class WeeklyTab extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Avg Blood Glucose',
+            'Weekly Avg Blood Glucose',
             style: TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-              fontWeight: FontWeight.bold
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold
             ),
           ),
           SizedBox(height: 8),
@@ -77,8 +109,8 @@ class WeeklyTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                mood == 'happy' ? Icons.sentiment_satisfied : Icons.sentiment_dissatisfied,
-                color: Colors.amber,
+                moodIcon,
+                color: moodColor,
                 size: 28,
               ),
               SizedBox(width: 8),
@@ -103,93 +135,4 @@ class WeeklyTab extends StatelessWidget {
       ),
     );
   }
-
-
-  // Widget _buildGlucoseLevelsCard() {
-  //   return Container(
-  //     padding: EdgeInsets.all(20),
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(16),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withOpacity(0.05),
-  //           blurRadius: 8,
-  //         ),
-  //       ],
-  //     ),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text(
-  //               'WEEK GLUCOSE LEVELS',
-  //               style: TextStyle(
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //             ),
-  //             Row(
-  //               children: [
-  //                 Icon(Icons.list, color: Colors.grey),
-  //                 SizedBox(width: 16),
-  //                 Icon(Icons.bar_chart, color: Colors.grey),
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         SizedBox(height: 20),
-  //         SizedBox(
-  //           height: 200,
-  //           child: BarChart(
-  //             BarChartData(
-  //               alignment: BarChartAlignment.spaceAround,
-  //               maxY: 200,
-  //               barTouchData: BarTouchData(enabled: false),
-  //               gridData: FlGridData(show: false),
-  //               titlesData: FlTitlesData(
-  //                 bottomTitles: AxisTitles(
-  //                   sideTitles: SideTitles(
-  //                     showTitles: true,
-  //                     getTitlesWidget: (value, meta) {
-  //                       const titles = ['S', 'S', 'M', 'T', 'W', 'T', 'F'];
-  //                       return Text(titles[value.toInt()]);
-  //                     },
-  //                   ),
-  //                 ),
-  //                 leftTitles: AxisTitles(
-  //                   sideTitles: SideTitles(
-  //                     showTitles: true,
-  //                     interval: 50,
-  //                     getTitlesWidget: (value, meta) {
-  //                       return Text('${value.toInt()}');
-  //                     },
-  //                   ),
-  //                 ),
-  //                 rightTitles: AxisTitles(
-  //                   sideTitles: SideTitles(showTitles: false),
-  //                 ),
-  //                 topTitles: AxisTitles(
-  //                   sideTitles: SideTitles(showTitles: false),
-  //                 ),
-  //               ),
-  //               borderData: FlBorderData(show: false),
-  //               barGroups: [
-  //                 BarChartGroupData(x: 0, barRods: [BarChartRodData(toY: 100, color: Colors.indigo.withOpacity(0.3))]),
-  //                 BarChartGroupData(x: 1, barRods: [BarChartRodData(toY: 140, color: Colors.indigo)]),
-  //                 BarChartGroupData(x: 2, barRods: [BarChartRodData(toY: 110, color: Colors.indigo.withOpacity(0.3))]),
-  //                 BarChartGroupData(x: 3, barRods: [BarChartRodData(toY: 180, color: Colors.indigo.withOpacity(0.3))]),
-  //                 BarChartGroupData(x: 4, barRods: [BarChartRodData(toY: 160, color: Colors.indigo.withOpacity(0.3))]),
-  //                 BarChartGroupData(x: 5, barRods: [BarChartRodData(toY: 140, color: Colors.indigo.withOpacity(0.3))]),
-  //                 BarChartGroupData(x: 6, barRods: [BarChartRodData(toY: 180, color: Colors.indigo.withOpacity(0.3))]),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }
