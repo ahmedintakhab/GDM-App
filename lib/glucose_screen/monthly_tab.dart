@@ -1,24 +1,101 @@
 // tabs/monthly_tab.dart
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
+import '../Home/user_data_provider.dart';
 
 class MonthlyTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    final monthlyData = _processMonthlyData(userProvider.glucoseData);
+    final monthlyAverage = _calculateMonthlyAverage(monthlyData);
+    final mood = _getMoodForValue(monthlyAverage);
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAverageGlucoseCard(111, 'happy'),
+          _buildAverageGlucoseCard(monthlyAverage.round(), mood),
           SizedBox(height: 24),
-          _buildGlucoseLevelsCard(),
+          _buildGlucoseLevelsCard(monthlyData),
         ],
       ),
     );
   }
 
+  Map<int, double> _processMonthlyData(List<Map<String, dynamic>> glucoseData) {
+    final now = DateTime.now();
+    final daysInMonth = DateUtils.getDaysInMonth(now.year, now.month);
+    final monthlyAverages = <int, double>{};
+
+    // Initialize with empty values
+    for (var day = 1; day <= daysInMonth; day++) {
+      monthlyAverages[day] = 0;
+    }
+
+    // Group data by day of month
+    final dailyValues = <int, List<int>>{};
+    for (var data in glucoseData) {
+      if (data['timestamp'] != null && data['value'] != null) {
+        final date = data['timestamp'].toDate();
+        // Only process data for current month
+        if (date.month == now.month && date.year == now.year) {
+          final day = date.day;
+          final value = data['value'] as int;
+
+          dailyValues.putIfAbsent(day, () => []).add(value);
+        }
+      }
+    }
+
+    // Calculate averages
+    dailyValues.forEach((day, values) {
+      monthlyAverages[day] = values.reduce((a, b) => a + b) / values.length;
+    });
+
+    return monthlyAverages;
+  }
+
+  double _calculateMonthlyAverage(Map<int, double> monthlyData) {
+    final values = monthlyData.values.where((value) => value > 0);
+    return values.isEmpty ? 0 : values.reduce((a, b) => a + b) / values.length;
+  }
+
+  String _getMoodForValue(double value) {
+    if (value < 80) return 'low';
+    if (value <= 120) return 'happy';
+    if (value <= 180) return 'neutral';
+    return 'sad';
+  }
+
   Widget _buildAverageGlucoseCard(int value, String mood) {
+    IconData moodIcon;
+    Color moodColor;
+
+    switch (mood) {
+      case 'happy':
+        moodIcon = Icons.sentiment_satisfied;
+        moodColor = Colors.green;
+        break;
+      case 'neutral':
+        moodIcon = Icons.sentiment_neutral;
+        moodColor = Colors.amber;
+        break;
+      case 'sad':
+        moodIcon = Icons.sentiment_dissatisfied;
+        moodColor = Colors.red;
+        break;
+      case 'low':
+        moodIcon = Icons.sentiment_very_dissatisfied;
+        moodColor = Colors.blue;
+        break;
+      default:
+        moodIcon = Icons.sentiment_neutral;
+        moodColor = Colors.grey;
+    }
+
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -34,11 +111,11 @@ class MonthlyTab extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Avg Blood Glucose',
+            'Monthly Avg Blood Glucose',
             style: TextStyle(
-              fontSize: 18,
-              color: Colors.black,
-              fontWeight: FontWeight.bold
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold
             ),
           ),
           SizedBox(height: 8),
@@ -46,8 +123,8 @@ class MonthlyTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                mood == 'happy' ? Icons.sentiment_satisfied : Icons.sentiment_dissatisfied,
-                color: Colors.amber,
+                moodIcon,
+                color: moodColor,
                 size: 28,
               ),
               SizedBox(width: 8),
@@ -56,7 +133,7 @@ class MonthlyTab extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
-                  color: value > 120 ? Colors.red : Colors.green,
+                  color: moodColor,
                 ),
               ),
               Text(
@@ -73,7 +150,11 @@ class MonthlyTab extends StatelessWidget {
     );
   }
 
-  Widget _buildGlucoseLevelsCard() {
+  Widget _buildGlucoseLevelsCard(Map<int, double> monthlyData) {
+    final now = DateTime.now();
+    final daysInMonth = DateUtils.getDaysInMonth(now.year, now.month);
+    final hasData = monthlyData.values.any((value) => value > 0);
+
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -104,16 +185,17 @@ class MonthlyTab extends StatelessWidget {
           SizedBox(height: 20),
           SizedBox(
             height: 200,
-            child: Stack(
+            child: hasData
+                ? Stack(
               children: [
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Container(
-                    width: 30 * 16.0, // Adjust width based on the number of bars
+                    width: daysInMonth * 16.0, // Adjust width based on days in month
                     child: BarChart(
                       BarChartData(
                         alignment: BarChartAlignment.spaceEvenly,
-                        maxY: 200,
+                        maxY: _calculateMaxY(monthlyData),
                         barTouchData: BarTouchData(enabled: false),
                         gridData: FlGridData(show: false),
                         titlesData: FlTitlesData(
@@ -121,7 +203,16 @@ class MonthlyTab extends StatelessWidget {
                             sideTitles: SideTitles(
                               showTitles: true,
                               getTitlesWidget: (value, meta) {
-                                return Text('${(value + 1).toInt()}');
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    '${(value + 1).toInt()}',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ),
@@ -129,9 +220,15 @@ class MonthlyTab extends StatelessWidget {
                             sideTitles: SideTitles(
                               showTitles: true,
                               interval: 50,
-                              reservedSize: 40, // To prevent cutoff on the Y-axis
+                              reservedSize: 40,
                               getTitlesWidget: (value, meta) {
-                                return Text('${value.toInt()}');
+                                return Text(
+                                  '${value.toInt()}',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey[600],
+                                  ),
+                                );
                               },
                             ),
                           ),
@@ -144,14 +241,14 @@ class MonthlyTab extends StatelessWidget {
                         ),
                         borderData: FlBorderData(show: false),
                         barGroups: List.generate(
-                          30,
+                          daysInMonth,
                               (index) => BarChartGroupData(
                             x: index,
                             barRods: [
                               BarChartRodData(
-                                toY: 80 + (index % 3) * 40.0, // Generate varying heights
-                                color: Colors.indigo.withOpacity(0.3),
-                                width: 10, // Increase bar width
+                                toY: monthlyData[index + 1] ?? 0,
+                                color: _getBarColor(monthlyData[index + 1] ?? 0),
+                                width: 10,
                                 borderRadius: BorderRadius.circular(4),
                               ),
                             ],
@@ -176,10 +273,23 @@ class MonthlyTab extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            )
+                : Center(child: Text('No glucose data available')),
           ),
         ],
       ),
     );
+  }
+
+  double _calculateMaxY(Map<int, double> monthlyData) {
+    final maxValue = monthlyData.values.reduce((a, b) => a > b ? a : b);
+    return (maxValue * 1.2).ceilToDouble().clamp(100, 300).toDouble();
+  }
+
+  Color _getBarColor(double value) {
+    if (value < 80) return Colors.blue.withOpacity(0.6);
+    if (value <= 120) return Colors.green.withOpacity(0.6);
+    if (value <= 180) return Colors.amber.withOpacity(0.6);
+    return Colors.red.withOpacity(0.6);
   }
 }
