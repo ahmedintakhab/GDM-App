@@ -1,12 +1,25 @@
 buildscript {
-    ext.kotlin_version = "1.9.0" // Update Kotlin version if needed
+    ext.kotlin_version = "1.9.0"
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.1' // Use a valid AGP version
+        classpath 'com.android.tools.build:gradle:8.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+// ADD THIS SECTION TO FIX FLUTTER_NATIVE_TIMEZONE
+subprojects {
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin("com.android.library")) {
+            android {
+                if (namespace == null) {
+                    namespace = "com.baseflow.${project.name.replace('-', '_')}"
+                }
+            }
+        }
     }
 }
 
@@ -20,13 +33,9 @@ allprojects {
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-
-subprojects {
     project.evaluationDependsOn(":app")
 }
 
-// Clean task
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
