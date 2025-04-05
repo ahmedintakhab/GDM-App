@@ -139,11 +139,13 @@ class HomeContent extends StatelessWidget {
 
                     // Progress and Steps Count
                     ProgressAndStepscount(),
-                    SizedBox(height: 16),
-                    //Linear percentage bar container function calling
+                    // SizedBox(height: 16),
+                  if (userProvider.userType != 'Doctor') ...[
+
+                //Linear percentage bar container function calling
                     LinearProgressContainer(),
                     SizedBox(height: 16),
-
+    ],
 
                     // Pills and Glucose Row
                     Row(
@@ -197,11 +199,10 @@ class HomeContent extends StatelessWidget {
                         // ),
                         // const SizedBox(width: 16),
                         // Spacer between the two containers
-
-                        // Second Container (Glucose)
+                    if (userProvider.userType != 'Doctor') ...[
+                      // Second Container (Glucose)
                         Expanded(
-
-                          child:                       GlucoseCardWidget(
+                          child:GlucoseCardWidget(
                             title: 'Glucose',
                             value: userProvider.isLoading
                                 ? 'Loading...'
@@ -218,6 +219,7 @@ class HomeContent extends StatelessWidget {
                           ),
                         ),
                       ],
+                      ]
                     ),
                     SizedBox(height: 16),
 

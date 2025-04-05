@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class UserProvider extends ChangeNotifier {
   String _name = '';
   String _email = '';
+  String _userType = ''; // Added userType field
   bool _isLoading = true;
   String? _errorMessage;
   bool _isDisposed = false; // Add this flag
@@ -12,6 +13,7 @@ class UserProvider extends ChangeNotifier {
   // Getters
   String get name => _name;
   String get email => _email;
+  String get userType => _userType; // Added getter
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
@@ -35,6 +37,7 @@ class UserProvider extends ChangeNotifier {
   void resetUserData() {
     _name = '';
     _email = '';
+    _userType = '';
     _isLoading = true;
     _errorMessage = null;
     _glucoseData = [];
@@ -69,6 +72,8 @@ class UserProvider extends ChangeNotifier {
 
         _name = userData['name'] ?? '';
         _email = userData['email'] ?? '';
+        _userType = userData['userType'] ?? ''; // Fetch userType
+
         _isLoading = false;
 
         _safeNotifyListeners();
