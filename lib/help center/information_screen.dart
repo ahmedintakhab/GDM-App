@@ -2,23 +2,85 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'information_card.dart'; // Import the second file
 
+// Static data for card titles and their details
+final Map<String, String> cardDetails = {
+  "What is GDM?":
+  "Gestational Diabetes Mellitus (GDM) is a condition where a pregnant woman "
+      "develops high blood sugar levels. "
+      "It usually occurs during the second or third "
+      "trimester and resolves after delivery. "
+      "It requires careful monitoring to ensure the health of both mother and baby.",
+  "Who is at Risk?":
+  "You are at higher risk if you:\n1. Have a family history of diabetes\n2. "
+      "Are overweight/obese or have a sedentary lifestyle\n3."
+      " Are older than 35 years\n4. Have had GDM in a previous pregnancy\n5."
+      " Have polycystic ovary syndrome (PCOS)\n6. "
+      "Belong to an ethnic group with a high diabetes risk"
+      " (including Middle Eastern populations)",
+  "Signs & Symptoms":
+"Most women do not have symptoms, so screening is essential. Some may experience:\n●"
+    " Increased thirst and frequent urination\n● Fatigue\n● Blurred vision",
+  "Screening & Diagnosis":
+"In the UAE:\n1. Screening for GDM is recommended between 24-28 weeks of pregnancy."
+    "\n2. A glucose tolerance test (OGTT) is used for diagnosis.",
+  "Complications of GDM":
+  "⚠️ If left uncontrolled, GDM can lead to:\n1. "
+      "High birth weight in babies (macrosomia)\n2."
+      " Preterm birth or C-section delivery\n3. "
+      "Preeclampsia (high blood pressure during pregnancy)\n4."
+      " Increased risk of Type 2 Diabetes for both mother & child later in life",
+  "Managing GDM":
+  "1 Healthy eating\n. Follow a balanced meal plan with whole grains, lean protein, and fiber\n"
+      "2 Regular physical activity\n. Aim for 30 minutes of moderate exercise (e.g., walking)\n"
+      "3 Blood sugar monitoring\n. Check your glucose levels as advised by your doctor\n"
+      "4 Medications\n. If needed, insulin or other treatments may be prescribed",
+  "Postpartum Care":
+"1. GDM usually resolves after birth, but women with GDM have a 50% risk of developing Type 2 Diabetes in the future\n"
+"2. Breastfeeding helps regulate blood sugar and lowers future diabetes risk\n"
+"3. A follow-up diabetes test is recommended 6-12 weeks postpartum and every 1-3 years thereafter",
+  "Prevention of GDM – UAE-Specific Tips":
+"1. Healthy Eating for GDM Prevention\n"
+"● Choose Nutrient-Rich UAE-Friendly Foods\n"
+". Opt for whole-wheat Arabic bread, brown rice, quinoa, and oats instead of white bread or refined grains\n"
+". Include grilled fish (like hammour or salmon), chicken, lean lamb, and plant-based proteins like lentils, chickpeas, and fava beans (foul)\n"
+". Use olive oil and nuts (almonds, walnuts, pistachios) instead of excessive butter or ghee\n"
+". Enjoy local fiber-rich options like dates (in moderation), cucumbers, tomatoes, okra, and zucchini\n"
+". Choose low-fat Laban, Greek yogurt, or Ayran instead of full-fat dairy\n"
+"● Foods to Limit\n"
+". Limit high-carb Emirati dishes (e.g., excess white rice in biryani or Harees – opt for whole-grain versions)\n"
+". Avoid sugary beverages (e.g., Karak tea with sugar, soft drinks, fruit juices – replace with unsweetened tea or infused water)\n"
+". Reduce desserts and sweets (e.g., Luqaimat, Baklava – enjoy in moderation and opt for healthier alternatives like dates with nuts)\n"
+"2. Staying Active in the UAE Climate\n"
+"● Exercise Tips Despite the Heat\n"
+". Walk indoors in malls (e.g., Mall of the Emirates, Yas Mall) or indoor gyms\n"
+". Try swimming, a great low-impact option for pregnancy-friendly fitness\n"
+". Take evening outdoor walks at parks like Al Barsha Pond Park, Safa Park, or Corniche when it’s cooler\n"
+". Join prenatal yoga or Pilates classes, offered at many gyms and maternity centers with women-only options\n"
+"3. Managing Cultural & Social Eating Habits\n"
+"● Smart Choices at Gatherings\n"
+". Practice portion control: enjoy small portions of rice and bread, filling up on grilled meats and vegetables\n"
+". Make healthy swaps: replace fried samosas with baked versions or grilled meats\n"
+". Choose balanced Iftar meals: avoid excessive sweets after Iftar; opt for fruit, Laban, or nuts instead\n"
+". Stay hydrated: drink plenty of water instead of sweetened juices",
+
+};
+
+
 class InformationScreen extends StatelessWidget {
   const InformationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Initialize ScreenUtil for responsive design
     ScreenUtil.init(context, designSize: const Size(375, 812));
 
     return Scaffold(
-      backgroundColor: Colors.grey[100], // Light background color
+      backgroundColor: Colors.grey[100],
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Help Center Title
               Text(
                 "Help Center",
                 style: TextStyle(
@@ -28,8 +90,6 @@ class InformationScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16.h),
-
-              // Search Bar
               TextField(
                 decoration: InputDecoration(
                   hintText: "Search by topics",
@@ -51,16 +111,15 @@ class InformationScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 24.h),
-
-              // Two GDM Containers in a Row
               Row(
                 children: [
                   Expanded(
                     child: _buildGDMContainer(
                       title: "Understanding Gestational Diabetes (GDM)",
-                      description: "A comprehensive overview of GDM, its causes, risk factors, and how it affects pregnancy.",
+                      description:
+                      "A comprehensive overview of GDM, its causes, risk factors, and how it affects pregnancy.",
                       onTap: () {
-                        // Add navigation or action for Paytee Line
+                        // Add navigation or action for Understanding GDM
                       },
                     ),
                   ),
@@ -68,17 +127,16 @@ class InformationScreen extends StatelessWidget {
                   Expanded(
                     child: _buildGDMContainer(
                       title: "GDM and Pregnancy",
-                      description: "Key facts about GDM, screening processes, and long-term health implications.",
+                      description:
+                      "Key facts about GDM, screening processes, and long-term health implications.",
                       onTap: () {
-                        // Add navigation or action for Live Chat
+                        // Add navigation or action for GDM and Pregnancy
                       },
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 24.h),
-
-              // Financial Assistance Hub Container
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
@@ -98,31 +156,125 @@ class InformationScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 16.h),
-
-                    // List of Information Cards (5 times)
-                    const InformationCard(
-                      title: "Credit Cards",
-                      onTap: null, // Will be updated in the loop below
+                    // Dynamically create InformationCards with navigation
+                    InformationCard(
+                      title: "What is GDM?",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InformationDetailsScreen(
+                              title: "What is GDM?",
+                              details: cardDetails["What is GDM?"]!,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 8.h),
-                    const InformationCard(
-                      title: "Payments",
-                      onTap: null,
+                    InformationCard(
+                      title: "Who is at Risk?",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InformationDetailsScreen(
+                              title: "Who is at Risk?",
+                              details: cardDetails["Who is at Risk?"]!,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 8.h),
-                    const InformationCard(
-                      title: "Billing Issues",
-                      onTap: null,
+                    InformationCard(
+                      title: "Signs & Symptoms",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InformationDetailsScreen(
+                              title: "Signs & Symptoms",
+                              details: cardDetails["Signs & Symptoms"]!,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 8.h),
-                    const InformationCard(
-                      title: "Refunds",
-                      onTap: null,
+                    InformationCard(
+                      title: "Screening & Diagnosis",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InformationDetailsScreen(
+                              title: "Screening & Diagnosis",
+                              details: cardDetails["Screening & Diagnosis"]!,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 8.h),
-                    const InformationCard(
-                      title: "Account Support",
-                      onTap: null,
+                    InformationCard(
+                      title: "Complications of GDM",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InformationDetailsScreen(
+                              title: "Complications of GDM",
+                              details: cardDetails["Complications of GDM"]!,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 8.h),
+                    InformationCard(
+                      title: "Managing GDM",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InformationDetailsScreen(
+                              title: "Managing GDM",
+                              details: cardDetails["Managing GDM"]!,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 8.h),
+                    InformationCard(
+                      title: "Postpartum Care",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InformationDetailsScreen(
+                              title: "Postpartum Care",
+                              details: cardDetails["Postpartum Care"]!,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 8.h),
+                    InformationCard(
+                      title: "Prevention of GDM – UAE-Specific Tips",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InformationDetailsScreen(
+                              title: "Prevention of GDM – UAE-Specific Tips",
+                              details: cardDetails["Prevention of GDM – UAE-Specific Tips"]!,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -134,7 +286,6 @@ class InformationScreen extends StatelessWidget {
     );
   }
 
-  // Helper method to build GDM containers
   Widget _buildGDMContainer({
     required String title,
     required String description,
@@ -148,9 +299,16 @@ class InformationScreen extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.r),
         ),
+        constraints: BoxConstraints(
+          minHeight: 120.h
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
             Text(
               title,
               style: TextStyle(
@@ -158,6 +316,9 @@ class InformationScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
+               maxLines: 2,
+               overflow: TextOverflow.ellipsis,
+
             ),
             if (description.isNotEmpty) ...[
               SizedBox(height: 8.h),
@@ -167,11 +328,17 @@ class InformationScreen extends StatelessWidget {
                   fontSize: 14.sp,
                   color: Colors.grey[600],
                 ),
+                maxLines: 6, // Limit description lines
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ],
         ),
+    ]
       ),
+
+    )
+
     );
   }
 }
