@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Home/chat_container.dart';
 import 'package:gdm_app/Home/doctor_visit_container.dart';
+import 'package:gdm_app/Home/information_card_widget.dart';
 import 'package:gdm_app/Home/linear_progress_container.dart';
 import 'package:gdm_app/Home/progress_and_stepscount.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:gdm_app/Home/user_reports_screen.dart';
 import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
+import 'package:gdm_app/help%20center/information_screen.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 import 'User_profile_screen.dart';
 import 'bottom_navigation_bar.dart';
@@ -139,8 +143,13 @@ class HomeContent extends StatelessWidget {
 
                     // Progress and Steps Count
                     ProgressAndStepscount(),
-                    // SizedBox(height: 16),
-                  if (userProvider.userType != 'Doctor') ...[
+                     SizedBox(height: 16),
+                  InformationCardWidget(onTap: (){
+                    Get.to(InformationScreen());
+                  }),
+                    SizedBox(height: 16),
+
+                    if (userProvider.userType != 'Doctor') ...[
 
                 //Linear percentage bar container function calling
                     LinearProgressContainer(),
