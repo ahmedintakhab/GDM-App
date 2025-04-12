@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Home/chat_container.dart';
 import 'package:gdm_app/Home/doctor_visit_container.dart';
 import 'package:gdm_app/Home/information_card_widget.dart';
@@ -6,6 +7,8 @@ import 'package:gdm_app/Home/linear_progress_container.dart';
 import 'package:gdm_app/Home/progress_and_stepscount.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:gdm_app/Home/user_reports_screen.dart';
+import 'package:gdm_app/feedback/feedback_container_widget.dart';
+import 'package:gdm_app/feedback/feedback_screen.dart';
 import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
 import 'package:gdm_app/help%20center/information_screen.dart';
 import 'package:get/get.dart';
@@ -158,7 +161,9 @@ class HomeContent extends StatelessWidget {
 
                     // Pills and Glucose Row
                     Row(
+
                       children: [
+                        Expanded(child: FeedbackContainerWidget(onTap: (){Get.to(FeedbackScreen());})),
                         // First Container (Pills)
                         // Expanded(
                         //   child: GestureDetector(
@@ -209,6 +214,8 @@ class HomeContent extends StatelessWidget {
                         // const SizedBox(width: 16),
                         // Spacer between the two containers
                     if (userProvider.userType != 'Doctor') ...[
+                      SizedBox(width: 16.w), // Responsive spacing using ScreenUtil
+
                       // Second Container (Glucose)
                         Expanded(
                           child:GlucoseCardWidget(
