@@ -1,60 +1,163 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gdm_app/Home/user_data_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:gdm_app/utils/utils.dart';
 
-class LinearProgressContainer extends StatelessWidget {
+
+import '../dialogbox/due_date_dialogbox.dart';
+
+class LinearProgressContainer extends StatefulWidget {
+  const LinearProgressContainer({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Expected due date',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Spacer(),
-              Text(
-                '1 week left',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: 0.5, // 50%
-            backgroundColor: Colors.grey[300],
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
-            minHeight: 10,
-          ),
-          SizedBox(height: 8),
-          Text(
-            '18-02-2025',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black54,
-            ),
-          ),
-        ],
+  State<LinearProgressContainer> createState() => _LinearProgressContainerState();
+}
+
+class _LinearProgressContainerState extends State<LinearProgressContainer> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<UserProvider>(context, listen: false);
+      provider.fetchPregnancyInfo();
+    });
+  }
+
+  void _openDueDateDialog(BuildContext context) async {
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => DueDateDialogBox(
+        initialDueDate: provider.dueDate,
+        initialLmp: provider.lmp,
+        onUpdate: (newLmp, newDueDate) async {
+          return await provider.updatePregnancyInfo(newLmp, newDueDate);
+        },
       ),
     );
+
+    if (result != null && mounted) {
+      Utils().toastMessage(result ? 'Due date updated successfully!' : 'Failed to update due date');
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<UserProvider>(
+      builder: (context, provider, child) {
+        final progressData = _calculateProgressAndWeeks(provider.lmp, provider.dueDate);
+
+        return GestureDetector(
+          onTap: () => _openDueDateDialog(context),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(16.w),
+            // margin: EdgeInsets.symmetric( vertical: 5.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Expected due date',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      progressData['weeksLeft'] ?? 'Set due date',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: progressData['weeksLeft'] == 'Due date passed'
+                            ? Colors.red
+                            : Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                LinearProgressIndicator(
+                  value: progressData['progressValue'] ?? 0,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0XFF5AA189)),
+                  minHeight: 10.h,
+                  borderRadius: BorderRadius.circular(5.r),
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  provider.dueDate.isNotEmpty ? provider.dueDate : 'No due date set',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: provider.dueDate.isNotEmpty ? Colors.black54 : Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Map<String, dynamic> _calculateProgressAndWeeks(String lmp, String dueDate) {
+    if (lmp.isEmpty || dueDate.isEmpty) {
+      return {
+        'progressValue': 0.0,
+        'weeksLeft': 'Set due date',
+      };
+    }
+
+    try {
+      final lmpDate = DateTime.parse(lmp);
+      final dueDateTime = DateTime.parse(dueDate);
+      final now = DateTime.now();
+
+      // Calculate total pregnancy duration (should be ~280 days)
+      final totalDays = dueDateTime.difference(lmpDate).inDays;
+
+      // Calculate days passed since LMP
+      final daysPassed = now.difference(lmpDate).inDays;
+
+      // Calculate progress (0.0 to 1.0)
+      double progressValue = daysPassed / totalDays;
+      progressValue = progressValue.clamp(0.0, 1.0);
+
+      // Calculate weeks remaining
+      final daysRemaining = dueDateTime.difference(now).inDays;
+      final weeksRemaining = (daysRemaining / 7).ceil();
+
+      String weeksLeft;
+      if (daysRemaining < 0) {
+        weeksLeft = 'Due date passed';
+      } else if (weeksRemaining == 0) {
+        weeksLeft = 'Due this week';
+      } else {
+        weeksLeft = '$weeksRemaining week${weeksRemaining == 1 ? '' : 's'} left';
+      }
+
+      return {
+        'progressValue': progressValue,
+        'weeksLeft': weeksLeft,
+      };
+    } catch (e) {
+      return {
+        'progressValue': 0.0,
+        'weeksLeft': 'Invalid date',
+      };
+    }
   }
 }

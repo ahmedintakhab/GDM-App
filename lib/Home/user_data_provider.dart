@@ -9,6 +9,11 @@ class UserProvider extends ChangeNotifier {
   bool _isLoading = true;
   String? _errorMessage;
   bool _isDisposed = false; // Add this flag
+  String _lmp = '';
+  String _dueDate = '';
+  String? _personalInfoDocId; // To store the document ID
+
+
 
   // Getters
   String get name => _name;
@@ -16,6 +21,9 @@ class UserProvider extends ChangeNotifier {
   String get userType => _userType; // Added getter
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
+  String get lmp => _lmp;
+  String get dueDate => _dueDate;
+
 
   UserProvider() {
     // fetchUserData();
@@ -26,6 +34,7 @@ class UserProvider extends ChangeNotifier {
     _isDisposed = true; // Mark the provider as disposed
     super.dispose();
   }
+
 
   // Helper method to safely call notifyListeners
   void _safeNotifyListeners() {
@@ -137,7 +146,64 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  // Code for fetching glucose data
+  //Code for fetching LMP
+  // Fetch pregnancy information
+  Future<void> fetchPregnancyInfo() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      final snapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .collection('Personal Information')
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final doc = snapshot.docs.first;
+        final data = doc.data();
+        _lmp = data['lmp'] ?? '';
+        _dueDate = data['lmp dueDate'] ?? '';
+        _personalInfoDocId = doc.id; // Store document ID
+        _safeNotifyListeners();
+      }
+    } catch (e) {
+      print("Error fetching pregnancy info: $e");
+    }
+  }
+
+  // Update pregnancy information (simplified without if-else)
+  Future<bool> updatePregnancyInfo(String lmp, String dueDate) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return false;
+
+      // Always use the same document reference
+      final docRef = FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .collection('Personal Information')
+          .doc(_personalInfoDocId ?? 'default_doc'); // Fallback ID
+
+      await docRef.set({
+        'lmp': lmp,
+        'lmp dueDate': dueDate,
+        'timestamp': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      _lmp = lmp;
+      _dueDate = dueDate;
+      _safeNotifyListeners();
+      return true;
+    } catch (e) {
+      print("Error updating pregnancy info: $e");
+      return false;
+    }
+  }
+
+
+// Code for fetching glucose data
   List<Map<String, dynamic>> _glucoseData = [];
 
   List<Map<String, dynamic>> get glucoseData => _glucoseData;

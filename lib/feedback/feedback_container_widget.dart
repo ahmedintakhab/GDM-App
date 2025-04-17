@@ -39,7 +39,7 @@ class FeedbackContainerWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Give your feedback here please",
+              "Give your feedback",
               style: TextStyle(
                 color: Colors.grey[600],
               ),
