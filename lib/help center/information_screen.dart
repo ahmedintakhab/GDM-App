@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gdm_app/help%20center/information_dialogbox.dart';
 import 'information_card.dart'; // Import the second file
 
 // Static data for card titles and their details
@@ -64,11 +65,56 @@ final Map<String, String> cardDetails = {
 ". Stay hydrated: drink plenty of water instead of sweetened juices",
 
 };
+// Static data for GDM containers
+final List<Map<String, String>> gdmContainers = [
+  {
+    'title': 'Understanding Gestational Diabetes (GDM)',
+    'description':
+    'A comprehensive overview of GDM, its causes, risk factors, and how it affects pregnancy.',
+  },
+  {
+    'title': 'GDM and Pregnancy',
+    'description':
+    'Key facts about GDM, screening processes, and long-term health implications.',
+  },
+];
 
 
-class InformationScreen extends StatelessWidget {
+class InformationScreen extends StatefulWidget {
   const InformationScreen({super.key});
 
+  @override
+  State<InformationScreen> createState() => _InformationScreenState();
+}
+
+class _InformationScreenState extends State<InformationScreen> {
+  String _searchQuery = '';
+  List<String> _filteredTitles = [];
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with all titles
+    _filteredTitles = cardDetails.keys.toList();
+  }
+  void _onSearchChanged(String query) {
+    setState(() {
+      _searchQuery = query;
+      if (query.isEmpty) {
+        _filteredTitles = cardDetails.keys.toList();
+      } else {
+        _filteredTitles = cardDetails.keys
+            .where((title) =>
+            title.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+        // Sort to prioritize exact or closer matches
+        _filteredTitles.sort((a, b) {
+          final aMatch = a.toLowerCase().indexOf(query.toLowerCase());
+          final bMatch = b.toLowerCase().indexOf(query.toLowerCase());
+          return aMatch.compareTo(bMatch);
+        });
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(375, 812));
@@ -84,13 +130,14 @@ class InformationScreen extends StatelessWidget {
               Text(
                 "Help Center",
                 style: TextStyle(
-                  fontSize: 24.sp,
+                  fontSize: 26.sp,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Color(0XFF5AA189),
                 ),
               ),
               SizedBox(height: 16.h),
               TextField(
+                onChanged: _onSearchChanged,
                 decoration: InputDecoration(
                   hintText: "Search by topics",
                   hintStyle: TextStyle(
@@ -99,7 +146,7 @@ class InformationScreen extends StatelessWidget {
                   ),
                   prefixIcon: Icon(
                     Icons.search,
-                    color: Colors.red[300],
+                    color: Color(0XFF5AA189),
                     size: 20.w,
                   ),
                   filled: true,
@@ -115,24 +162,28 @@ class InformationScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _buildGDMContainer(
-                      title: "Understanding Gestational Diabetes (GDM)",
-                      description:
-                      "A comprehensive overview of GDM, its causes, risk factors, and how it affects pregnancy.",
-                      onTap: () {
-                        // Add navigation or action for Understanding GDM
-                      },
-                    ),
+                      title: gdmContainers[0]['title']!,
+                      description: gdmContainers[0]['description']!,
+                      onTap: (){
+                        showDialog(context: context, builder:
+                            (context)=>InformationDialogbox(title: gdmContainers[0]['title']!,
+                                description: gdmContainers[0]['description']!));
+                      }
+                    )
+
                   ),
                   SizedBox(width: 16.w),
                   Expanded(
-                    child: _buildGDMContainer(
-                      title: "GDM and Pregnancy",
-                      description:
-                      "Key facts about GDM, screening processes, and long-term health implications.",
-                      onTap: () {
-                        // Add navigation or action for GDM and Pregnancy
-                      },
-                    ),
+                      child: _buildGDMContainer(
+                          title: gdmContainers[1]['title']!,
+                          description: gdmContainers[1]['description']!,
+                          onTap: (){
+                            showDialog(context: context, builder:
+                                (context)=>InformationDialogbox(title: gdmContainers[1]['title']!,
+                                description: gdmContainers[1]['description']!));
+                          }
+                      )
+
                   ),
                 ],
               ),
@@ -149,133 +200,32 @@ class InformationScreen extends StatelessWidget {
                     Text(
                       "GDM Assistance + HUB",
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Color(0XFF5AA189),
                       ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 16.h),
-                    // Dynamically create InformationCards with navigation
-                    InformationCard(
-                      title: "What is GDM?",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InformationDetailsScreen(
-                              title: "What is GDM?",
-                              details: cardDetails["What is GDM?"]!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-                    InformationCard(
-                      title: "Who is at Risk?",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InformationDetailsScreen(
-                              title: "Who is at Risk?",
-                              details: cardDetails["Who is at Risk?"]!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-                    InformationCard(
-                      title: "Signs & Symptoms",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InformationDetailsScreen(
-                              title: "Signs & Symptoms",
-                              details: cardDetails["Signs & Symptoms"]!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-                    InformationCard(
-                      title: "Screening & Diagnosis",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InformationDetailsScreen(
-                              title: "Screening & Diagnosis",
-                              details: cardDetails["Screening & Diagnosis"]!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-                    InformationCard(
-                      title: "Complications of GDM",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InformationDetailsScreen(
-                              title: "Complications of GDM",
-                              details: cardDetails["Complications of GDM"]!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-                    InformationCard(
-                      title: "Managing GDM",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InformationDetailsScreen(
-                              title: "Managing GDM",
-                              details: cardDetails["Managing GDM"]!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-                    InformationCard(
-                      title: "Postpartum Care",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InformationDetailsScreen(
-                              title: "Postpartum Care",
-                              details: cardDetails["Postpartum Care"]!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-                    InformationCard(
-                      title: "Prevention of GDM – UAE-Specific Tips",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InformationDetailsScreen(
-                              title: "Prevention of GDM – UAE-Specific Tips",
-                              details: cardDetails["Prevention of GDM – UAE-Specific Tips"]!,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    ..._filteredTitles.map((title) => Column(
+                      children: [
+                        InformationCard(
+                          title: title,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InformationDetailsScreen(
+                                  title: title,
+                                  details: cardDetails[title]!,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: 8.h),
+                      ],
+                    )).toList(),
                   ],
                 ),
               ),

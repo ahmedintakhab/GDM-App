@@ -144,7 +144,7 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
           }
           _lastStepTime = now;
 
-          if (steps % 10 == 0) {
+          if (steps % 2 == 0) {
             _updateFirestoreSteps(); // Save steps to Firestore periodically
           }
         }

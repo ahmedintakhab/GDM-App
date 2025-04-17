@@ -152,7 +152,7 @@ class HomeContent extends StatelessWidget {
                   }),
                     SizedBox(height: 16),
 
-                    if (userProvider.userType != 'Doctor') ...[
+                    if (userProvider.userType != 'Doctor' && userProvider.userType != 'Not Pregnant') ...[
 
                 //Linear percentage bar container function calling
                     LinearProgressContainer(),
@@ -213,7 +213,7 @@ class HomeContent extends StatelessWidget {
                         // ),
                         // const SizedBox(width: 16),
                         // Spacer between the two containers
-                    if (userProvider.userType != 'Doctor') ...[
+                        if (userProvider.userType != 'Doctor' && userProvider.userType != 'Not Pregnant') ...[
                       SizedBox(width: 16.w), // Responsive spacing using ScreenUtil
 
                       // Second Container (Glucose)
@@ -243,10 +243,14 @@ class HomeContent extends StatelessWidget {
                     // HealthMetricsRow(),
                     // SizedBox(height: 16),
                     //Doctor checkup container function calling
-                    DoctorVisitContainer(),
-                    SizedBox(height: 16),
+            if (userProvider.userType != 'Doctor' && userProvider.userType != 'Not Pregnant') ...[
+
+              DoctorVisitContainer(),
+                    SizedBox(height: 16),],
 
                     // Weekly Graph Container
+                    if (userProvider.userType != 'Doctor' && userProvider.userType != 'Not Pregnant') ...[
+
                     Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
@@ -277,6 +281,7 @@ class HomeContent extends StatelessWidget {
                         ],
                       ),
                     ),
+                        ],
                   ],
                 ),
               ),
