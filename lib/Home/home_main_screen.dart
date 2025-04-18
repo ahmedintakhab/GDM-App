@@ -145,8 +145,6 @@ class HomeContent extends StatelessWidget {
                   children: [
                     // Chat Container
                     // ChatContainer(),
-                    SizedBox(height: 16),
-
                     // Progress and Steps Count
                     ProgressAndStepscount(),
                      SizedBox(height: 16),

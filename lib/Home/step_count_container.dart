@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -165,7 +166,7 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
     return Expanded(
       flex: 2,
       child: Container(
-        height: 120,
+        height: 150,
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -177,64 +178,82 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
             ),
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // Left side: Circular Progress Indicator with Icon
+            Stack(
+              alignment: Alignment.center,
               children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.directions_walk,
-                      color: _isWalking ? const Color(0xFF5AA189) : Colors.grey,
-                      size: 20,
+                SizedBox(
+                  width: 130, // Increased size
+                  height: 130, // Increased size
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(
+                      value: steps / 1000, // Range of 10,000 steps
+                      strokeWidth: 15,
+                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF5AA189)),
+                      backgroundColor: Colors.grey[200],
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Steps Count',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _isWalking ? Colors.green : Colors.grey[300],
+                Positioned(
+                  top: 30, // Adjusted for larger circle
+                  child: Icon(
+                    Icons.directions_walk,
+                    color: _isWalking ? Colors.green : Colors.grey,
+                    size: 50, // Slightly larger icon to match scale
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              steps.toString(),
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            SizedBox(width: 40.w,),
+            // Right side: Steps, Walking Indicator, and Debug Text
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        steps.toString(),
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF5AA189),
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: _isWalking ? Colors.green : Colors.grey[300],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'steps',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF5AA189),
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    _debugText,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey[400],
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-            ),
-            Text(
-              'steps',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              _debugText,
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.grey[400],
-              ),
-              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
