@@ -132,9 +132,16 @@ class _TodayTabState extends State<TodayTab> {
         .map((data) => data['value'] as int)
         .toList();
 
+    final units = userProvider.glucoseData
+        .where((data) => data['unit'] != null)
+        .map((data) => data['unit'] as String)
+        .toList();
+
     final averageGlucose = glucoseValues.isNotEmpty
         ? glucoseValues.reduce((a, b) => a + b) / glucoseValues.length
         : 0;
+    // Use the most recent unit if available, otherwise default to 'mg/dl'
+    final unit = units.isNotEmpty ? units.first : 'mg/dl';
 
     final mood = _getMoodForValue(averageGlucose.toDouble());
 
@@ -196,7 +203,7 @@ class _TodayTabState extends State<TodayTab> {
               ),
               SizedBox(width: 8),
               Text(
-                '${averageGlucose.toStringAsFixed(1)}',
+                '${averageGlucose.toInt()}',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -204,7 +211,7 @@ class _TodayTabState extends State<TodayTab> {
                 ),
               ),
               Text(
-                ' mg/dl',
+                '$unit',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[600],
@@ -219,8 +226,7 @@ class _TodayTabState extends State<TodayTab> {
 
   Widget _buildGlucoseLevelsCard(UserProvider userProvider) {
     final validGlucoseData = userProvider.glucoseData
-        .where((data) => data['value'] != null && data['timestamp'] != null)
-        .toList();
+        .where((data) => data['value'] != null && data['timestamp'] != null && data['mealOption'] != null)        .toList();
 
     if (validGlucoseData.isEmpty) {
       return Container(
@@ -286,21 +292,26 @@ class _TodayTabState extends State<TodayTab> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       interval: 1,
+                      reservedSize: 40,
                       getTitlesWidget: (value, meta) {
                         if (value.toInt() >= validGlucoseData.length) return SizedBox();
-                        final date = validGlucoseData[value.toInt()]['timestamp'].toDate();
-                        final hour = date.hour > 12 ? date.hour - 12 : (date.hour == 0 ? 12 : date.hour);
-                        final minute = date.minute.toString().padLeft(2, '0');
-                        final period = date.hour >= 12 ? 'pm' : 'am';
-
+                        final mealOption = validGlucoseData[value.toInt()]['mealOption'] as String;
+                        // Shorten mealOption for display
+                        final shortLabel = mealOption
+                            .replaceAll('Before ', 'Pre ')
+                            .replaceAll('After ', 'Post ')
+                            .replaceAll('Breakfast', 'B')
+                            .replaceAll('Lunch', 'L')
+                            .replaceAll('Dinner', 'D');
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            '$hour:$minute $period',
+                            shortLabel,
                             style: TextStyle(
                               fontSize: 10,
                               color: Colors.grey[600],
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         );
                       },

@@ -319,9 +319,16 @@ class UserProvider extends ChangeNotifier {
 
         _glucoseData = glucoseSnapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>;
+          // Parse glucoseLevel string (e.g., "99 mmol/L")
+          final glucoseLevel = data['glucoseLevel'] as String;
+          final parts = glucoseLevel.split(' ');
+          final value = int.parse(parts[0]); // Extract number
+          final unit = parts[1]; // Extract unit
           return {
-            'value': data['glucoseLevel'],
+            'value': value,
+            'unit': unit,
             'timestamp': data['dateTime'],
+            'mealOption': data['mealOption'] ?? 'Unknown', // Include mealOption
           };
         }).toList();
       }else {
@@ -366,9 +373,12 @@ class UserProvider extends ChangeNotifier {
       }
     }
 
-    // Calculate averages
+    // Calculate averages and truncate decimals
     dailyValues.forEach((day, values) {
-      weeklyAverages[weekDays[day]] = values.reduce((a, b) => a + b) / values.length;
+      if (values.isNotEmpty) {
+        final average = values.reduce((a, b) => a + b) / values.length;
+        weeklyAverages[weekDays[day]] = average.floor().toDouble(); // Truncate decimals
+      }
     });
 
     return weeklyAverages;
@@ -378,8 +388,10 @@ class UserProvider extends ChangeNotifier {
     final weeklyData = getWeeklyAverages();
     final values = weeklyData.values.where((value) => value > 0);
 
-    return values.isEmpty ? 0 : values.reduce((a, b) => a + b) / values.length;
-  }
+    if (values.isEmpty) return 0;
+    final average = values.reduce((a, b) => a + b) / values.length;
+    return average.floor().toDouble(); // Truncate decimals
+     }
 
   String getWeeklyMood() {
     final average = getWeeklyAverage();

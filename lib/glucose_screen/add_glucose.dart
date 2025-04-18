@@ -25,6 +25,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
 
   String _selectedMealOption = 'Before Breakfast';
   bool _isLoading = false; // Track loading state
+  String _selectedUnit = 'mg/dl';
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -59,13 +60,26 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
         final date = _dateController.text;
         final time = _timeController.text;
 
+        // Parse and validate glucose value
+        final glucoseValue = int.tryParse(_glucoseController.text);
+        if (glucoseValue == null) {
+          Utils().toastMessage('Please enter a valid glucose value!');
+          setState(() {
+            _isLoading = false;
+          });
+          return;
+        }
+        // Combine glucose value and unit
+        final glucoseWithUnit = '$glucoseValue $_selectedUnit';
+        print('Check new glucose:$glucoseWithUnit');
+
         // Combine date and time into a single DateTime object
         final dateTime = DateFormat('yyyy-MM-dd HH:mm').parse('$date $time');
 
         // Prepare the glucose data
         final glucoseData = {
           'dateTime': Timestamp.fromDate(dateTime), // Save as Timestamp
-          'glucoseLevel': int.parse(_glucoseController.text),
+          'glucoseLevel': glucoseWithUnit,
           'mealOption': _selectedMealOption,
         };
 
@@ -219,11 +233,31 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: const Text(
-                              'mg/dl',
-                              style: TextStyle(
+                            child: DropdownButton<String>(
+                              value: _selectedUnit,
+                              items: ['mg/dl', 'mmol/L'].map((String unit) {
+                                return DropdownMenuItem<String>(
+                                  value: unit,
+                                  child: Text(
+                                    unit,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  setState(() {
+                                    _selectedUnit = newValue;
+                                  });
+                                }
+                              },
+                              underline: SizedBox(),
+                              icon: Icon(
+                                Icons.arrow_drop_down,
                                 color: Colors.grey,
-                                fontSize: 16,
                               ),
                             ),
                           ),

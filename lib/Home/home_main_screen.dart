@@ -223,8 +223,7 @@ class HomeContent extends StatelessWidget {
                             title: 'Glucose',
                             value: userProvider.isLoading
                                 ? 'Loading...'
-                                : '$averageGlucoseValue mg/dl',
-                            onTap: () {
+                                : '${averageGlucoseValue.toInt()} ${userProvider.glucoseData.isNotEmpty ? userProvider.glucoseData.first['unit'] : 'mg/dl'}',                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
