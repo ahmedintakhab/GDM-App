@@ -184,7 +184,7 @@ class MonthlyTab extends StatelessWidget {
           ),
           SizedBox(height: 20),
           SizedBox(
-            height: 200,
+            height: 230,
             child: hasData
                 ? Stack(
               children: [
@@ -220,7 +220,7 @@ class MonthlyTab extends StatelessWidget {
                             sideTitles: SideTitles(
                               showTitles: true,
                               interval: 50,
-                              reservedSize: 40,
+                              reservedSize: 30,
                               getTitlesWidget: (value, meta) {
                                 return Text(
                                   '${value.toInt()}',
@@ -283,7 +283,7 @@ class MonthlyTab extends StatelessWidget {
 
   double _calculateMaxY(Map<int, double> monthlyData) {
     final maxValue = monthlyData.values.reduce((a, b) => a > b ? a : b);
-    return (maxValue * 1.2).ceilToDouble().clamp(100, 300).toDouble();
+    return (maxValue * 1.2).ceilToDouble();
   }
 
   Color _getBarColor(double value) {

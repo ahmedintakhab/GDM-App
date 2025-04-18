@@ -376,7 +376,7 @@ class _TodayTabState extends State<TodayTab> {
     final maxValue = glucoseData
         .map((data) => data['value'] as int)
         .reduce((a, b) => a > b ? a : b);
-    return (maxValue * 1.2).ceilToDouble().clamp(100, 300).toDouble();
+    return (maxValue * 1).ceilToDouble();
   }
 
   Color _getLineColor(List<dynamic> glucoseData) {

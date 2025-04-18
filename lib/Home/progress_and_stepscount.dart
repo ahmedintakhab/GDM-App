@@ -98,7 +98,7 @@ class ProgressAndStepscount extends StatelessWidget {
 
         // Right Container (Steps Count)
         StepsCountContainer()
-      
+
       ],
     );
   }

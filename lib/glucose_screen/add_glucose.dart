@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../Home/user_data_provider.dart';
+import '../widgets/time_picker.dart';
 import 'meal_selection_widget.dart'; // Import your UserProvider
 
 class AddGlucoseScreen extends StatefulWidget {
@@ -115,24 +116,17 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
     }
   }
 
+// Updated method to use TimePicker
   Future<void> _selectTime() async {
-    // Show the time picker
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(), // Set the initial time to the current time
+    await showTimePickerDialog(
+      context,
+          (selectedTime) {
+        setState(() {
+          _timeController.text = selectedTime;
+        });
+      },
     );
-
-    // If the user selects a time, update the text field
-    if (pickedTime != null) {
-      setState(() {
-        // Format the time as HH:mm
-        final hour = pickedTime.hour.toString().padLeft(2, '0');
-        final minute = pickedTime.minute.toString().padLeft(2, '0');
-        _timeController.text = '$hour:$minute';
-      });
-    }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
