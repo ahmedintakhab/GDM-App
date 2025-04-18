@@ -141,7 +141,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.grey[300],
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.r),
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
                             padding: EdgeInsets.symmetric(vertical: 12.h),
                           ),
@@ -163,7 +163,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0XFF5AA189),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.r),
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
                             padding: EdgeInsets.symmetric(vertical: 12.h),
                           ),

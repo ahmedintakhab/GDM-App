@@ -12,6 +12,10 @@ class UserProvider extends ChangeNotifier {
   String _lmp = '';
   String _dueDate = '';
   String? _personalInfoDocId; // To store the document ID
+  String? _lastVisit;
+  String? _nextVisit;
+
+
 
 
 
@@ -23,6 +27,8 @@ class UserProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   String get lmp => _lmp;
   String get dueDate => _dueDate;
+  String? get lastVisit => _lastVisit;
+  String? get nextVisit => _nextVisit;
 
 
   UserProvider() {
@@ -123,13 +129,6 @@ class UserProvider extends ChangeNotifier {
         'email': email,
       });
 
-
-      // // Update user data in the appropriate collection
-      // await _firestore.collection(collection).doc(uid).update({
-      //   'name': name,
-      //   'email': email,
-      // });
-
       // Update local state
       _name = name;
       _email = email;
@@ -145,6 +144,87 @@ class UserProvider extends ChangeNotifier {
       return false;
     }
   }
+  // Add this method to update visits
+  // Add this to your initialization or fetch method
+  Future<void> fetchDoctorVisits() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      // First try to get the document ID if we don't have it
+      if (_personalInfoDocId == null) {
+        final snapshot = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .collection('Personal Information')
+            .limit(1)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          _personalInfoDocId = snapshot.docs.first.id;
+        }
+      }
+
+      // Now fetch the visits data
+      final doc = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .collection('Personal Information')
+          .doc(_personalInfoDocId ?? 'default_doc')
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data()!;
+        setState(() {
+          _lastVisit = data['lastVisit'] as String?;
+          _nextVisit = data['nextVisit'] as String?;
+        });
+      }
+    } catch (e) {
+      print("Error fetching doctor visits: $e");
+    }
+  }
+
+// Update this method to ensure proper persistence
+  Future<void> updateDoctorVisits(String newNextVisit) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+
+      // Ensure we have the document ID
+      if (_personalInfoDocId == null) {
+        await fetchDoctorVisits();
+      }
+
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .collection('Personal Information')
+          .doc(_personalInfoDocId ?? 'default_doc')
+          .set({
+        'lastVisit': _nextVisit, // Current next becomes last
+        'nextVisit': newNextVisit,
+        'timestamp': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // Update local state
+      setState(() {
+        _lastVisit = _nextVisit;
+        _nextVisit = newNextVisit;
+      });
+    } catch (e) {
+      print("Error updating doctor visits: $e");
+    }
+  }
+
+// Helper method to safely update state
+  void setState(VoidCallback fn) {
+    if (!_isDisposed) {
+      fn();
+      _safeNotifyListeners();
+    }
+  }
+
 
   //Code for fetching LMP
   // Fetch pregnancy information
