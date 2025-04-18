@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:gdm_app/utils/utils.dart';
+
 
 import '../dialogbox/doctor_visit_dialogbox.dart';
 
@@ -140,7 +142,12 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
     );
 
     if (result != null) {
-      await provider.updateDoctorVisits(result);
+      try {
+        await provider.updateDoctorVisits(result);
+        Utils().toastMessage('Next Visit updated successfully!');
+      } catch (e) {
+        Utils().toastMessage('Failed to update Next Visit');
+      }
     }
   }
 }

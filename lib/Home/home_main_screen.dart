@@ -64,6 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: _screens[_selectedIndex], // Display the selected screen
       ),
+      floatingActionButton: const ChatActionButton(), // Add this line
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // Position at bottom right
+
       bottomNavigationBar: Container(
         height: 75,
         decoration: BoxDecoration(
@@ -141,7 +144,7 @@ class HomeContent extends StatelessWidget {
                 child: Column(
                   children: [
                     // Chat Container
-                    ChatContainer(),
+                    // ChatContainer(),
                     SizedBox(height: 16),
 
                     // Progress and Steps Count
