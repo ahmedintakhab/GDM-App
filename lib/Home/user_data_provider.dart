@@ -5,6 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 class UserProvider extends ChangeNotifier {
   String _name = '';
   String _email = '';
+  String _age = '';
+  String _weight = '';
+  String _height = '';
+  String _ethnicity = '';
   String _userType = ''; // Added userType field
   bool _isLoading = true;
   String? _errorMessage;
@@ -15,14 +19,14 @@ class UserProvider extends ChangeNotifier {
   String? _lastVisit;
   String? _nextVisit;
 
-
-
-
-
   // Getters
   String get name => _name;
   String get email => _email;
-  String get userType => _userType; // Added getter
+  String get age => _age;
+  String get weight => _weight;
+  String get height => _height;
+  String get ethnicity => _ethnicity;
+  String get userType => _userType;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String get lmp => _lmp;
@@ -52,6 +56,10 @@ class UserProvider extends ChangeNotifier {
   void resetUserData() {
     _name = '';
     _email = '';
+    _age = '';
+    _weight = '';
+    _height = '';
+    _ethnicity = '';
     _userType = '';
     _isLoading = true;
     _errorMessage = null;
@@ -81,32 +89,66 @@ class UserProvider extends ChangeNotifier {
       // Fetch user data from 'Users' collection
       DocumentSnapshot userDoc = await _firestore.collection('Users').doc(uid).get();
 
-      // If user document exists, populate the data
+      // If user document exists, populate name, email, and userType
       if (userDoc.exists) {
         final userData = userDoc.data() as Map<String, dynamic>;
-
         _name = userData['name'] ?? '';
         _email = userData['email'] ?? '';
         _userType = userData['userType'] ?? ''; // Fetch userType
-
-        _isLoading = false;
-
-        _safeNotifyListeners();
       } else {
         _errorMessage = "User data not found in Users collection";
-      }
         _isLoading = false;
         _safeNotifyListeners();
+        return;
       }
-     catch (e) {
+
+      // Fetch age, weight, height, ethnicity from 'Personal Information' subcollection
+      if (_personalInfoDocId == null) {
+        final snapshot = await _firestore
+            .collection('Users')
+            .doc(uid)
+            .collection('Personal Information')
+            .limit(1)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          _personalInfoDocId = snapshot.docs.first.id;
+        }
+      }
+
+      // Fetch data from Personal Information document
+      if (_personalInfoDocId != null) {
+        final personalInfoDoc = await _firestore
+            .collection('Users')
+            .doc(uid)
+            .collection('Personal Information')
+            .doc(_personalInfoDocId)
+            .get();
+
+        if (personalInfoDoc.exists) {
+          final personalData = personalInfoDoc.data() as Map<String, dynamic>;
+          _age = personalData['age'] ?? '';
+          _weight = personalData['weight'] ?? '';
+          _height = personalData['height'] ?? '';
+          _ethnicity = personalData['ethnicity'] ?? '';
+          // _lmp = personalData['lmp'] ?? '';
+          // _dueDate = personalData['lmp dueDate'] ?? '';
+          // _lastVisit = personalData['lastVisit'] as String?;
+          // _nextVisit = personalData['nextVisit'] as String?;
+        }
+      }
+
+      _isLoading = false;
+      _safeNotifyListeners();
+    } catch (e) {
       _errorMessage = "Error fetching user data: $e";
       _isLoading = false;
       _safeNotifyListeners();
       print("Error fetching user data: $e");
     }
   }
-
-  Future<bool> updateUserProfile(String name, String email) async {
+  Future<bool> updateUserProfile(
+      String name, String email, String age, String weight, String height, String ethnicity) async {
     _isLoading = true;
     _safeNotifyListeners();
 
@@ -123,15 +165,55 @@ class UserProvider extends ChangeNotifier {
         return false;
       }
 
-      // Update in 'Users' collection only
+      // Update name and email in 'Users' collection
       await _firestore.collection('Users').doc(uid).update({
         'name': name,
         'email': email,
       });
 
+      // Ensure we have the document ID for Personal Information
+      if (_personalInfoDocId == null) {
+        final snapshot = await _firestore
+            .collection('Users')
+            .doc(uid)
+            .collection('Personal Information')
+            .limit(1)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          _personalInfoDocId = snapshot.docs.first.id;
+        } else {
+          // Create a new document if none exists
+          final newDoc = await _firestore
+              .collection('Users')
+              .doc(uid)
+              .collection('Personal Information')
+              .add({});
+          _personalInfoDocId = newDoc.id;
+        }
+      }
+
+      // Update age, weight, height, ethnicity in 'Personal Information' subcollection
+      await _firestore
+          .collection('Users')
+          .doc(uid)
+          .collection('Personal Information')
+          .doc(_personalInfoDocId)
+          .set({
+        'age': age,
+        'weight': weight,
+        'height': height,
+        'ethnicity': ethnicity,
+        'timestamp': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
       // Update local state
       _name = name;
       _email = email;
+      _age = age;
+      _weight = weight;
+      _height = height;
+      _ethnicity = ethnicity;
       _isLoading = false;
       _safeNotifyListeners();
 
@@ -143,8 +225,7 @@ class UserProvider extends ChangeNotifier {
       print("Error updating profile: $e");
       return false;
     }
-  }
-  // Add this method to update visits
+  }  // Add this method to update visits
   // Add this to your initialization or fetch method
   Future<void> fetchDoctorVisits() async {
     try {

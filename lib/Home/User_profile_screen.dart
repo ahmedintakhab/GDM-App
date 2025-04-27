@@ -21,8 +21,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final  _nameController = TextEditingController();
+  final  _emailController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _ethnicityController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final reminderService = ReminderService();
   bool isLoading = true;
@@ -35,8 +39,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await userProvider.fetchUserData();
       if (mounted) {
         setState(() {
-          nameController.text = userProvider.name;
-          emailController.text = userProvider.email;
+          _nameController.text = userProvider.name;
+          _emailController.text = userProvider.email;
+          _ageController.text = userProvider.age;
+          _weightController.text = userProvider.weight;
+          _heightController.text = userProvider.height;
+          _ethnicityController.text = userProvider.ethnicity;
           isLoading = false;
         });
       }
@@ -45,8 +53,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
-    nameController.dispose();
-    emailController.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _ageController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
+    _ethnicityController.dispose();
     super.dispose();
   }
 
@@ -79,6 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           'Profile Update',
@@ -99,10 +112,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator(color: Color(0XFF5AA189)))
-          : Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: SingleChildScrollView(
+      ? Center(child: CircularProgressIndicator(color: Color(0XFF5AA189)))
+        : SafeArea(
+    child: SingleChildScrollView(
+    // Make sure it can scroll through the entire content area
+    physics: AlwaysScrollableScrollPhysics(),
+    padding: EdgeInsets.symmetric(horizontal: 20.w),
+    child: ConstrainedBox(
+    constraints: BoxConstraints(
+    minHeight: MediaQuery.of(context).size.height -
+    AppBar().preferredSize.height -
+    MediaQuery.of(context).padding.top,
+    ),
+
           child: Column(
             children: [
               SizedBox(height: 30.h),
@@ -117,8 +139,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: 30.h),
               CustomTextFormField(
-                controller: nameController,
-                hintText: 'Enter your name',
+                controller: _nameController,
+                hintText: 'Name',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your name';
@@ -128,8 +150,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               SizedBox(height: 16.h),
               CustomTextFormField(
-                controller: emailController,
-                hintText: 'Enter your email',
+                controller: _emailController,
+                hintText: 'Email',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your email';
@@ -139,6 +161,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }
                   return null;
                 },
+              ),
+              SizedBox(height: 16.h),
+              // Other Fields
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextFormField(
+                      controller: _ageController,
+                      keyboardType: TextInputType.phone,
+                      hintText: 'Age',
+                      validator: (value) => null,
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: CustomTextFormField(
+                      controller: _weightController,
+                      hintText: 'Weight (kg)',
+                      keyboardType: TextInputType.phone,
+                      validator: (value) => null,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+
+              // Height and Ethnicity in one row
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextFormField(
+                      controller: _heightController,
+                      hintText: 'Height (cm)',
+                      keyboardType: TextInputType.phone,
+                      validator: (value) => null,
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: CustomTextFormField(
+                      controller: _ethnicityController,
+                      hintText: 'Ethnicity',
+                      validator: (value) => null,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 30.h),
               CustomButton(
@@ -172,6 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+      )
     );
   }
 
@@ -189,8 +258,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       bool success = await userProvider.updateUserProfile(
-        nameController.text,
-        emailController.text,
+        _nameController.text,
+        _emailController.text,
+        _ageController.text,
+        _weightController.text,
+        _heightController.text,
+        _ethnicityController.text,
       );
       if (!mounted) return;
       Navigator.pop(context);
