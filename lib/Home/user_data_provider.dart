@@ -9,8 +9,19 @@ class UserProvider extends ChangeNotifier {
   String _weight = '';
   String _height = '';
   String _ethnicity = '';
+  String _gender = '';
+  String _waist = '';
+  String _diabetes = '';
+  String _childrenAlive = '';
+  String _deliveries = '';
+  String _pregnancies = '';
+  String _diabetesTestDate = '';
+  String _miscarriages = '';
+  String _stillbirths = '';
+  String _familytHistory = '';
+  String _hypertension = '';
   String _userType = ''; // Added userType field
-  bool _isLoading = true;
+  bool _isLoading = false;
   String? _errorMessage;
   bool _isDisposed = false; // Add this flag
   String _lmp = '';
@@ -23,8 +34,19 @@ class UserProvider extends ChangeNotifier {
   String get name => _name;
   String get email => _email;
   String get age => _age;
+  String get gender => _gender;
+  String get waist => _waist;
   String get weight => _weight;
   String get height => _height;
+  String get diabetes => _diabetes;
+  String get childrenAlive => _childrenAlive;
+  String get deliveries => _deliveries;
+  String get pregnancies => _pregnancies;
+  String get diabetesTestDate => _diabetesTestDate;
+  String get miscarriages => _miscarriages;
+  String get stillbirths => _stillbirths;
+  String get familyHistory => _familytHistory;
+  String get hypertension => _hypertension;
   String get ethnicity => _ethnicity;
   String get userType => _userType;
   bool get isLoading => _isLoading;
@@ -57,12 +79,28 @@ class UserProvider extends ChangeNotifier {
     _name = '';
     _email = '';
     _age = '';
+    _gender = '';
+    _waist = '';
     _weight = '';
     _height = '';
     _ethnicity = '';
+    _diabetes = '';
+    _childrenAlive = '';
+    _deliveries = '';
+    _pregnancies = '';
+    _diabetesTestDate = '';
+    _miscarriages = '';
+    _stillbirths = '';
+    _familytHistory = '';
+    _hypertension= '';
     _userType = '';
-    _isLoading = true;
+    _isLoading = false;
     _errorMessage = null;
+    _personalInfoDocId = null;
+    _lmp = '';
+    _dueDate = '';
+    _lastVisit = null;
+    _nextVisit = null;
     _glucoseData = [];
     _safeNotifyListeners();
   }
@@ -130,11 +168,22 @@ class UserProvider extends ChangeNotifier {
           _age = personalData['age'] ?? '';
           _weight = personalData['weight'] ?? '';
           _height = personalData['height'] ?? '';
+          _gender = personalData['gender'] ?? '';
+          _waist = personalData['waist'] ?? '';
           _ethnicity = personalData['ethnicity'] ?? '';
-          // _lmp = personalData['lmp'] ?? '';
-          // _dueDate = personalData['lmp dueDate'] ?? '';
-          // _lastVisit = personalData['lastVisit'] as String?;
-          // _nextVisit = personalData['nextVisit'] as String?;
+          _diabetes = personalData['diabetes'] ?? '';
+          _stillbirths = personalData['stillbirths'] ?? '';
+          _miscarriages = personalData['miscarriages'] ?? '';
+          _pregnancies = personalData['pregnancies'] ?? '';
+          _diabetesTestDate = personalData['diabetesTestDate'] ?? '';
+          _childrenAlive = personalData['childrenAlive'] ?? '';
+          _deliveries = personalData['deliveries'] ?? '';
+          _familytHistory = personalData['familyHistory'] ?? '';
+          _hypertension = personalData['hypertension'] ?? '';
+          _lmp = personalData['lmp'] ?? '';
+          _dueDate = personalData['lmp dueDate'] ?? '';
+          _lastVisit = personalData['lastVisit'] as String?;
+          _nextVisit = personalData['nextVisit'] as String?;
         }
       }
 
@@ -148,7 +197,24 @@ class UserProvider extends ChangeNotifier {
     }
   }
   Future<bool> updateUserProfile(
-      String name, String email, String age, String weight, String height, String ethnicity) async {
+      String name,
+      String email,
+      String age,
+      String weight,
+      String height,
+      String ethnicity,
+      // Include other fields to update
+          {String gender = '',
+        String waist = '',
+        String diabetes = '',
+        String hypertension = '',
+        String deliveries = '',
+        String childrenAlive = '',
+        String pregnancies = '',
+        String diabetesTestDate = '',
+        String miscarriages = '',
+        String stillbirths = '',
+        String familyHistory = ''}) async {
     _isLoading = true;
     _safeNotifyListeners();
 
@@ -204,6 +270,17 @@ class UserProvider extends ChangeNotifier {
         'weight': weight,
         'height': height,
         'ethnicity': ethnicity,
+        'gender': gender,
+        'waist': waist,
+        'diabetes': diabetes,
+        'hypertension': hypertension,
+        'deliveries': deliveries,
+        'childrenAlive': childrenAlive,
+        'pregnancies': pregnancies,
+        'diabetesTestDate': diabetesTestDate,
+        'miscarriages': miscarriages,
+        'stillbirths': stillbirths,
+        'familyHistory': familyHistory,
         'timestamp': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
 
@@ -212,8 +289,19 @@ class UserProvider extends ChangeNotifier {
       _email = email;
       _age = age;
       _weight = weight;
+      _gender = gender;
+      _waist = waist;
       _height = height;
       _ethnicity = ethnicity;
+      _diabetes = diabetes;
+      _deliveries = deliveries;
+      _childrenAlive = childrenAlive;
+      _pregnancies = pregnancies;
+      _diabetesTestDate = diabetesTestDate;
+      _stillbirths = stillbirths;
+      _miscarriages = miscarriages;
+      _familytHistory = familyHistory;
+      _hypertension = hypertension;
       _isLoading = false;
       _safeNotifyListeners();
 

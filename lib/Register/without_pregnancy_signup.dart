@@ -18,9 +18,6 @@ final _formKey = GlobalKey<FormState>();
 
 class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
   bool loading =false;
-  // final _nameController = TextEditingController();
-  // final _emailController = TextEditingController();
-  // final _passwordController = TextEditingController();
   final  _ageController = TextEditingController();
   final  _genderController = TextEditingController();
   final  _heightController = TextEditingController();

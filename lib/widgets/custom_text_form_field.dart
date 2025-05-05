@@ -5,6 +5,7 @@ Widget CustomTextFormField({
   required TextEditingController controller,
   required String hintText,
   required String? Function(String?) validator,
+  String? labelText,
   TextInputType keyboardType = TextInputType.text, // Added keyboardType parameter
   bool isPasswordField = false,
   bool obscureText = false,
@@ -24,6 +25,13 @@ Widget CustomTextFormField({
         fontFamily: 'Gilroy',
         color: const Color(0XFF9B9B9B),
         fontWeight: FontWeight.bold,
+      ),
+      labelText: labelText, // Use optional labelText
+      labelStyle: TextStyle(
+        fontSize: 16.sp,
+        fontFamily: 'Gilroy',
+        color: const Color(0xFF5AA189), // Match theme color
+        fontWeight: FontWeight.w600,
       ),
       suffixIcon: suffixIcon,
       focusedBorder: OutlineInputBorder(
