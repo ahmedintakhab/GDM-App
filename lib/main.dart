@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
@@ -6,14 +7,16 @@ import 'package:provider/provider.dart';
 import 'Home/user_data_provider.dart';
 import 'Splash Screen/splash_screen.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // Initialize Firebase Analytics
+  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
   // Create a singleton instance of ReminderService
   final ReminderService reminderService = ReminderService();
 
-  // Initialize the notification plugin
-  await reminderService.initNotifications();
+  // Initialize the ReminderService
+  await reminderService.init();
   runApp(
     MultiProvider(
       providers: [
@@ -22,7 +25,8 @@ void main() async{
       ],
       child: MyApp(reminderService: reminderService),
     ),
-  );}
+  );
+}
 
 class MyApp extends StatelessWidget {
   final ReminderService reminderService;
@@ -45,4 +49,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

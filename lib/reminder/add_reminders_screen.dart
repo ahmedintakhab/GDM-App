@@ -20,15 +20,13 @@ class _AddRemindersState extends State<AddReminders> {
   final TextEditingController _dateController = TextEditingController();
   String? _selectedDropdownValue;
   String _selectedFrequency = 'Everyday'; // Default frequency
-  bool _showDiabetesTestDate = false;
   bool _isLoading = false;
 
-  // Add a list of frequency options
   final List<String> _frequencyOptions = [
     'Everyday',
     'Weekdays',
     'Weekends',
-    'Mon, Wed, Fri',
+    ' SLOWSn, Wed, Fri',
     'Tue, Thu',
     'Once',
   ];
@@ -37,8 +35,8 @@ class _AddRemindersState extends State<AddReminders> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime.now(), // Start from today
-      lastDate: DateTime(2100), // Allow future dates for reminders
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
     );
     if (picked != null) {
       setState(() {
@@ -112,7 +110,6 @@ class _AddRemindersState extends State<AddReminders> {
   }
 
   Future<void> _addReminder() async {
-    // Validate inputs
     if (_timeController.text.isEmpty ||
         _dateController.text.isEmpty ||
         _selectedDropdownValue == null) {
@@ -129,19 +126,17 @@ class _AddRemindersState extends State<AddReminders> {
     });
 
     try {
-      // Create a new reminder
       final newReminder = Reminder(
-        id: DateTime.now().millisecondsSinceEpoch.toString() + Random().nextInt(10000).toString(),
+        id: DateTime.now().millisecondsSinceEpoch.toString() +
+            Random().nextInt(10000).toString(),
         time: _timeController.text,
         frequency: _selectedFrequency,
         date: _dateController.text,
         type: _selectedDropdownValue!,
       );
 
-      // Add the reminder using the service
       await widget.reminderService.addReminder(newReminder);
 
-      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Reminder added successfully'),
@@ -149,7 +144,6 @@ class _AddRemindersState extends State<AddReminders> {
         ),
       );
 
-      // Navigate to AllReminders screen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -159,7 +153,6 @@ class _AddRemindersState extends State<AddReminders> {
         ),
       );
     } catch (e) {
-      // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to add reminder: ${e.toString()}'),
@@ -189,7 +182,6 @@ class _AddRemindersState extends State<AddReminders> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dropdown Widget
             DropdownWidget(
               onChanged: (value) {
                 setState(() {
@@ -208,8 +200,6 @@ class _AddRemindersState extends State<AddReminders> {
               label: 'Select an option',
             ),
             SizedBox(height: 16),
-
-            // Time Picker Text Field
             CustomTextFormField(
               controller: _timeController,
               hintText: 'Select time (HH:mm)',
@@ -222,8 +212,6 @@ class _AddRemindersState extends State<AddReminders> {
               ),
             ),
             SizedBox(height: 16),
-
-            // Date Picker Text Field
             CustomTextFormField(
               controller: _dateController,
               hintText: 'Select date (yyyy-MM-dd)',
@@ -236,8 +224,6 @@ class _AddRemindersState extends State<AddReminders> {
               value?.isEmpty ?? true ? 'Please select date' : null,
             ),
             SizedBox(height: 16),
-
-            // Frequency Selector
             Text(
               'Repeat Frequency',
               style: TextStyle(
@@ -279,8 +265,6 @@ class _AddRemindersState extends State<AddReminders> {
               ),
             ),
             SizedBox(height: 24),
-
-            // Set Reminder Button
             _isLoading
                 ? Center(child: CircularProgressIndicator(color: Color(0XFF5AA189)))
                 : CustomButton(

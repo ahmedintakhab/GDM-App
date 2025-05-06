@@ -13,13 +13,6 @@ class AllReminders extends StatefulWidget {
 }
 
 class _AllRemindersState extends State<AllReminders> {
-  @override
-  void initState() {
-    super.initState();
-    // Initialize notifications when the screen loads
-    widget.reminderService.initNotifications();
-  }
-
   void _deleteReminder(String id) async {
     try {
       await widget.reminderService.deleteReminder(id);
@@ -143,8 +136,7 @@ class _AllRemindersState extends State<AllReminders> {
                 );
               },
             );
-          }
-      ),
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

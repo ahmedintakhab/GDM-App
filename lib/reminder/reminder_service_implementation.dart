@@ -1,12 +1,9 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tz_init;
 
 class Reminder {
   final String id;
@@ -53,76 +50,189 @@ class Reminder {
 class ReminderService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FlutterLocalNotificationsPlugin _notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
-  static bool _isInitialized = false;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  Future<void> initNotifications() async {
-    if (_isInitialized) return;
-
+  Future<void> init() async {
     try {
-      // Initialize timezones
-      tz_init.initializeTimeZones();
-      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(timeZoneName));
-      print('Timezone initialized: $timeZoneName');
+      // Request notification permissions
+      await requestNotificationPermission();
 
-      // Initialize notifications plugin
-      const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+      // Initialize local notifications
+      await _initLocalNotifications();
 
-      final DarwinInitializationSettings initializationSettingsIOS =
-      DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
+      // Get and store FCM token
+      String? token = await _messaging.getToken();
+      if (token != null && _auth.currentUser != null) {
+        await _firestore
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .set({'fcmToken': token}, SetOptions(merge: true));
+        print('FCM token stored: $token');
+      }
 
-      final initSettings = InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsIOS,
-      );
+      // Listen for token refresh
+      _messaging.onTokenRefresh.listen((token) async {
+        if (_auth.currentUser != null) {
+          await _firestore
+              .collection('Users')
+              .doc(_auth.currentUser!.uid)
+              .set({'fcmToken': token}, SetOptions(merge: true));
+          print('FCM token updated: $token');
+        }
+      });
 
-      await _notificationsPlugin.initialize(
-        initSettings,
-        onDidReceiveNotificationResponse: (response) {
-          print('Notification tapped: ${response.payload}');
-          // Handle notification tap here
-        },
-      );
+      // Handle foreground messages
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        print('Received foreground message: ${message.notification?.title}');
+        // Display a local notification
+        if (message.notification != null) {
+          _showLocalNotification(
+            title: message.notification!.title ?? 'Notification',
+            body: message.notification!.body ?? '',
+          );
+        }
+      });
 
-      // Create notification channel
-      await _createNotificationChannel();
-
-      // Schedule all active reminders
-      await scheduleAllActiveReminders();
-
-      _isInitialized = true;
-      print('Notification system initialized');
+      // Handle background messages
+      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     } catch (e) {
-      print('Error in initNotifications: $e');
+      print('Error initializing ReminderService: $e');
       rethrow;
     }
   }
 
-  Future<void> _createNotificationChannel() async {
-    AndroidNotificationChannel channel = AndroidNotificationChannel(
+  Future<void> _initLocalNotifications() async {
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await _notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        print('Notification tapped: ${response.payload}');
+        // Handle notification tap (e.g., navigate to a screen)
+      },
+    );
+
+    // Create notification channel for Android
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'reminder_channel',
       'Reminders',
       description: 'Channel for important reminders',
       importance: Importance.max,
       playSound: true,
       enableVibration: true,
-      sound: const RawResourceAndroidNotificationSound('notification_sound'),
-      // Fixed Int64List by making it nullable
-      vibrationPattern: Int64List.fromList([0, 250, 250, 250]),
-      showBadge: true,
     );
 
     await _notificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
-    print('Notification channel created');
+  }
+
+  Future<void> _showLocalNotification({required String title, required String body}) async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'reminder_channel',
+      'Reminders',
+      channelDescription: 'Channel for important reminders',
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: true,
+      enableVibration: true,
+    );
+    const NotificationDetails platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: DarwinNotificationDetails(),
+    );
+
+    await _notificationsPlugin.show(
+      0, // Notification ID
+      title,
+      body,
+      platformDetails,
+    );
+  }
+
+  Future<void> requestNotificationPermission() async {
+    NotificationSettings settings = await _messaging.requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: true,
+      criticalAlert: true,
+      provisional: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      if (kDebugMode) {
+        print('user granted permission');
+      }
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      if (kDebugMode) {
+        print('user granted provisional permission');
+      }
+    } else {
+      if (kDebugMode) {
+        print('user denied permission');
+      }
+      // Open notification settings if permission is denied
+      await AppSettings.openAppSettings(type: AppSettingsType.notification);
+    }
+  }
+
+  static Future<void> _initializeNotificationsForBackground() async {
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await _notificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        print('Background notification tapped: ${response.payload}');
+      },
+    );
+  }
+
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await _initializeNotificationsForBackground();
+    print('Handling background message: ${message.notification?.title}');
+    if (message.notification != null) {
+      const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+        'reminder_channel',
+        'Reminders',
+        channelDescription: 'Channel for important reminders',
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        enableVibration: true,
+      );
+      const NotificationDetails platformDetails = NotificationDetails(
+        android: androidDetails,
+        iOS: DarwinNotificationDetails(),
+      );
+
+      await _notificationsPlugin.show(
+        0,
+        message.notification!.title ?? 'Notification',
+        message.notification!.body ?? '',
+        platformDetails,
+      );
+    }
   }
 
   Future<CollectionReference> _getUserReminderCollection() async {
@@ -141,19 +251,6 @@ class ReminderService {
       final reminderCollection = await _getUserReminderCollection();
       final docRef = await reminderCollection.add(reminder.toMap());
       await docRef.update({'id': docRef.id});
-
-      await _cancelNotification(docRef.id);
-
-      if (reminder.isActive) {
-        await _scheduleReminderNotification(Reminder(
-          id: docRef.id,
-          time: reminder.time,
-          frequency: reminder.frequency,
-          date: reminder.date,
-          type: reminder.type,
-          isActive: true,
-        ));
-      }
       print('Reminder added successfully');
     } catch (e) {
       print('Error adding reminder: $e');
@@ -165,7 +262,6 @@ class ReminderService {
     try {
       final reminderCollection = await _getUserReminderCollection();
       await reminderCollection.doc(reminderId).delete();
-      await _cancelNotification(reminderId);
       print('Reminder deleted successfully');
     } catch (e) {
       print('Error deleting reminder: $e');
@@ -177,15 +273,6 @@ class ReminderService {
     try {
       final reminderCollection = await _getUserReminderCollection();
       await reminderCollection.doc(reminderId).update({'isActive': isActive});
-
-      final doc = await reminderCollection.doc(reminderId).get();
-      final reminder = Reminder.fromDocument(doc);
-
-      await _cancelNotification(reminderId);
-
-      if (isActive) {
-        await _scheduleReminderNotification(reminder);
-      }
       print('Reminder status updated to $isActive');
     } catch (e) {
       print('Error updating reminder status: $e');
@@ -217,246 +304,5 @@ class ReminderService {
       print('Error getting active reminders: $e');
       return [];
     }
-  }
-
-  Future<void> scheduleAllActiveReminders() async {
-    try {
-      await _notificationsPlugin.cancelAll();
-      print('Canceled all existing notifications');
-
-      final activeReminders = await getAllActiveReminders();
-      print('Found ${activeReminders.length} active reminders to schedule');
-
-      for (var reminder in activeReminders) {
-        if (reminder.frequency == 'Once') {
-          final date = DateTime.parse(reminder.date);
-          final time = _parseTimeString(reminder.time);
-          final combined = DateTime(
-              date.year, date.month, date.day, time.hour, time.minute);
-
-          if (combined.isBefore(DateTime.now())) {
-            print('Skipping past one-time reminder: ${reminder.id}');
-            await updateReminderStatus(reminder.id, false);
-            continue;
-          }
-        }
-
-        await _scheduleReminderNotification(reminder);
-      }
-      print('Finished scheduling all active reminders');
-    } catch (e) {
-      print('Error scheduling reminders: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _scheduleReminderNotification(Reminder reminder) async {
-    try {
-      print('Scheduling reminder: ${reminder.type} (${reminder.frequency})');
-      await _cancelNotification(reminder.id);
-
-      switch (reminder.frequency) {
-        case 'Everyday':
-          await _scheduleDailyReminder(reminder);
-          break;
-        case 'Weekdays':
-          await _scheduleWeeklyReminder(reminder, [1, 2, 3, 4, 5]);
-          break;
-        case 'Weekends':
-          await _scheduleWeeklyReminder(reminder, [6, 7]);
-          break;
-        case 'Mon, Wed, Fri':
-          await _scheduleWeeklyReminder(reminder, [1, 3, 5]);
-          break;
-        case 'Tue, Thu':
-          await _scheduleWeeklyReminder(reminder, [2, 4]);
-          break;
-        case 'Once':
-          await _scheduleSingleReminder(reminder);
-          break;
-        default:
-          await _scheduleSingleReminder(reminder);
-      }
-    } catch (e) {
-      print('Error scheduling reminder notification: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _scheduleSingleReminder(Reminder reminder) async {
-    try {
-      final date = DateTime.parse(reminder.date);
-      final time = _parseTimeString(reminder.time);
-      final scheduledDate = tz.TZDateTime(
-        tz.local,
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
-
-      print('Scheduling single reminder for: ${scheduledDate.toString()}');
-
-      await _showNotification(
-        reminder.id,
-        'Reminder: ${reminder.type}',
-        'Time for your ${reminder.type.toLowerCase()}',
-        scheduledDate,
-      );
-    } catch (e) {
-      print('Error in _scheduleSingleReminder: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _scheduleDailyReminder(Reminder reminder) async {
-    try {
-      final time = _parseTimeString(reminder.time);
-      final scheduledDate = _nextInstanceOfTime(time);
-
-      print('Scheduling daily reminder for: ${scheduledDate.toString()}');
-
-      await _showNotification(
-        reminder.id,
-        'Daily Reminder: ${reminder.type}',
-        'Time for your daily ${reminder.type.toLowerCase()}',
-        scheduledDate,
-        repeatDaily: true,
-      );
-    } catch (e) {
-      print('Error in _scheduleDailyReminder: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _scheduleWeeklyReminder(Reminder reminder, List<int> days) async {
-    try {
-      final time = _parseTimeString(reminder.time);
-      for (int day in days) {
-        final scheduledDate = _nextInstanceOfTimeAndDay(time, day);
-        print('Scheduling weekly reminder for day $day at: ${scheduledDate.toString()}');
-
-        await _showNotification(
-          '${reminder.id}-$day',
-          'Reminder: ${reminder.type}',
-          'Time for your ${reminder.type.toLowerCase()}',
-          scheduledDate,
-          repeatWeekly: true,
-        );
-      }
-    } catch (e) {
-      print('Error in _scheduleWeeklyReminder: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _showNotification(
-      String id,
-      String title,
-      String body,
-      tz.TZDateTime scheduledDate, {
-        bool repeatDaily = false,
-        bool repeatWeekly = false,
-      }) async {
-    try {
-      print('Preparing notification: $title at $scheduledDate');
-      final now = tz.TZDateTime.now(tz.local);
-
-      if (scheduledDate.isBefore(now)) {
-        if (repeatDaily || repeatWeekly) {
-          while (scheduledDate.isBefore(now)) {
-            scheduledDate = scheduledDate.add(const Duration(days: 1));
-          }
-          print('Rescheduled to future date: $scheduledDate');
-        } else {
-          print('Skipping - one-time notification time is in the past');
-          return;
-        }
-      }
-
-      const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-        'reminder_channel',
-        'Reminders',
-        channelDescription: 'Channel for important reminders',
-        importance: Importance.max,
-        playSound: true,
-        enableVibration: true,
-      );
-
-      final NotificationDetails platformDetails = NotificationDetails(
-        android: androidDetails,
-      );
-
-      await _notificationsPlugin.cancel(_getNotificationId(id));
-
-      await _notificationsPlugin.zonedSchedule(
-        _getNotificationId(id),
-        title,
-        body,
-        scheduledDate,
-        platformDetails,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        matchDateTimeComponents: repeatDaily
-            ? DateTimeComponents.time
-            : (repeatWeekly ? DateTimeComponents.dayOfWeekAndTime : null),
-      );
-
-      print('Notification scheduled successfully for: ${scheduledDate.toString()}');
-    } catch (e) {
-      print('Error in _showNotification: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _cancelNotification(String id) async {
-    try {
-      await _notificationsPlugin.cancel(_getNotificationId(id));
-      for (int i = 1; i <= 7; i++) {
-        await _notificationsPlugin.cancel(_getNotificationId('$id-$i'));
-      }
-      print('Notifications canceled for ID: $id');
-    } catch (e) {
-      print('Error canceling notifications: $e');
-      rethrow;
-    }
-  }
-
-  TimeOfDay _parseTimeString(String timeStr) {
-    try {
-      final parts = timeStr.split(':');
-      return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-    } catch (e) {
-      print('Error parsing time string: $timeStr');
-      return TimeOfDay.now();
-    }
-  }
-
-  tz.TZDateTime _nextInstanceOfTime(TimeOfDay time) {
-    final now = tz.TZDateTime.now(tz.local);
-    var scheduled = tz.TZDateTime(
-        tz.local, now.year, now.month, now.day, time.hour, time.minute);
-
-    if (scheduled.isBefore(now)) {
-      scheduled = scheduled.add(const Duration(days: 1));
-    }
-
-    return scheduled;
-  }
-
-  tz.TZDateTime _nextInstanceOfTimeAndDay(TimeOfDay time, int targetDay) {
-    var scheduled = _nextInstanceOfTime(time);
-    while (scheduled.weekday != targetDay) {
-      scheduled = scheduled.add(const Duration(days: 1));
-    }
-    return scheduled;
-  }
-
-  int _getNotificationId(String id) {
-    return id.hashCode & 0x7FFFFFFF;
-  }
-
-  void dispose() {
-    _notificationsPlugin.cancelAll();
   }
 }
