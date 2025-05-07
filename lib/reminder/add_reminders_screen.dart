@@ -143,6 +143,7 @@ class _AddRemindersState extends State<AddReminders> {
           backgroundColor: Color(0XFF5AA189),
         ),
       );
+      print('Reminder Added successfully');
 
       Navigator.pushReplacement(
         context,

@@ -137,6 +137,7 @@ class ReminderService {
         ?.createNotificationChannel(channel);
   }
 
+
   Future<void> _showLocalNotification({required String title, required String body}) async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'reminder_channel',
