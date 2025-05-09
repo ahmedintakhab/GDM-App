@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../Home/home_main_screen.dart';
 import '../Home/user_data_provider.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
@@ -25,6 +27,26 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordHidden = true;
    final _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+      if (user != null) {
+        await Provider.of<ReminderService>(context, listen: false).init();
+        await regenerateFcmToken(context); // Regenerate FCM token after auth state change
+      }
+    });
+  }
+
+     regenerateFcmToken(BuildContext context) async {
+    print('Regenerating FCM token');
+    await FirebaseMessaging.instance.deleteToken();
+    await Provider.of<ReminderService>(context, listen: false).updateFCMToken();
+    print('FCM token regeneration completed');
+  }
+
+
 
   void togglePasswordVisibility() {
     setState(() {
@@ -44,7 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
       Utils().toastMessage('User Login Successfully!');
+
       // Fetch new user data after successful login
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       await userProvider.fetchUserData();
@@ -69,6 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Reminder {
@@ -30,6 +28,7 @@ class Reminder {
       'date': date,
       'type': type,
       'isActive': isActive,
+      'notificationSent': false,
       'createdAt': FieldValue.serverTimestamp(),
     };
   }
@@ -51,219 +50,151 @@ class ReminderService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  bool _isInitialized = false;
 
   Future<void> init() async {
+    print('Entering init()');
+    if (_isInitialized) {
+      print('init() skipped: Already initialized');
+      return;
+    }
+
     try {
-      // Request notification permissions
-      await requestNotificationPermission();
+      print('Requesting notification permission');
+      await _requestNotificationPermission(); // Added to ensure permissions
+      print('Setting FCM auto-init');
+      await _messaging.setAutoInitEnabled(true);
+      print('Updating FCM token');
+      await updateFCMToken();
 
-      // Initialize local notifications
-      await _initLocalNotifications();
-
-      // Get and store FCM token
-      String? token = await _messaging.getToken();
-      if (token != null && _auth.currentUser != null) {
-        await _firestore
-            .collection('Users')
-            .doc(_auth.currentUser!.uid)
-            .set({'fcmToken': token}, SetOptions(merge: true));
-        print('FCM token stored: $token');
-      }
-
-      // Listen for token refresh
-      _messaging.onTokenRefresh.listen((token) async {
-        if (_auth.currentUser != null) {
-          await _firestore
-              .collection('Users')
-              .doc(_auth.currentUser!.uid)
-              .set({'fcmToken': token}, SetOptions(merge: true));
-          print('FCM token updated: $token');
-        }
+      print('Setting up listeners');
+      _messaging.onTokenRefresh.listen((token) {
+        print('Token refreshed: $token');
+        updateFCMToken();
       });
+      FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
-      // Handle foreground messages
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('Received foreground message: ${message.notification?.title}');
-        // Display a local notification
-        if (message.notification != null) {
-          _showLocalNotification(
-            title: message.notification!.title ?? 'Notification',
-            body: message.notification!.body ?? '',
-          );
-        }
-      });
-
-      // Handle background messages
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      _isInitialized = true;
+      print('init() completed successfully');
     } catch (e) {
       print('Error initializing ReminderService: $e');
       rethrow;
     }
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosInit = DarwinInitializationSettings();
+    const initSettings = InitializationSettings(android: androidInit, iOS: iosInit);
+    await _localNotifications.initialize(initSettings);
   }
 
-  Future<void> _initLocalNotifications() async {
-    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
-
-    await _notificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        print('Notification tapped: ${response.payload}');
-        // Handle notification tap (e.g., navigate to a screen)
-      },
-    );
-
-    // Create notification channel for Android
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'reminder_channel',
-      'Reminders',
-      description: 'Channel for important reminders',
-      importance: Importance.max,
-      playSound: true,
-      enableVibration: true,
-    );
-
-    await _notificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-  }
-
-
-  Future<void> _showLocalNotification({required String title, required String body}) async {
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-      'reminder_channel',
-      'Reminders',
-      channelDescription: 'Channel for important reminders',
-      importance: Importance.max,
-      priority: Priority.high,
-      playSound: true,
-      enableVibration: true,
-    );
-    const NotificationDetails platformDetails = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(),
-    );
-
-    await _notificationsPlugin.show(
-      0, // Notification ID
-      title,
-      body,
-      platformDetails,
-    );
-  }
-
-  Future<void> requestNotificationPermission() async {
-    NotificationSettings settings = await _messaging.requestPermission(
+  Future<void> _requestNotificationPermission() async {
+    print('Entering _requestNotificationPermission()');
+    final settings = await _messaging.requestPermission(
       alert: true,
-      announcement: true,
+      announcement: false,
       badge: true,
-      carPlay: true,
-      criticalAlert: true,
-      provisional: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
       sound: true,
     );
+    print('Notification permission settings: $settings');
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      if (kDebugMode) {
-        print('user granted permission');
-      }
+      print('User granted notification permission');
     } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      if (kDebugMode) {
-        print('user granted provisional permission');
-      }
+      print('User granted provisional notification permission');
     } else {
-      if (kDebugMode) {
-        print('user denied permission');
-      }
-      // Open notification settings if permission is denied
-      await AppSettings.openAppSettings(type: AppSettingsType.notification);
+      print('User declined notification permission');
     }
   }
 
-  static Future<void> _initializeNotificationsForBackground() async {
-    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
-
-    await _notificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        print('Background notification tapped: ${response.payload}');
-      },
-    );
+  Future<void> updateFCMToken() async {
+    print('Entering updateFCMToken()');
+    try {
+      if (_auth.currentUser != null) {
+        print('Current user UID: ${_auth.currentUser!.uid}');
+        String? token = await _messaging.getToken();
+        print('Retrieved FCM token: $token');
+        if (token != null) {
+          print('Writing FCM token to Firestore for user: ${_auth.currentUser!.uid}');
+          await _firestore.collection('Users').doc(_auth.currentUser!.uid).set({
+            'fcmToken': token,
+            'timezone': 'Asia/Karachi',
+            'updatedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
+          print('Successfully updated FCM token and set timezone to Asia/Karachi');
+        } else {
+          print('FCM token is null');
+        }
+      } else {
+        print('No user signed in');
+      }
+    } catch (e) {
+      print('Error updating FCM token: $e');
+    }
   }
 
-  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    await _initializeNotificationsForBackground();
-    print('Handling background message: ${message.notification?.title}');
+  Future<void> _handleForegroundMessage(RemoteMessage message) async {
+    print('Entering _handleForegroundMessage()');
     if (message.notification != null) {
-      const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      print('Foreground message received: ${message.notification!.title} - ${message.notification!.body}');
+      const androidDetails = AndroidNotificationDetails(
         'reminder_channel',
-        'Reminders',
-        channelDescription: 'Channel for important reminders',
+        'Reminder Notifications',
+        channelDescription: 'Notifications for reminders',
         importance: Importance.max,
         priority: Priority.high,
-        playSound: true,
-        enableVibration: true,
       );
-      const NotificationDetails platformDetails = NotificationDetails(
-        android: androidDetails,
-        iOS: DarwinNotificationDetails(),
-      );
-
-      await _notificationsPlugin.show(
+      const iosDetails = DarwinNotificationDetails();
+      const notificationDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
+      await _localNotifications.show(
         0,
-        message.notification!.title ?? 'Notification',
-        message.notification!.body ?? '',
-        platformDetails,
+        message.notification!.title,
+        message.notification!.body,
+        notificationDetails,
       );
+      print('Displayed local notification');
+    } else {
+      print('Foreground message received but no notification payload');
     }
-  }
-
-  Future<CollectionReference> _getUserReminderCollection() async {
-    final User? currentUser = _auth.currentUser;
-    if (currentUser == null) throw Exception('No user signed in');
-
-    final userDoc = await _firestore.collection('Users').doc(currentUser.uid).get();
-    if (!userDoc.exists) throw Exception('User not found');
-
-    return _firestore.collection('Users').doc(currentUser.uid).collection('reminders');
   }
 
   Future<void> addReminder(Reminder reminder) async {
+    print('Entering addReminder() with reminder: ${reminder.toMap()}');
     try {
-      print('Adding new reminder: ${reminder.type} at ${reminder.time}');
       final reminderCollection = await _getUserReminderCollection();
+      print('Adding reminder to collection: ${reminderCollection.path}');
       final docRef = await reminderCollection.add(reminder.toMap());
+      print('Reminder added with doc ID: ${docRef.id}');
       await docRef.update({'id': docRef.id});
-      print('Reminder added successfully');
+      print('Reminder updated with ID: ${reminder.id}');
     } catch (e) {
       print('Error adding reminder: $e');
       rethrow;
     }
   }
 
+  Future<CollectionReference> _getUserReminderCollection() async {
+    print('Entering _getUserReminderCollection()');
+    final user = _auth.currentUser;
+    if (user == null) {
+      print('No user signed in');
+      throw Exception('No user signed in');
+    }
+    print('User UID: ${user.uid}');
+    final collection = _firestore.collection('Users').doc(user.uid).collection('reminders');
+    print('Returning collection path: ${collection.path}');
+    return collection;
+  }
+
   Future<void> deleteReminder(String reminderId) async {
+    print('Entering deleteReminder() with reminderId: $reminderId');
     try {
       final reminderCollection = await _getUserReminderCollection();
+      print('Deleting reminder from collection: ${reminderCollection.path}');
       await reminderCollection.doc(reminderId).delete();
-      print('Reminder deleted successfully');
+      print('Reminder deleted: $reminderId');
     } catch (e) {
       print('Error deleting reminder: $e');
       rethrow;
@@ -271,10 +202,12 @@ class ReminderService {
   }
 
   Future<void> updateReminderStatus(String reminderId, bool isActive) async {
+    print('Entering updateReminderStatus() with reminderId: $reminderId, isActive: $isActive');
     try {
       final reminderCollection = await _getUserReminderCollection();
+      print('Updating reminder in collection: ${reminderCollection.path}');
       await reminderCollection.doc(reminderId).update({'isActive': isActive});
-      print('Reminder status updated to $isActive');
+      print('Reminder status updated: $reminderId, isActive: $isActive');
     } catch (e) {
       print('Error updating reminder status: $e');
       rethrow;
@@ -282,12 +215,17 @@ class ReminderService {
   }
 
   Stream<List<Reminder>> getReminders() async* {
+    print('Entering getReminders()');
     try {
       final reminderCollection = await _getUserReminderCollection();
+      print('Streaming reminders from collection: ${reminderCollection.path}');
       yield* reminderCollection
           .orderBy('createdAt', descending: true)
           .snapshots()
-          .map((snapshot) => snapshot.docs.map(Reminder.fromDocument).toList());
+          .map((snapshot) {
+        print('Received snapshot with ${snapshot.docs.length} reminders');
+        return snapshot.docs.map(Reminder.fromDocument).toList();
+      });
     } catch (e) {
       print('Error getting reminders: $e');
       yield [];
@@ -295,15 +233,41 @@ class ReminderService {
   }
 
   Future<List<Reminder>> getAllActiveReminders() async {
+    print('Entering getAllActiveReminders()');
     try {
       final reminderCollection = await _getUserReminderCollection();
-      final snapshot = await reminderCollection
-          .where('isActive', isEqualTo: true)
-          .get();
+      print('Querying active reminders from collection: ${reminderCollection.path}');
+      final snapshot = await reminderCollection.where('isActive', isEqualTo: true).get();
+      print('Retrieved ${snapshot.docs.length} active reminders');
       return snapshot.docs.map(Reminder.fromDocument).toList();
     } catch (e) {
       print('Error getting active reminders: $e');
       return [];
+    }
+  }
+
+  Future<void> fixExistingReminders() async {
+    print('Entering fixExistingReminders()');
+    try {
+      if (_auth.currentUser == null) {
+        print('No user signed in');
+        return;
+      }
+      final reminderCollection = await _getUserReminderCollection();
+      print('Fetching all reminders from collection: ${reminderCollection.path}');
+      final snapshot = await reminderCollection.get();
+      print('Retrieved ${snapshot.docs.length} reminders');
+      for (var doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>?;
+        if (data != null && data['notificationSent'] == null) {
+          print('Updating reminder ${doc.id} to add notificationSent: false');
+          await doc.reference.update({'notificationSent': false});
+          print('Updated reminder ${doc.id}');
+        }
+      }
+      print('fixExistingReminders() completed');
+    } catch (e) {
+      print('Error fixing reminders: $e');
     }
   }
 }
