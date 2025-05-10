@@ -86,8 +86,8 @@ exports.scheduleReminders = functions
           const minutesUntil = reminderTime.diff(nowInUserTz, 'minutes');
           console.log(`Reminder ${reminder.id}: ${reminderTime.format()} (${timezone}), Minutes until: ${minutesUntil}`);
 
-     if (minutesUntil === 0 && secondsUntil >= 0 && secondsUntil <= 20) {
-      console.log(`SENDING NOTIFICATION for reminder ${reminder.id}: ${reminder.type}`);
+          if (minutesUntil >= -1 && minutesUntil <= 1) {
+            console.log(`SENDING NOTIFICATION for reminder ${reminder.id}: ${reminder.type}`);
 
             const message = {
               token: fcmToken,
