@@ -82,13 +82,12 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 20.h),
-
-                // LMP Field
                 //LMP due date calculated using Naegele's rule
                 // LMP Field
                 CustomTextFormField(
                   controller: _lmpController,
                   hintText: 'Last Menstrual Period (LMP)',
+                  readOnly: true,
                   validator: (value) => value?.isEmpty ?? true ? 'Please enter LMP' : null,
                   suffixIcon: IconButton(
                     icon: Icon(Icons.calendar_today),

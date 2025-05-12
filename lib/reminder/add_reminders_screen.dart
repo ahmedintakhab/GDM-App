@@ -204,6 +204,7 @@ class _AddRemindersState extends State<AddReminders> {
             CustomTextFormField(
               controller: _timeController,
               hintText: 'Select time (HH:mm)',
+              readOnly: true,
               validator: (value) =>
               value?.isEmpty ?? true ? 'Please select time' : null,
               suffixIcon: IconButton(
@@ -215,6 +216,7 @@ class _AddRemindersState extends State<AddReminders> {
             SizedBox(height: 16),
             CustomTextFormField(
               controller: _dateController,
+              readOnly: true,
               hintText: 'Select date (yyyy-MM-dd)',
               suffixIcon: IconButton(
                 icon: Icon(Icons.calendar_today),

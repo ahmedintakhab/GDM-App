@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gdm_app/Home/home_main_screen.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/progress_bar.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
@@ -78,7 +79,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
       // Navigate to the LoginScreen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     } catch (e) {
       // Handle other errors
