@@ -25,9 +25,24 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
   final  _diabetesController = TextEditingController();
   final  _waistController = TextEditingController();
   final  _hypertensionController = TextEditingController();
+  final _weightController = TextEditingController();
+  final ValueNotifier<String> _selectedUnit = ValueNotifier<String>('kg');
   // String phoneNumber = '';
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  @override
+  void dispose() {
+    _ageController.dispose();
+    _genderController.dispose();
+    _heightController.dispose();
+    _ethnicityController.dispose();
+    _diabetesController.dispose();
+    _waistController.dispose();
+    _hypertensionController.dispose();
+    _weightController.dispose();
+    _selectedUnit.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +126,10 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       ),
                       const SizedBox(height: 16),
                       // Weight Input
-                      WeightInputField(),
+                      WeightInputField(
+                        weightController: _weightController,
+                        selectedUnit: _selectedUnit,
+                      ),
                       const SizedBox(height: 16),
                       // Age Input
                       CustomTextFormField(
