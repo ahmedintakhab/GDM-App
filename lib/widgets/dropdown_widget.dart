@@ -9,6 +9,7 @@ class DropdownWidget extends StatefulWidget {
   final TextEditingController diabetesTestDateController; // Non-nullable
   final List<String> items; // List of dropdown items
   final String label; // Label for the dropdown
+  final String hintText;
 
   const DropdownWidget({
     Key? key,
@@ -17,6 +18,7 @@ class DropdownWidget extends StatefulWidget {
     required this.diabetesTestDateController, // Non-nullable
     required this.items,
     required this.label,
+     this.hintText = 'Select Option',
   }) : super(key: key);
 
   @override
@@ -44,7 +46,7 @@ class _DropdownWidgetState extends State<DropdownWidget> {
           child: DropdownButton2<String>(
             isExpanded: true,
             hint: Text(
-              'Select Option',
+              widget.hintText,
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).hintColor,

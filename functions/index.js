@@ -11,7 +11,7 @@ exports.scheduleReminders = functions
   .runWith({
     memory: '256MB',
     timeoutSeconds: 120,
-    serviceAccountEmail: SERVICE_ACCOUNT_EMAIL
+    serviceAccountEmail: SERVICE_ACCOUNT_EMAIL,
   })
   .pubsub.schedule('every 1 minutes')
   .onRun(async (context) => {
@@ -21,13 +21,10 @@ exports.scheduleReminders = functions
 
     try {
       console.log('Fetching users from Firestore');
-      const usersSnapshot = await admin.firestore()
-        .collection('Users')
-        .get();
+      const usersSnapshot = await admin.firestore().collection('Users').get();
       console.log(`Found ${usersSnapshot.size} users`);
 
       const notificationPromises = [];
-      const batch = admin.firestore().batch();
 
       for (const userDoc of usersSnapshot.docs) {
         const userId = userDoc.id;
@@ -86,8 +83,15 @@ exports.scheduleReminders = functions
           const minutesUntil = reminderTime.diff(nowInUserTz, 'minutes');
           console.log(`Reminder ${reminder.id}: ${reminderTime.format()} (${timezone}), Minutes until: ${minutesUntil}`);
 
-          if (minutesUntil >= -1 && minutesUntil <= 1) {
+          // Narrow the trigger window to exact minute (0 minutes)
+          if (minutesUntil === 0) {
             console.log(`SENDING NOTIFICATION for reminder ${reminder.id}: ${reminder.type}`);
+
+            // Immediately mark the reminder as processed to prevent duplicates
+            await reminderDoc.ref.update({
+              notificationSent: true,
+              lastNotified: admin.firestore.FieldValue.serverTimestamp(),
+            });
 
             const message = {
               token: fcmToken,
@@ -123,17 +127,12 @@ exports.scheduleReminders = functions
             console.log(`Preparing to send FCM message for reminder ${reminder.id}`);
             notificationPromises.push(
               retryFcmSend(message, 2)
-                .then((response) => {
+                .then(async (response) => {
                   console.log(`Successfully sent notification for ${reminder.id}: ${response}`);
-                  const updates = {
-                    notificationSent: true,
-                    lastNotified: admin.firestore.FieldValue.serverTimestamp(),
-                  };
 
+                  // Handle frequency-based updates
                   console.log(`Updating Firestore for reminder ${reminder.id}, frequency: ${reminder.frequency}`);
-                  if (reminder.frequency === 'Once') {
-                    batch.update(reminderDoc.ref, updates);
-                  } else {
+                  if (reminder.frequency !== 'Once') {
                     let nextDate = reminderTime.clone();
                     switch (reminder.frequency) {
                       case 'Everyday':
@@ -145,19 +144,26 @@ exports.scheduleReminders = functions
                         } while ([0, 6].includes(nextDate.day()));
                         break;
                       default:
-                        nextDate.add(1, 'day');
+                        // Handle custom frequencies (e.g., specific days)
+                        const days = reminder.frequency.split(', ').map(day => {
+                          const dayMap = { 'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6 };
+                          return dayMap[day];
+                        });
+                        do {
+                          nextDate.add(1, 'day');
+                        } while (!days.includes(nextDate.day()));
+                        break;
                     }
-                    batch.update(reminderDoc.ref, {
-                      ...updates,
+                    await reminderDoc.ref.update({
                       date: nextDate.format('YYYY-MM-DD'),
                       time: nextDate.format('HH:mm'),
                       notificationSent: false,
                     });
                   }
                 })
-                .catch((error) => {
+                .catch(async (error) => {
                   console.error(`Error sending notification for ${reminder.id}: ${error.message}`);
-                  batch.update(reminderDoc.ref, {
+                  await reminderDoc.ref.update({
                     notificationError: error.message,
                     notificationErrorTimestamp: admin.firestore.FieldValue.serverTimestamp(),
                   });
@@ -170,12 +176,6 @@ exports.scheduleReminders = functions
       }
 
       console.log(`Total notification promises: ${notificationPromises.length}`);
-      if (notificationPromises.length > 0) {
-        console.log('Committing batch updates');
-        await batch.commit();
-        console.log('Batch updates committed');
-      }
-
       console.log('Waiting for all notification promises');
       await Promise.all(notificationPromises);
       console.log('All notifications processed');
@@ -209,7 +209,7 @@ async function retryFcmSend(message, retries) {
 exports.sendReminderNotification = functions
   .region('us-central1')
   .runWith({
-    serviceAccountEmail: SERVICE_ACCOUNT_EMAIL
+    serviceAccountEmail: SERVICE_ACCOUNT_EMAIL,
   })
   .https.onCall(async (data, context) => {
     console.log('Entering sendReminderNotification');
@@ -276,7 +276,7 @@ exports.sendReminderNotification = functions
 exports.updateFcmToken = functions
   .region('us-central1')
   .runWith({
-    serviceAccountEmail: SERVICE_ACCOUNT_EMAIL
+    serviceAccountEmail: SERVICE_ACCOUNT_EMAIL,
   })
   .firestore
   .document('Users/{userId}')

@@ -5,6 +5,8 @@ import '../widgets/custom_text_form_field.dart';
 import '../widgets/dropdown_widget.dart';
 import 'all_reminders_screen.dart';
 import 'dart:math';
+import 'package:gdm_app/utils/utils.dart';
+
 
 class AddReminders extends StatefulWidget {
   final ReminderService reminderService;
@@ -19,17 +21,12 @@ class _AddRemindersState extends State<AddReminders> {
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   String? _selectedDropdownValue;
-  String _selectedFrequency = 'Everyday'; // Default frequency
+  String _selectedFrequency = '';
+  bool _showDatePicker = false;
+  List<bool> _selectedDays = List<bool>.filled(7, false);
   bool _isLoading = false;
-
-  final List<String> _frequencyOptions = [
-    'Everyday',
-    'Weekdays',
-    'Weekends',
-    ' SLOWSn, Wed, Fri',
-    'Tue, Thu',
-    'Once',
-  ];
+  bool _reminderAddedSuccessfully = false;
+  bool _showCustomFrequencySection = false;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -60,59 +57,97 @@ class _AddRemindersState extends State<AddReminders> {
     }
   }
 
-  void _showFrequencyPicker() {
-    showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Text(
-                  'Select Frequency',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Divider(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _frequencyOptions.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(_frequencyOptions[index]),
-                      onTap: () {
-                        setState(() {
-                          _selectedFrequency = _frequencyOptions[index];
-                        });
-                        Navigator.pop(context);
-                      },
-                      trailing: _selectedFrequency == _frequencyOptions[index]
-                          ? Icon(Icons.check, color: Color(0XFF5AA189))
-                          : null,
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+  void _toggleDay(int index) {
+    setState(() {
+      _selectedDays[index] = !_selectedDays[index];
+      _updateFrequency();
+    });
+  }
+
+  void _updateFrequency() {
+    final selectedDayCount = _selectedDays.where((day) => day).length;
+    final List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final selectedDaysList = days.asMap().entries
+        .where((entry) => _selectedDays[entry.key])
+        .map((entry) => entry.value)
+        .toList();
+
+    if (selectedDayCount == 0) {
+      _selectedFrequency = 'Custom';
+    } else if (selectedDayCount == 7) {
+      _selectedFrequency = 'Everyday';
+    } else {
+      // Check for consecutive days from Monday to Friday (weekdays)
+      bool isWeekdays = _selectedDays[1] && _selectedDays[2] && _selectedDays[3] &&
+          _selectedDays[4] && !_selectedDays[0] && !_selectedDays[5] && !_selectedDays[6];
+
+      if (isWeekdays) {
+        _selectedFrequency = 'Mon to Fri';
+      } else {
+        // Check for other consecutive patterns
+        List<int> selectedIndices = [];
+        for (int i = 0; i < _selectedDays.length; i++) {
+          if (_selectedDays[i]) selectedIndices.add(i);
+        }
+
+        bool isConsecutive = true;
+        if (selectedIndices.length > 1) {
+          for (int i = 0; i < selectedIndices.length - 1; i++) {
+            if (selectedIndices[i + 1] != selectedIndices[i] + 1) {
+              isConsecutive = false;
+              break;
+            }
+          }
+        }
+
+        if (isConsecutive && selectedIndices.length > 1) {
+          String startDay = days[selectedIndices.first];
+          String endDay = days[selectedIndices.last];
+          _selectedFrequency = '$startDay to $endDay';
+        } else {
+          _selectedFrequency = selectedDaysList.join(', ');
+        }
+      }
+    }
+  }
+
+  void _selectFrequency(String frequency) {
+    setState(() {
+      _selectedFrequency = frequency;
+      _showDatePicker = frequency == 'Ring Once';
+
+      if (frequency == 'Custom') {
+        _showCustomFrequencySection = true;
+        _updateFrequency();
+      } else if (frequency == 'Ring Once') {
+        _showCustomFrequencySection = false;
+        _selectedDays = List<bool>.filled(7, false);
+        _dateController.clear();
+      } else if (frequency == 'Everyday') {
+        _showCustomFrequencySection = true;
+        _selectedDays = List<bool>.filled(7, true);
+        _updateFrequency();
+      }
+    });
+  }
+
+  void _resetState() {
+    setState(() {
+      _selectedFrequency = '';
+      _showDatePicker = false;
+      _selectedDays = List<bool>.filled(7, false);
+      _timeController.clear();
+      _dateController.clear();
+      _selectedDropdownValue = null;
+      _reminderAddedSuccessfully = false;
+      _showCustomFrequencySection = false;
+    });
   }
 
   Future<void> _addReminder() async {
     if (_timeController.text.isEmpty ||
-        _dateController.text.isEmpty ||
-        _selectedDropdownValue == null) {
+        _selectedDropdownValue == null ||
+        (_showDatePicker && _dateController.text.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please fill all fields'),
@@ -130,29 +165,36 @@ class _AddRemindersState extends State<AddReminders> {
         id: DateTime.now().millisecondsSinceEpoch.toString() +
             Random().nextInt(10000).toString(),
         time: _timeController.text,
-        frequency: _selectedFrequency,
-        date: _dateController.text,
+        frequency: _selectedFrequency.isEmpty ? 'Ring Once' : _selectedFrequency,
+        date: _showDatePicker ? _dateController.text : DateTime.now().toString().split(' ')[0],
         type: _selectedDropdownValue!,
       );
 
       await widget.reminderService.addReminder(newReminder);
+      Utils().toastMessage('Reminder added successfully!');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Reminder added successfully'),
-          backgroundColor: Color(0XFF5AA189),
-        ),
-      );
-      print('Reminder Added successfully');
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AllReminders(
-            reminderService: widget.reminderService,
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text('Reminder added successfully'),
+      //     backgroundColor: Color(0xFF5AA189),
+      //   ),
+      // );
+
+      setState(() {
+        _reminderAddedSuccessfully = true;
+      });
+
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AllReminders(
+              reminderService: widget.reminderService,
+            ),
           ),
-        ),
-      );
+        );
+      });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -172,7 +214,7 @@ class _AddRemindersState extends State<AddReminders> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color(0XFF5AA189),
+        backgroundColor: Color(0xFF5AA189),
         title: Text(
           'Add Reminder',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -191,6 +233,7 @@ class _AddRemindersState extends State<AddReminders> {
               },
               showDiabetesTestDate: false,
               diabetesTestDateController: TextEditingController(),
+              hintText: 'Select label',
               items: [
                 'Glucose Reading',
                 'Log Calories',
@@ -198,7 +241,7 @@ class _AddRemindersState extends State<AddReminders> {
                 'Step Count',
                 'GDM Facts'
               ],
-              label: 'Select an option',
+              label: 'Select Reminder label',
             ),
             SizedBox(height: 16),
             CustomTextFormField(
@@ -209,67 +252,137 @@ class _AddRemindersState extends State<AddReminders> {
               value?.isEmpty ?? true ? 'Please select time' : null,
               suffixIcon: IconButton(
                 icon: Icon(Icons.access_time),
-                color: Color(0XFF5AA189),
+                color: Color(0xFF5AA189),
                 onPressed: _selectTime,
               ),
             ),
             SizedBox(height: 16),
-            CustomTextFormField(
-              controller: _dateController,
-              readOnly: true,
-              hintText: 'Select date (yyyy-MM-dd)',
-              suffixIcon: IconButton(
-                icon: Icon(Icons.calendar_today),
-                color: Color(0XFF5AA189),
-                onPressed: () => _selectDate(context),
-              ),
-              validator: (value) =>
-              value?.isEmpty ?? true ? 'Please select date' : null,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Repeat Frequency',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
-            ),
-            SizedBox(height: 8),
-            InkWell(
-              onTap: _showFrequencyPicker,
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.grey.shade400,
-                    width: 1,
-                  ),
-                  color: const Color(0xFFF5F5F5),
+            if (_showDatePicker)
+              CustomTextFormField(
+                controller: _dateController,
+                readOnly: true,
+                hintText: 'Select date (yyyy-MM-dd)',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.calendar_today),
+                  color: Color(0xFF5AA189),
+                  onPressed: () => _selectDate(context),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      _selectedFrequency,
+                validator: (value) =>
+                value?.isEmpty ?? true ? 'Please select date' : null,
+              ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () => _selectFrequency('Ring Once'),
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: _selectedFrequency == 'Ring Once'
+                          ? Color(0xFF5AA189)
+                          : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      'Ring Once',
                       style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black87,
+                        color: _selectedFrequency == 'Ring Once'
+                            ? Colors.white
+                            : Colors.black87,
                       ),
                     ),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.grey[600],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                GestureDetector(
+                  onTap: () => _selectFrequency('Custom'),
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: _selectedFrequency == 'Custom'
+                          ? Color(0xFF5AA189)
+                          : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      'Custom',
+                      style: TextStyle(
+                        color: _selectedFrequency == 'Custom'
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
+            if (_showCustomFrequencySection && !_reminderAddedSuccessfully)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Repeat',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        _selectedFrequency == 'Everyday' ? 'Everyday' : 'Weekdays',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      for (int i = 0; i < 7; i++)
+                        GestureDetector(
+                          onTap: () => _toggleDay(i),
+                          child: Container(
+                            width: 30,
+                            height: 35,
+                            margin: EdgeInsets.symmetric(horizontal: 4),
+                            decoration: BoxDecoration(
+                              color: _selectedDays[i]
+                                  ? Color(0xFF5AA189)
+                                  : Colors.grey[300],
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                ['S', 'M', 'T', 'W', 'T', 'F', 'S'][i],
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: _selectedDays[i] ? Colors.white : Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Repeat: $_selectedFrequency',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
             SizedBox(height: 24),
             _isLoading
-                ? Center(child: CircularProgressIndicator(color: Color(0XFF5AA189)))
+                ? Center(child: CircularProgressIndicator(color: Color(0xFF5AA189)))
                 : CustomButton(
               onTap: _addReminder,
               buttonText: 'Add Reminder',
