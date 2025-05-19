@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gdm_app/weight/view_weight_summary.dart';
 import 'package:intl/intl.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
@@ -69,7 +70,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           'date': _dateController.text,
           'weight': _weightController.text,
           'unit': _selectedUnit.value,
-          // 'timestamp': FieldValue.serverTimestamp(),
+           'timestamp': FieldValue.serverTimestamp(),
         });
 
         Utils().toastMessage('Weight data successfully added!');
@@ -134,9 +135,10 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
             const SizedBox(height: 16),
             CustomButton(
               onTap: () {
-                Navigator.pushNamed(context, '/weight_summary');
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context)=>ViewWeightSummary()));
               },
-              buttonText: 'Weight Summary',
+              buttonText: 'Check Summary',
             ),
           ],
         ),

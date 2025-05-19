@@ -60,6 +60,9 @@ dependencies:
   app_settings: ^6.1.1
   firebase_messaging: ^15.2.5
   firebase_analytics: ^11.4.5
+  pdf: ^3.10.8
+  path_provider: ^2.1.5
+  share_plus: ^11.0.0
 
 
 dev_dependencies:
