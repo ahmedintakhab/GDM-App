@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/glucose_screen/add_glucose.dart';
+import 'package:gdm_app/glucose_screen/view_glucose_summary.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -110,6 +112,16 @@ class _TodayTabState extends State<TodayTab> {
                     });
                   },
                   buttonText: 'Add Glucose',
+                ),
+                SizedBox(height: 15.h),
+                CustomButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ViewGlucoseSummary()),
+                    );
+                  },
+                  buttonText: 'View Glucose Summary',
                 ),
               ],
             ),

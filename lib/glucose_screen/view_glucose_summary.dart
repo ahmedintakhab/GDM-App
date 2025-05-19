@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -8,29 +9,30 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:intl/intl.dart';
 
-class ViewWeightSummary extends StatefulWidget {
-  const ViewWeightSummary({super.key});
+class ViewGlucoseSummary extends StatefulWidget {
+  const ViewGlucoseSummary({super.key});
 
   @override
-  State<ViewWeightSummary> createState() => _ViewWeightSummaryState();
+  State<ViewGlucoseSummary> createState() => _ViewGlucoseSummaryState();
 }
 
-class _ViewWeightSummaryState extends State<ViewWeightSummary> {
+class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _isLoading = true;
-  bool _isGeneratingPdf = false; // State for PDF generation
+  bool _isGeneratingPdf = false;
   String? _errorMessage;
-  List<Map<String, dynamic>> _weightData = [];
+  List<Map<String, dynamic>> _glucoseData = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchWeightData();
+    _fetchGlucoseData();
   }
 
-  Future<void> _fetchWeightData() async {
+  Future<void> _fetchGlucoseData() async {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -46,19 +48,21 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
         return;
       }
 
-      QuerySnapshot weightSnapshot = await _firestore
+      QuerySnapshot glucoseSnapshot = await _firestore
           .collection('Users')
           .doc(user.uid)
-          .collection('weight')
-          .orderBy('date', descending: true)
+          .collection('glucoseEntries')
+          .orderBy('dateTime', descending: true)
           .get();
 
-      _weightData = weightSnapshot.docs.map((doc) {
+      _glucoseData = glucoseSnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
+        final timestamp = (data['dateTime'] as Timestamp?)?.toDate();
         return {
-          'date': data['date'] ?? '',
-          'weight': data['weight'] ?? '',
-          'unit': data['unit'] ?? 'kg',
+          'date': timestamp != null ? DateFormat('MMMM d, yyyy').format(timestamp) : '',
+          'time': timestamp != null ? DateFormat('h:mm a').format(timestamp) : '',
+          'reading': data['glucoseLevel'] ?? '',
+          'mealContext': data['mealOption'] ?? 'Unknown',
         };
       }).toList();
 
@@ -67,20 +71,19 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error fetching weight data: $e';
+        _errorMessage = 'Error fetching glucose data: $e';
         _isLoading = false;
       });
-      Utils().toastMessage('Error fetching weight data: $e');
+      Utils().toastMessage('Error fetching glucose data: $e');
     }
   }
 
   Future<void> _generateAndSavePdf() async {
     setState(() {
-      _isGeneratingPdf = true; // Show loading indicator
+      _isGeneratingPdf = true;
     });
 
     try {
-      // Create PDF document
       final pdf = pw.Document();
 
       pdf.addPage(
@@ -89,25 +92,24 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                'Weight Summary Report',
+                'Glucose Summary Report',
                 style: pw.TextStyle(
                   fontSize: 24,
                   fontWeight: pw.FontWeight.bold,
                 ),
               ),
-              pw.SizedBox(height: 20),
+              pw.SizedBox(height: 20.h),
               pw.Table(
                 border: pw.TableBorder.all(),
                 columnWidths: {
                   0: const pw.FlexColumnWidth(2),
-                  1: const pw.FlexColumnWidth(1),
+                  1: const pw.FlexColumnWidth(1.5),
+                  2: const pw.FlexColumnWidth(1.5),
+                  3: const pw.FlexColumnWidth(2),
                 },
                 children: [
-                  // Header Row
                   pw.TableRow(
-                    decoration: const pw.BoxDecoration(
-                      // color: pw.PdfColor.fromInt(0xFFE0E0E0), // Light grey
-                    ),
+                    decoration: const pw.BoxDecoration(),
                     children: [
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(10),
@@ -119,14 +121,27 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(10),
                         child: pw.Text(
-                          'Weight',
+                          'Time',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(10),
+                        child: pw.Text(
+                          'Reading',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                        ),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(10),
+                        child: pw.Text(
+                          'Meal Context',
                           style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                         ),
                       ),
                     ],
                   ),
-                  // Data Rows
-                  ..._weightData.map((entry) {
+                  ..._glucoseData.map((entry) {
                     return pw.TableRow(
                       children: [
                         pw.Padding(
@@ -135,7 +150,15 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
                         ),
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(10),
-                          child: pw.Text('${entry['weight']} ${entry['unit']}'),
+                          child: pw.Text(entry['time']),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text(entry['reading']),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.all(10),
+                          child: pw.Text(entry['mealContext']),
                         ),
                       ],
                     );
@@ -147,7 +170,6 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
         ),
       );
 
-      // Try primary directory (Application Documents)
       Directory? directory;
       try {
         directory = await getApplicationDocumentsDirectory();
@@ -159,7 +181,6 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
           print('Failed to access documents directory: $e');
         }
         Utils().toastMessage('Failed to access documents directory: $e');
-        // Fallback to temporary directory
         try {
           directory = await getTemporaryDirectory();
           if (kDebugMode) {
@@ -179,17 +200,14 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
         return;
       }
 
-      // Create file path with timestamp to avoid overwriting
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final file = File('${directory.path}/weight_summary_$timestamp.pdf');
+      final file = File('${directory.path}/glucose_summary_$timestamp.pdf');
 
-      // Save the PDF file
       await file.writeAsBytes(await pdf.save());
 
-      // Share the PDF
       await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'Weight Summary Report',
+        text: 'Glucose Summary Report',
       );
 
       Utils().toastMessage('PDF report saved to ${file.path} and shared');
@@ -200,7 +218,7 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
       Utils().toastMessage('Error generating PDF: $e');
     } finally {
       setState(() {
-        _isGeneratingPdf = false; // Hide loading indicator
+        _isGeneratingPdf = false;
       });
     }
   }
@@ -210,7 +228,7 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Weight Summary',
+          'Glucose Summary',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -241,59 +259,95 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
                       ),
                     ),
                   if (!_isLoading && _errorMessage == null)
-                    if (_weightData.isEmpty)
-                      const Center(child: Text('No weight data available'))
+                    if (_glucoseData.isEmpty)
+                      const Center(child: Text('No glucose data available'))
                     else ...[
-                      Table(
-                        border: TableBorder.all(color: Colors.grey),
-                        columnWidths: const {
-                          0: FlexColumnWidth(2),
-                          1: FlexColumnWidth(1),
-                        },
-                        children: [
-                          // Header Row
-                          TableRow(
-                            decoration: BoxDecoration(color: Colors.grey[200]),
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  'Date',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  'Weight',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // Data Rows
-                          ..._weightData.map((entry) {
-                            return TableRow(
-                              children: [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Table(
+                          border: TableBorder.all(color: Colors.grey),
+                          defaultColumnWidth: const IntrinsicColumnWidth(),
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(color: Colors.grey[200]),
+                              children: const [
                                 Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(entry['date']),
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'Date',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text('${entry['weight']} ${entry['unit']}'),
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'Time',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'Reading',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'Meal Context',
+                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ],
-                            );
-                          }).toList(),
-                        ],
+                            ),
+                            ..._glucoseData.map((entry) {
+                              return TableRow(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      entry['date'],
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      entry['time'],
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      entry['reading'],
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Text(
+                                      entry['mealContext'],
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                          ],
+                        ),
                       ),
                     ],
                 ],
               ),
             ),
           ),
-          if (!_isLoading && _errorMessage == null && _weightData.isNotEmpty)
+          if (!_isLoading && _errorMessage == null && _glucoseData.isNotEmpty)
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
