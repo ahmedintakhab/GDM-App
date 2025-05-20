@@ -3,14 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WeightSummaryList extends StatelessWidget {
   final List<Map<String, dynamic>> weightData;
-  final Function(int) onItemTap;
   final bool isGeneratingPdf;
   final Function() onGeneratePdf;
 
   const WeightSummaryList({
     super.key,
     required this.weightData,
-    required this.onItemTap,
     required this.isGeneratingPdf,
     required this.onGeneratePdf,
   });
@@ -28,8 +26,6 @@ class WeightSummaryList extends StatelessWidget {
             itemBuilder: (context, index) {
               return WeightEntryContainer(
                 data: weightData[index],
-                isExpanded: weightData[index]['isExpanded'] ?? false,
-                onTap: () => onItemTap(index),
               );
             },
           ),
@@ -41,14 +37,10 @@ class WeightSummaryList extends StatelessWidget {
 
 class WeightEntryContainer extends StatelessWidget {
   final Map<String, dynamic> data;
-  final bool isExpanded;
-  final VoidCallback onTap;
 
   const WeightEntryContainer({
     super.key,
     required this.data,
-    required this.isExpanded,
-    required this.onTap,
   });
 
   @override
@@ -57,63 +49,19 @@ class WeightEntryContainer extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    data['date'],
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-                  ),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: Container(
-                      width: 30.w,
-                      height: 30.h,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF5AA189),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                        color: Colors.white,
-                        size: 20.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            Text(
+              data['date'],
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
-            if (isExpanded)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Weight', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
-                        Text(data['weight'].toString(), style: TextStyle(fontSize: 14.sp)),
-                      ],
-                    ),
-                    SizedBox(height: 8.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Unit', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
-                        Text(data['unit'], style: TextStyle(fontSize: 14.sp)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            Text(
+              '${data['weight'].toStringAsFixed(1)} ${data['unit']}',
+              style: TextStyle(fontSize: 16.sp),
+            ),
           ],
         ),
       ),

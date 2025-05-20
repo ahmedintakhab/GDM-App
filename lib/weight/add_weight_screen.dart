@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +7,8 @@ import 'package:gdm_app/weight/add_weight_dialogbox.dart';
 import 'package:gdm_app/weight/view_weight_summary.dart';
 import 'package:gdm_app/weight/weight_graph.dart';
 import 'package:intl/intl.dart';
+
+import 'generate_weight_pdf.dart';
 
 class AddWeightScreen extends StatefulWidget {
   const AddWeightScreen({super.key});
@@ -96,12 +97,9 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     });
 
     try {
-      // ... (keep your existing PDF generation code)
+      await generateAndSavePdf(_weightData);
     } catch (e) {
-      if (kDebugMode) {
-        print('Error generating PDF: $e');
-      }
-      Utils().toastMessage('Error generating PDF: $e');
+      // Error is already handled in generateAndSavePdf with toast
     } finally {
       setState(() {
         _isGeneratingPdf = false;
@@ -124,7 +122,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         backgroundColor: const Color(0xFF5AA189),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Color(0XFF5AA189),))
           : _errorMessage != null
           ? Center(
         child: Text(
@@ -178,7 +176,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           Expanded(
             child: WeightSummaryList(
               weightData: _weightData,
-              onItemTap: _handleItemTap,
+              // onItemTap: _handleItemTap,
               isGeneratingPdf: _isGeneratingPdf,
               onGeneratePdf: _generateAndSavePdf,
             ),
