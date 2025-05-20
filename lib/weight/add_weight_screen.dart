@@ -7,6 +7,7 @@ import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/weight/add_weight_dialogbox.dart';
 import 'package:gdm_app/weight/view_weight_summary.dart';
 import 'package:gdm_app/weight/weight_graph.dart';
+import 'package:intl/intl.dart';
 
 class AddWeightScreen extends StatefulWidget {
   const AddWeightScreen({super.key});
@@ -49,18 +50,27 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           .collection('Users')
           .doc(user.uid)
           .collection('weight')
-          .orderBy('date', descending: true)
+          .orderBy('timestamp', descending: true)
           .get();
 
       _weightData = weightSnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
+        String dateStr = data['date'] ?? '';
+        DateTime parsedDate = dateStr.isNotEmpty
+            ? DateFormat('dd MMM yyyy').parse(dateStr)
+            : DateTime.now();
         return {
-          'date': data['date'] ?? '',
-          'weight': data['weight'] ?? '',
+          'date': dateStr,
+          'weight': double.tryParse(data['weight']?.toString() ?? '0') ?? 0.0,
           'unit': data['unit'] ?? 'kg',
+          'timestamp': (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          'parsedDate': parsedDate,
           'isExpanded': false,
         };
       }).toList();
+
+      // Sort weightData for graph (chronological order by parsedDate)
+      _weightData.sort((a, b) => a['parsedDate'].compareTo(b['parsedDate']));
 
       setState(() {
         _isLoading = false;
@@ -113,11 +123,20 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         centerTitle: true,
         backgroundColor: const Color(0xFF5AA189),
       ),
-      body: Column(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _errorMessage != null
+          ? Center(
+        child: Text(
+          _errorMessage!,
+          style: const TextStyle(color: Colors.red),
+        ),
+      )
+          : Column(
         children: [
           // Graph Container (Fixed)
           Container(
-            height: 250,
+            height: 250.h,
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
@@ -144,6 +163,13 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                 return WeightGraph(
                   maxWidth: chartWidth,
                   barWidth: barWidth,
+                  weightData: _weightData
+                      .where((data) {
+                    DateTime weekAgo = DateTime.now().subtract(const Duration(days: 7));
+                    return data['parsedDate'].isAfter(weekAgo) ||
+                        data['parsedDate'].isAtSameMomentAs(weekAgo);
+                  })
+                      .toList(),
                 );
               },
             ),
@@ -151,8 +177,6 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           // Scrollable Weight Summary
           Expanded(
             child: WeightSummaryList(
-              isLoading: _isLoading,
-              errorMessage: _errorMessage,
               weightData: _weightData,
               onItemTap: _handleItemTap,
               isGeneratingPdf: _isGeneratingPdf,
@@ -167,7 +191,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           showDialog(
             context: context,
             builder: (context) => const AddWeightDialogBox(),
-          );
+          ).then((_) => _fetchWeightData()); // Refresh data after dialog
         },
         child: const Icon(Icons.add, color: Colors.white),
         backgroundColor: const Color(0xFF5AA189),
@@ -182,7 +206,13 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               onPressed: _isGeneratingPdf ? null : _generateAndSavePdf,
               label: _isGeneratingPdf
                   ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('PDF',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  : const Text(
+                'PDF',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               icon: const Icon(Icons.download, color: Colors.white),
               backgroundColor: const Color(0xFF5AA189),
               tooltip: 'Download PDF',
@@ -195,9 +225,15 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                 showDialog(
                   context: context,
                   builder: (context) => const AddWeightDialogBox(),
-                );
+                ).then((_) => _fetchWeightData()); // Refresh data after dialog
               },
-              label: const Text('Weight',style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              label: const Text(
+                'Weight',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               icon: const Icon(Icons.add_circle, color: Colors.white),
               backgroundColor: const Color(0xFF5AA189),
               tooltip: 'Add Weight',

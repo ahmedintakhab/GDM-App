@@ -60,19 +60,44 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
           return;
         }
 
-        await _firestore
+        // Check if a weight entry exists for the selected date
+        QuerySnapshot existingEntry = await _firestore
             .collection('Users')
             .doc(user.uid)
             .collection('weight')
-            .doc()
-            .set({
-          'date': _dateController.text,
-          'weight': _weightController.text,
-          'unit': _selectedUnit.value,
-          'timestamp': FieldValue.serverTimestamp(),
-        });
+            .where('date', isEqualTo: _dateController.text)
+            .get();
 
-        Utils().toastMessage('Weight data successfully added!');
+        if (existingEntry.docs.isNotEmpty) {
+          // Update existing entry
+          String docId = existingEntry.docs.first.id;
+          await _firestore
+              .collection('Users')
+              .doc(user.uid)
+              .collection('weight')
+              .doc(docId)
+              .update({
+            'weight': _weightController.text,
+            'unit': _selectedUnit.value,
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+          Utils().toastMessage('Weight data successfully updated!');
+        } else {
+          // Create new entry
+          await _firestore
+              .collection('Users')
+              .doc(user.uid)
+              .collection('weight')
+              .doc()
+              .set({
+            'date': _dateController.text,
+            'weight': _weightController.text,
+            'unit': _selectedUnit.value,
+            'timestamp': FieldValue.serverTimestamp(),
+          });
+          Utils().toastMessage('Weight data successfully added!');
+        }
+
         _dateController.clear();
         _weightController.clear();
         Navigator.of(context).pop(); // Close the dialog after success

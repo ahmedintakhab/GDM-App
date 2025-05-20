@@ -1,129 +1,160 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class WeightGraph extends StatelessWidget {
   final double maxWidth; // Dynamic width based on screen size
   final double barWidth; // Dynamic bar width based on screen size
+  final List<Map<String, dynamic>> weightData; // Pre-fetched data
 
-  // Data for each day: single weight value in kg
-  final List<double> weeklyData = [
-    55, // Saturday
-    28, // Sunday
-    63, // Monday
-    57, // Tuesday
-    100, // Wednesday
-    40, // Thursday
-    70, // Friday
-  ];
-
-   WeightGraph({
+  const WeightGraph({
     Key? key,
     required this.maxWidth,
     required this.barWidth,
+    required this.weightData,
   }) : super(key: key);
+
+  Color _getBarColor(double weight) {
+    if (weight < 50) return Colors.yellow;
+    if (weight >= 50 && weight <= 80) return Colors.green;
+    return Colors.red;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: maxWidth,
-      height: 250, // Adjusted height to fit inside the container
-      child: BarChart(
-        BarChartData(
-          alignment: BarChartAlignment.spaceAround,
-          maxY: 150, // Increased to ensure space for text above bars
-          barTouchData: BarTouchData(
-            enabled: true, // Enable touch interactions
-            touchTooltipData: BarTouchTooltipData(
-              tooltipBorder: const BorderSide(
-                color: Colors.transparent, // Remove the tooltip border
-                width: 0,
-              ),
-              tooltipPadding: const EdgeInsets.all(0), // Remove padding
-              tooltipMargin: -1, // Position the text closer to the bar top
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                return BarTooltipItem(
-                  '${weeklyData[groupIndex].toInt()} kg', // Display weight in kg
-                  const TextStyle(
-                    color: Colors.white, // Changed to white for contrast
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
-            ),
-          ),
-          titlesData: FlTitlesData(
-            show: true,
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  const style = TextStyle(
-                    color: Colors.black,
-                    fontSize: 12,
-                  );
-                  switch (value.toInt()) {
-                    case 0:
-                      return const Text('Sat', style: style);
-                    case 1:
-                      return const Text('Sun', style: style);
-                    case 2:
-                      return const Text('Mon', style: style);
-                    case 3:
-                      return const Text('Tue', style: style);
-                    case 4:
-                      return const Text('Wed', style: style);
-                    case 5:
-                      return const Text('Thu', style: style);
-                    case 6:
-                      return const Text('Fri', style: style);
-                    default:
-                      return const Text('', style: style);
-                  }
-                },
+    // Calculate maxY and latest weight details
+    double maxY = 150; // Default maxY
+    String? latestWeight = 'N/A';
+    String? latestUnit = '';
+    Color? latestWeightColor = Colors.black87;
+
+    if (weightData.isNotEmpty) {
+      maxY = weightData
+          .map((data) => data['weight'] as double)
+          .reduce((a, b) => a > b ? a : b); // Find max weight
+      maxY = (maxY * 1.2).ceilToDouble(); // Add 20% padding and round up
+      maxY = maxY < 50 ? 50 : maxY; // Ensure minimum maxY
+      latestWeight = weightData.last['weight'].toStringAsFixed(1);
+      latestUnit = weightData.last['unit'];
+      latestWeightColor = _getBarColor(weightData.last['weight']);
+    }
+
+    return Stack(
+      children: [
+        // Current Weight Text
+        Positioned(
+          top: 0,
+          left: 0,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 8.h),
+            child: Text(
+              'Current Weight: $latestWeight $latestUnit',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: latestWeightColor,
               ),
             ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: false), // Hide left titles
-            ),
-            topTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: false), // Hide top titles
-            ),
-            rightTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: false), // Hide right titles
-            ),
-          ),
-          gridData: FlGridData(show: false), // Hide grid
-          borderData: FlBorderData(show: false), // Hide border
-          barGroups: List.generate(7, (index) {
-            return BarChartGroupData(
-              x: index,
-              barRods: [
-                BarChartRodData(
-                  toY: weeklyData[index], // Single bar height (weight in kg)
-                  color: const Color(0xFF5AA189), // Set to your desired color
-                  width: barWidth,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(barWidth / 2),
-                    topRight: Radius.circular(barWidth / 2),
-                  ),
-                  rodStackItems: [
-                    BarChartRodStackItem(
-                      0,
-                      weeklyData[index],
-                      const Color(0xFF5AA189), // Updated to match bar color
-                    ),
-                  ],
-                ),
-              ],
-              showingTooltipIndicators: [0], // Show tooltip for the single bar
-            );
-          }),
-          extraLinesData: ExtraLinesData(
-            extraLinesOnTop: false,
           ),
         ),
-      ),
+        // Graph or Empty State
+        weightData.isEmpty
+            ? const Center(child: Text('No weight data available for the past week'))
+            : Padding(
+          padding: EdgeInsets.only(top: 28.h),
+          child: SizedBox(
+            width: maxWidth,
+            height: 250.h - 28.h,
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceAround,
+                maxY: maxY,
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipBorder: const BorderSide(
+                      color: Colors.transparent,
+                      width: 0,
+                    ),
+                    tooltipPadding: const EdgeInsets.all(0),
+                    tooltipMargin: -1,
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      return BarTooltipItem(
+                        '${weightData[groupIndex]['weight'].toInt()} ${weightData[groupIndex]['unit']}',
+                        const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        const style = TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        );
+                        if (value.toInt() >= weightData.length) {
+                          return const Text('', style: style);
+                        }
+                        String dateStr = weightData[value.toInt()]['date'];
+                        DateTime date = DateFormat('dd MMM yyyy').parse(dateStr);
+                        String day = DateFormat('E').format(date).substring(0, 3);
+                        return Text(day, style: style);
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                gridData: FlGridData(show: false),
+                borderData: FlBorderData(show: false),
+                barGroups: List.generate(weightData.length, (index) {
+                  return BarChartGroupData(
+                    x: index,
+                    barRods: [
+                      BarChartRodData(
+                        toY: weightData[index]['weight'],
+                        color: _getBarColor(weightData[index]['weight']),
+                        width: barWidth,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(barWidth / 2),
+                          topRight: Radius.circular(barWidth / 2),
+                        ),
+                        rodStackItems: [
+                          BarChartRodStackItem(
+                            0,
+                            weightData[index]['weight'],
+                            _getBarColor(weightData[index]['weight']),
+                          ),
+                        ],
+                      ),
+                    ],
+                    showingTooltipIndicators: [0],
+                  );
+                }),
+                extraLinesData: ExtraLinesData(
+                  extraLinesOnTop: false,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
