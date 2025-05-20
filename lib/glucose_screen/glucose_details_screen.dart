@@ -40,7 +40,7 @@ class GlucoseDetailsScreen extends StatelessWidget {
             labelStyle: TextStyle(fontSize: 16,
             fontWeight: FontWeight.bold),
             tabs: [
-              Tab(text: 'Today'),
+              Tab(text: 'Daily'),
               Tab(text: 'Week'),
               Tab(text: 'Month'),
             ],

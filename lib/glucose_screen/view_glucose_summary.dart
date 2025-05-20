@@ -244,107 +244,31 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (_isLoading)
-                    const Center(child: CircularProgressIndicator()),
-                  if (_errorMessage != null)
-                    Center(
-                      child: Text(
-                        _errorMessage!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  if (!_isLoading && _errorMessage == null)
-                    if (_glucoseData.isEmpty)
-                      const Center(child: Text('No glucose data available'))
-                    else ...[
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Table(
-                          border: TableBorder.all(color: Colors.grey),
-                          defaultColumnWidth: const IntrinsicColumnWidth(),
-                          children: [
-                            TableRow(
-                              decoration: BoxDecoration(color: Colors.grey[200]),
-                              children: const [
-                                Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Text(
-                                    'Date',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Text(
-                                    'Time',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Text(
-                                    'Reading',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Text(
-                                    'Meal Context',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            ..._glucoseData.map((entry) {
-                              return TableRow(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      entry['date'],
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      entry['time'],
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      entry['reading'],
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      entry['mealContext'],
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ],
-                        ),
-                      ),
-                    ],
-                ],
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage != null
+                ? Center(
+              child: Text(
+                _errorMessage!,
+                style: const TextStyle(color: Colors.red),
               ),
+            )
+                : _glucoseData.isEmpty
+                ? const Center(child: Text('No glucose data available'))
+                : ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: _glucoseData.length,
+              itemBuilder: (context, index) {
+                return GlucoseEntryContainer(
+                  data: _glucoseData[index],
+                  isExpanded: _glucoseData[index]['isExpanded'] ?? false,
+                  onTap: () {
+                    setState(() {
+                      _glucoseData[index]['isExpanded'] = !(_glucoseData[index]['isExpanded'] ?? false);
+                    });
+                  },
+                );
+              },
             ),
           ),
           if (!_isLoading && _errorMessage == null && _glucoseData.isNotEmpty)
@@ -367,6 +291,101 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class GlucoseEntryContainer extends StatefulWidget {
+  final Map<String, dynamic> data;
+  final bool isExpanded;
+  final VoidCallback onTap;
+
+  const GlucoseEntryContainer({
+    super.key,
+    required this.data,
+    required this.isExpanded,
+    required this.onTap,
+  });
+
+  @override
+  State<GlucoseEntryContainer> createState() => _GlucoseEntryContainerState();
+}
+
+class _GlucoseEntryContainerState extends State<GlucoseEntryContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      elevation: 2,
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.data['date'],
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  ),
+                  GestureDetector(
+                    onTap: widget.onTap,
+                    child: Container(
+                      width: 30.w,
+                      height: 30.h,
+                      decoration: const BoxDecoration(
+                        color: Color(0XFF5AA189),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        widget.isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (widget.isExpanded)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Reading', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                        Text(widget.data['reading'], style: TextStyle(fontSize: 14.sp)),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Meal Context', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                        Text(widget.data['mealContext'], style: TextStyle(fontSize: 14.sp)),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Time', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                        Text(widget.data['time'], style: TextStyle(fontSize: 14.sp)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -20,7 +21,7 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _isLoading = true;
-  bool _isGeneratingPdf = false; // State for PDF generation
+  bool _isGeneratingPdf = false;
   String? _errorMessage;
   List<Map<String, dynamic>> _weightData = [];
 
@@ -76,11 +77,10 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
 
   Future<void> _generateAndSavePdf() async {
     setState(() {
-      _isGeneratingPdf = true; // Show loading indicator
+      _isGeneratingPdf = true;
     });
 
     try {
-      // Create PDF document
       final pdf = pw.Document();
 
       pdf.addPage(
@@ -103,11 +103,8 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
                   1: const pw.FlexColumnWidth(1),
                 },
                 children: [
-                  // Header Row
                   pw.TableRow(
-                    decoration: const pw.BoxDecoration(
-                      // color: pw.PdfColor.fromInt(0xFFE0E0E0), // Light grey
-                    ),
+                    decoration: const pw.BoxDecoration(),
                     children: [
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(10),
@@ -125,7 +122,6 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
                       ),
                     ],
                   ),
-                  // Data Rows
                   ..._weightData.map((entry) {
                     return pw.TableRow(
                       children: [
@@ -147,7 +143,6 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
         ),
       );
 
-      // Try primary directory (Application Documents)
       Directory? directory;
       try {
         directory = await getApplicationDocumentsDirectory();
@@ -159,7 +154,6 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
           print('Failed to access documents directory: $e');
         }
         Utils().toastMessage('Failed to access documents directory: $e');
-        // Fallback to temporary directory
         try {
           directory = await getTemporaryDirectory();
           if (kDebugMode) {
@@ -179,14 +173,11 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
         return;
       }
 
-      // Create file path with timestamp to avoid overwriting
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final file = File('${directory.path}/weight_summary_$timestamp.pdf');
 
-      // Save the PDF file
       await file.writeAsBytes(await pdf.save());
 
-      // Share the PDF
       await Share.shareXFiles(
         [XFile(file.path)],
         text: 'Weight Summary Report',
@@ -200,7 +191,7 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
       Utils().toastMessage('Error generating PDF: $e');
     } finally {
       setState(() {
-        _isGeneratingPdf = false; // Hide loading indicator
+        _isGeneratingPdf = false;
       });
     }
   }
@@ -226,71 +217,32 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
       body: Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (_isLoading)
-                    const Center(child: CircularProgressIndicator()),
-                  if (_errorMessage != null)
-                    Center(
-                      child: Text(
-                        _errorMessage!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ),
-                  if (!_isLoading && _errorMessage == null)
-                    if (_weightData.isEmpty)
-                      const Center(child: Text('No weight data available'))
-                    else ...[
-                      Table(
-                        border: TableBorder.all(color: Colors.grey),
-                        columnWidths: const {
-                          0: FlexColumnWidth(2),
-                          1: FlexColumnWidth(1),
-                        },
-                        children: [
-                          // Header Row
-                          TableRow(
-                            decoration: BoxDecoration(color: Colors.grey[200]),
-                            children: const [
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  'Date',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  'Weight',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // Data Rows
-                          ..._weightData.map((entry) {
-                            return TableRow(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(entry['date']),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text('${entry['weight']} ${entry['unit']}'),
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ],
-                      ),
-                    ],
-                ],
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage != null
+                ? Center(
+              child: Text(
+                _errorMessage!,
+                style: const TextStyle(color: Colors.red),
               ),
+            )
+                : _weightData.isEmpty
+                ? const Center(child: Text('No weight data available'))
+                : ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: _weightData.length,
+              itemBuilder: (context, index) {
+                return WeightEntryContainer(
+                  data: _weightData[index],
+                  isExpanded: _weightData[index]['isExpanded'] ?? false,
+                  onTap: () {
+                    setState(() {
+                      _weightData[index]['isExpanded'] =
+                      !(_weightData[index]['isExpanded'] ?? false);
+                    });
+                  },
+                );
+              },
             ),
           ),
           if (!_isLoading && _errorMessage == null && _weightData.isNotEmpty)
@@ -313,6 +265,93 @@ class _ViewWeightSummaryState extends State<ViewWeightSummary> {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class WeightEntryContainer extends StatefulWidget {
+  final Map<String, dynamic> data;
+  final bool isExpanded;
+  final VoidCallback onTap;
+
+  const WeightEntryContainer({
+    super.key,
+    required this.data,
+    required this.isExpanded,
+    required this.onTap,
+  });
+
+  @override
+  State<WeightEntryContainer> createState() => _WeightEntryContainerState();
+}
+
+class _WeightEntryContainerState extends State<WeightEntryContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      elevation: 2,
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.data['date'],
+                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  ),
+                  GestureDetector(
+                    onTap: widget.onTap,
+                    child: Container(
+                      width: 30.w,
+                      height: 30.h,
+                      decoration: const BoxDecoration(
+                        color: Color(0XFF5AA189),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        widget.isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                        size: 20.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (widget.isExpanded)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Weight', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                        Text(widget.data['weight'].toString(), style: TextStyle(fontSize: 14.sp)),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Unit', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                        Text(widget.data['unit'], style: TextStyle(fontSize: 14.sp)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -38,6 +38,10 @@ class BottomNavigation extends StatelessWidget {
         //   label: '',
         // ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.alarm_add),
+          label: 'Reminder',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.no_meals),
           label: 'Meals',
         ),

@@ -11,9 +11,11 @@ import 'package:gdm_app/feedback/feedback_container_widget.dart';
 import 'package:gdm_app/feedback/feedback_screen.dart';
 import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
 import 'package:gdm_app/help%20center/information_screen.dart';
+import 'package:gdm_app/reminder/add_reminders_screen.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import '../reminder/reminder_service_implementation.dart';
 import 'User_profile_screen.dart';
 import 'bottom_navigation_bar.dart';
 import 'glucose_card_widget.dart';
@@ -30,14 +32,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0; // Track the selected index
+  final reminderService = ReminderService();
+  late final List<Widget> _screens; // Declare as late
 
-  // List of screens to display based on the selected index
-  final List<Widget> _screens = [
-    HomeContent(), // Home content
-    NotificationScreen(), // Notifications screen
-    MealsScreen(), // Reports screen
-    ProfileScreen(), // Profile screen
-  ];
+
+
 
   // Function to handle bottom navigation item taps
   void _onItemTapped(int index) {
@@ -48,6 +47,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    // List of screens to display based on the selected index
+    _screens = [
+      HomeContent(), // Home content
+      NotificationScreen(), // Notifications screen
+      AddReminders(reminderService: reminderService),
+      MealsScreen(), // Reports screen
+      ProfileScreen(), // Profile screen
+    ];
+
     // Use addPostFrameCallback to defer the call to fetchUserData
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
