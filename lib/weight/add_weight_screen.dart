@@ -1,12 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gdm_app/weight/view_weight_summary.dart';
-import 'package:intl/intl.dart';
-import 'package:gdm_app/widgets/custom_text_form_field.dart';
-import 'package:gdm_app/widgets/custom_button.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/utils/utils.dart';
-import 'package:gdm_app/Register/weight_input_field.dart';
+import 'package:gdm_app/weight/add_weight_dialogbox.dart';
+import 'package:gdm_app/weight/view_weight_summary.dart';
+import 'package:gdm_app/weight/weight_graph.dart';
 
 class AddWeightScreen extends StatefulWidget {
   const AddWeightScreen({super.key});
@@ -16,72 +16,85 @@ class AddWeightScreen extends StatefulWidget {
 }
 
 class _AddWeightScreenState extends State<AddWeightScreen> {
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController();
-  final ValueNotifier<String> _selectedUnit = ValueNotifier<String>('kg');
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool _isLoading = false;
+  bool _isLoading = true;
+  bool _isGeneratingPdf = false;
+  String? _errorMessage;
+  List<Map<String, dynamic>> _weightData = [];
 
   @override
-  void dispose() {
-    _dateController.dispose();
-    _weightController.dispose();
-    _selectedUnit.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _fetchWeightData();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null) {
-      setState(() {
-        _dateController.text = DateFormat('dd MMM yyyy').format(picked);
-      });
-    }
-  }
-
-  Future<void> _addWeight() async {
+  Future<void> _fetchWeightData() async {
     setState(() {
       _isLoading = true;
+      _errorMessage = null;
     });
 
     try {
       User? user = _auth.currentUser;
-      if (user != null) {
-        if (_dateController.text.isEmpty || _weightController.text.isEmpty) {
-          Utils().toastMessage('Please enter both date and weight');
-          setState(() {
-            _isLoading = false;
-          });
-          return;
-        }
-
-        await _firestore
-            .collection('Users')
-            .doc(user.uid)
-            .collection('weight')
-            .doc()
-            .set({
-          'date': _dateController.text,
-          'weight': _weightController.text,
-          'unit': _selectedUnit.value,
-           'timestamp': FieldValue.serverTimestamp(),
+      if (user == null) {
+        setState(() {
+          _errorMessage = 'No user logged in';
+          _isLoading = false;
         });
-
-        Utils().toastMessage('Weight data successfully added!');
-        _dateController.clear();
-        _weightController.clear();
+        return;
       }
-    } catch (e) {
-      Utils().toastMessage('Error adding weight: $e');
-    } finally {
+
+      QuerySnapshot weightSnapshot = await _firestore
+          .collection('Users')
+          .doc(user.uid)
+          .collection('weight')
+          .orderBy('date', descending: true)
+          .get();
+
+      _weightData = weightSnapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return {
+          'date': data['date'] ?? '',
+          'weight': data['weight'] ?? '',
+          'unit': data['unit'] ?? 'kg',
+          'isExpanded': false,
+        };
+      }).toList();
+
       setState(() {
         _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error fetching weight data: $e';
+        _isLoading = false;
+      });
+      Utils().toastMessage('Error fetching weight data: $e');
+    }
+  }
+
+  void _handleItemTap(int index) {
+    setState(() {
+      _weightData[index]['isExpanded'] = !(_weightData[index]['isExpanded'] ?? false);
+    });
+  }
+
+  Future<void> _generateAndSavePdf() async {
+    setState(() {
+      _isGeneratingPdf = true;
+    });
+
+    try {
+      // ... (keep your existing PDF generation code)
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error generating PDF: $e');
+      }
+      Utils().toastMessage('Error generating PDF: $e');
+    } finally {
+      setState(() {
+        _isGeneratingPdf = false;
       });
     }
   }
@@ -98,50 +111,99 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0XFF5AA189),
+        backgroundColor: const Color(0xFF5AA189),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTextFormField(
-              controller: _dateController,
-              hintText: 'Pick Date',
-              validator: (value) => value?.isEmpty ?? true ? 'Please enter date' : null,
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.calendar_today),
-                color: const Color(0XFF5AA189),
-                onPressed: () => _selectDate(context),
-              ),
-            ),
-            const SizedBox(height: 16),
-            WeightInputField(
-              weightController: _weightController,
-              selectedUnit: _selectedUnit,
-            ),
-            const SizedBox(height: 36),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                CustomButton(
-                  onTap: _isLoading ? () {} : () => _addWeight(),
-                  buttonText: _isLoading ? '' : 'Add Weight',
+      body: Column(
+        children: [
+          // Graph Container (Fixed)
+          Container(
+            height: 250,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: const Offset(0, 3),
                 ),
-                if (_isLoading)
-                  const CircularProgressIndicator(color: Colors.white,),
               ],
             ),
-            const SizedBox(height: 16),
-            CustomButton(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context)=>ViewWeightSummary()));
+            padding: const EdgeInsets.all(16.0),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                double chartWidth = constraints.maxWidth;
+                double barWidth = chartWidth > 600
+                    ? 20.0
+                    : chartWidth > 400
+                    ? 15.0
+                    : 13.0;
+
+                return WeightGraph(
+                  maxWidth: chartWidth,
+                  barWidth: barWidth,
+                );
               },
-              buttonText: 'Check Summary',
             ),
-          ],
-        ),
+          ),
+          // Scrollable Weight Summary
+          Expanded(
+            child: WeightSummaryList(
+              isLoading: _isLoading,
+              errorMessage: _errorMessage,
+              weightData: _weightData,
+              onItemTap: _handleItemTap,
+              isGeneratingPdf: _isGeneratingPdf,
+              onGeneratePdf: _generateAndSavePdf,
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: _isLoading || _errorMessage != null || _weightData.isEmpty
+          ? FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => const AddWeightDialogBox(),
+          );
+        },
+        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: const Color(0xFF5AA189),
+        tooltip: 'Add Weight',
+      )
+          : Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, bottom: 20.0),
+            child: FloatingActionButton.extended(
+              onPressed: _isGeneratingPdf ? null : _generateAndSavePdf,
+              label: _isGeneratingPdf
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text('PDF',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+              icon: const Icon(Icons.download, color: Colors.white),
+              backgroundColor: const Color(0xFF5AA189),
+              tooltip: 'Download PDF',
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0, bottom: 20.0),
+            child: FloatingActionButton.extended(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => const AddWeightDialogBox(),
+                );
+              },
+              label: const Text('Weight',style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              icon: const Icon(Icons.add_circle, color: Colors.white),
+              backgroundColor: const Color(0xFF5AA189),
+              tooltip: 'Add Weight',
+            ),
+          ),
+        ],
       ),
     );
   }

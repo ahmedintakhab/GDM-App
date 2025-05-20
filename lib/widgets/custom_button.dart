@@ -8,6 +8,7 @@ class CustomButton extends StatelessWidget {
   final Color? textColor;
   final String buttonText;
   final bool loading;
+  final Widget? leadingIcon;
 
   const CustomButton({
     Key? key,
@@ -17,6 +18,7 @@ class CustomButton extends StatelessWidget {
     required this.buttonText,
     this.textColor,
     this.loading = false,
+    this.leadingIcon,
   }) : super(key: key);
 
   @override
@@ -32,15 +34,28 @@ class CustomButton extends StatelessWidget {
           color: buttonColor ?? const Color(0xFF5AA189),
         ),
         child: Center(
-          child: loading ? CircularProgressIndicator(strokeWidth: 3,color: Colors.white,): Text(
+
+          child: loading ? CircularProgressIndicator(strokeWidth: 3,color: Colors.white,)
+              :Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+              if (leadingIcon != null) ...[
+          leadingIcon!, // Display the icon if provided
+          const SizedBox(width: 8.0), // Space between icon and text
+          ],
+
+          Text(
             buttonText,
+
             style: TextStyle(
               color: textColor ?? Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),
+      ]
         ),
+    ),
       ),
     );
   }
