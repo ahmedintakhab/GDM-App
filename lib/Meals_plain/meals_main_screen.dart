@@ -4,22 +4,32 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'meals_tabbar_screen.dart';
 import 'meal_container.dart';
 
-class MealsMainScreen extends StatelessWidget {
+class MealsMainScreen extends StatefulWidget {
+  @override
+  _MealsMainScreenState createState() => _MealsMainScreenState();
+}
+
+class _MealsMainScreenState extends State<MealsMainScreen> {
+  Map<String, List<Map<String, dynamic>>> mealItems = {
+    'Breakfast': [],
+    'Lunch': [],
+    'Dinner': [],
+    'Snacks': [],
+  };
+
   @override
   Widget build(BuildContext context) {
-    // Set the status bar color to match the AppBar
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Color(0xFF5AA189), // Match AppBar color
-        statusBarIconBrightness: Brightness.light, // White icons for visibility
+        statusBarColor: Color(0xFF5AA189),
+        statusBarIconBrightness: Brightness.light,
       ),
     );
 
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5), // Background color for the entire screen
+      backgroundColor: Color(0xFFF5F5F5),
       body: Column(
         children: [
-          // AppBar with extended color
           Container(
             color: Color(0xFF5AA189),
             child: SafeArea(
@@ -37,90 +47,123 @@ class MealsMainScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Scrollable Content wrapped in SafeArea to avoid status bar overlap
           Expanded(
             child: SafeArea(
-              top: false, // Allow content to start right below the AppBar
+              top: false,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // Top Container with Eaten/Remaining, Apple Image, and Indicators
                     MealHeaderContainer(),
-                    // Reusable Meal Containers
                     MealContainer(
                       mainText: 'Breakfast',
                       subText: 'Recommended 424 Cal',
-                      onTap: () {
-                        final mainText = 'Breakfast'; // Capture the mainText
-                        final subText = 'Recommended 424 Cal'; // Capture the subText
-                        int calories = int.parse(subText.split(' ')[1]); // Extract 424 from "Recommended 424 Cal"
+                      items: mealItems['Breakfast']!,
+                      onTap: (mainText, subText) {
+                        int calories = int.parse(subText.split(' ')[1]);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => MealsTabBarScreen(
                               mealType: mainText,
                               recommendedCalories: calories,
+                              onAddItem: (item) {
+                                setState(() {
+                                  mealItems[mainText]!.add(item);
+                                });
+                              },
                             ),
                           ),
                         );
                         print('Breakfast tapped');
                       },
+                      onRemoveItem: (mainText, item) {
+                        setState(() {
+                          mealItems[mainText]!.remove(item);
+                        });
+                      },
                     ),
                     MealContainer(
                       mainText: 'Lunch',
                       subText: 'Recommended 495 Cal',
-                      onTap: () {
-                        final mainText = 'Lunch'; // Capture the mainText
-                        final subText = 'Recommended 495 Cal'; // Capture the subText
-                        int calories = int.parse(subText.split(' ')[1]); // Extract 495 from "Recommended 495 Cal"
+                      items: mealItems['Lunch']!,
+                      onTap: (mainText, subText) {
+                        int calories = int.parse(subText.split(' ')[1]);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => MealsTabBarScreen(
                               mealType: mainText,
                               recommendedCalories: calories,
+                              onAddItem: (item) {
+                                setState(() {
+                                  mealItems[mainText]!.add(item);
+                                });
+                              },
                             ),
                           ),
                         );
                         print('Lunch tapped');
                       },
+                      onRemoveItem: (mainText, item) {
+                        setState(() {
+                          mealItems[mainText]!.remove(item);
+                        });
+                      },
                     ),
                     MealContainer(
                       mainText: 'Dinner',
                       subText: 'Recommended 354 Cal',
-                      onTap: () {
-                        final mainText = 'Dinner'; // Capture the mainText
-                        final subText = 'Recommended 354 Cal'; // Capture the subText
-                        int calories = int.parse(subText.split(' ')[1]); // Extract 354 from "Recommended 354 Cal"
+                      items: mealItems['Dinner']!,
+                      onTap: (mainText, subText) {
+                        int calories = int.parse(subText.split(' ')[1]);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => MealsTabBarScreen(
                               mealType: mainText,
                               recommendedCalories: calories,
+                              onAddItem: (item) {
+                                setState(() {
+                                  mealItems[mainText]!.add(item);
+                                });
+                              },
                             ),
                           ),
                         );
                         print('Dinner tapped');
                       },
+                      onRemoveItem: (mainText, item) {
+                        setState(() {
+                          mealItems[mainText]!.remove(item);
+                        });
+                      },
                     ),
                     MealContainer(
                       mainText: 'Snacks',
                       subText: 'Recommended 254 Cal',
-                      onTap: () {
-                        final mainText = 'Snacks'; // Capture the mainText
-                        final subText = 'Recommended 254 Cal'; // Capture the subText
-                        int calories = int.parse(subText.split(' ')[1]); // Extract 254 from "Recommended 254 Cal"
+                      items: mealItems['Snacks']!,
+                      onTap: (mainText, subText) {
+                        int calories = int.parse(subText.split(' ')[1]);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => MealsTabBarScreen(
                               mealType: mainText,
                               recommendedCalories: calories,
+                              onAddItem: (item) {
+                                setState(() {
+                                  mealItems[mainText]!.add(item);
+                                });
+                              },
                             ),
                           ),
                         );
                         print('Snacks tapped');
+                      },
+                      onRemoveItem: (mainText, item) {
+                        setState(() {
+                          mealItems[mainText]!.remove(item);
+                        });
                       },
                     ),
                   ],
@@ -134,7 +177,6 @@ class MealsMainScreen extends StatelessWidget {
   }
 }
 
-// Separate Widget for the Header Container
 class MealHeaderContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -143,7 +185,6 @@ class MealHeaderContainer extends StatelessWidget {
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
-          // Row with Eaten/Remaining and Apple Image
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -169,13 +210,12 @@ class MealHeaderContainer extends StatelessWidget {
                 ],
               ),
               Image.asset(
-                'assets/images/apple1.png', // Ensure you have an apple image in assets
-                height: 170.h,
-                width: 170.w,
+                'assets/images/apple1.png',
+                height: 150.h,
+                width: 150.w,
               ),
             ],
           ),
-          // Macronutrient Indicators
           Padding(
             padding: EdgeInsets.only(top: 16.h),
             child: Row(
@@ -247,16 +287,6 @@ class MealHeaderContainer extends StatelessWidget {
               ],
             ),
           ),
-          // Circular background (placeholder for the design)
-          // Container(
-          //   margin: EdgeInsets.only(top: 8.h),
-          //   height: 100.h,
-          //   width: 100.w,
-          //   decoration: BoxDecoration(
-          //     color: Color(0xFF5AA189).withOpacity(0.3),
-          //     shape: BoxShape.circle,
-          //   ),
-          // ),
         ],
       ),
     );

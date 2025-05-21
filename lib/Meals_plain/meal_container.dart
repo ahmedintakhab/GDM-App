@@ -1,52 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MealContainer extends StatelessWidget {
   final String mainText;
   final String subText;
-  final VoidCallback onTap;
+  final List<Map<String, dynamic>> items;
+  final Function(String, String) onTap;
+  final Function(String, Map<String, dynamic>) onRemoveItem;
 
-  MealContainer({
+  const MealContainer({
     required this.mainText,
     required this.subText,
+    required this.items,
     required this.onTap,
+    required this.onRemoveItem,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-        padding: EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      onTap: () => onTap(mainText, subText), // Navigate to MealsTabBarScreen on tap
+      child: Card(
+        color: Colors.white,
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  mainText,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  subText,
-                  style: TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ],
+            ListTile(
+              contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              title: Text(
+                mainText,
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(
+                '$subText eaten',
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.add_circle, color: Color(0xFF5AA189)),
+                onPressed: () {
+                  // Optional: Add additional logic for the add button if needed
+                  onTap(mainText, subText); // This will also trigger navigation
+                },
+              ),
             ),
-            Icon(Icons.add, color: Colors.grey),
+            if (items.isNotEmpty)
+              Column(
+                children: [
+                  Divider(
+                    color: Colors.grey,
+                    thickness: 1.0,
+                    height: 0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: items.map((item) {
+                        return ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            item['name'],
+                            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Padding(
+                            padding: EdgeInsets.only(top: 4.h),
+                            child: Text(
+                              item['quantity'],
+                              style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                            ),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                '${item['calories']} Cal',
+                                style: TextStyle(fontSize: 14.sp),
+                              ),
+                              SizedBox(width: 8.w),
+                              IconButton(
+                                icon: Icon(Icons.close, color: Colors.grey),
+                                onPressed: () => onRemoveItem(mainText, item),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),

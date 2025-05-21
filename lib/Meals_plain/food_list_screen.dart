@@ -18,19 +18,9 @@ class FoodListScreen extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 8.h),
           child: ListTile(
             contentPadding: EdgeInsets.zero,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  food['name'],
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  '${food['calories']} Cal',
-                  style: TextStyle(fontSize: 14.sp, color: Colors.grey),
-                ),
-              ],
+            title: Text(
+              food['name'],
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             subtitle: Padding(
               padding: EdgeInsets.only(top: 4.h),
@@ -39,13 +29,23 @@ class FoodListScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 14.sp, color: Colors.grey),
               ),
             ),
-            trailing: GestureDetector(
-              onTap: () => onAdd(food),
-              child: CircleAvatar(
-                radius: 12.r,
-                backgroundColor: Color(0xFF5AA189),
-                child: Icon(Icons.add, color: Colors.white, size: 16.sp),
-              ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${food['calories']} Cal',
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+                SizedBox(width: 8.w),
+                GestureDetector(
+                  onTap: () => onAdd(food),
+                  child: CircleAvatar(
+                    radius: 12.r,
+                    backgroundColor: Color(0xFF5AA189),
+                    child: Icon(Icons.add, color: Colors.white, size: 16.sp),
+                  ),
+                ),
+              ],
             ),
           ),
         );
