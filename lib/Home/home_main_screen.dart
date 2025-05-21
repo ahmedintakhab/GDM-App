@@ -7,6 +7,7 @@ import 'package:gdm_app/Home/linear_progress_container.dart';
 import 'package:gdm_app/Home/progress_and_stepscount.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:gdm_app/Home/user_reports_screen.dart';
+import 'package:gdm_app/Meals_plain/meals_main_screen.dart';
 import 'package:gdm_app/feedback/feedback_container_widget.dart';
 import 'package:gdm_app/feedback/feedback_screen.dart';
 import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
@@ -52,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       HomeContent(), // Home content
       NotificationScreen(), // Notifications screen
       AddReminders(reminderService: reminderService),
-      MealsScreen(), // Reports screen
+      MealsMainScreen(), // Reports screen
       ProfileScreen(), // Profile screen
     ];
 

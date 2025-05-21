@@ -85,11 +85,11 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     }
   }
 
-  void _handleItemTap(int index) {
-    setState(() {
-      _weightData[index]['isExpanded'] = !(_weightData[index]['isExpanded'] ?? false);
-    });
-  }
+  // void _handleItemTap(int index) {
+  //   setState(() {
+  //     _weightData[index]['isExpanded'] = !(_weightData[index]['isExpanded'] ?? false);
+  //   });
+  // }
 
   Future<void> _generateAndSavePdf() async {
     setState(() {

@@ -92,17 +92,24 @@ class _TodayTabState extends State<TodayTab> {
         } else if (userProvider.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else {
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          return Scaffold(
+            body: SingleChildScrollView(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildAverageGlucoseCard(userProvider),
+                  SizedBox(height: 24),
+                  _buildGlucoseLevelsCard(userProvider),
+
+                ],
+              ),
+            ),
+            floatingActionButton: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                _buildAverageGlucoseCard(userProvider),
-                SizedBox(height: 24),
-                _buildGlucoseLevelsCard(userProvider),
-                SizedBox(height: 25),
-                CustomButton(
-                  onTap: () {
+                FloatingActionButton.extended(
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => AddGlucoseScreen()),
@@ -111,17 +118,35 @@ class _TodayTabState extends State<TodayTab> {
                       _fetchDataWithRetry();
                     });
                   },
-                  buttonText: 'Add Glucose',
+                  icon: const Icon(Icons.add, color: Colors.white),
+                  label: const Text(
+                    'Glucose',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  backgroundColor: const Color(0xFF5AA189),
+                  tooltip: 'Add Glucose',
                 ),
-                SizedBox(height: 15.h),
-                CustomButton(
-                  onTap: () {
+                SizedBox(height: 10),
+                FloatingActionButton.extended(
+                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => ViewGlucoseSummary()),
                     );
                   },
-                  buttonText: 'View Glucose Summary',
+                  icon: const Icon(Icons.summarize, color: Colors.white),
+                  label: const Text(
+                    'Summary',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  backgroundColor: const Color(0xFF5AA189),
+                  tooltip: 'View Glucose Summary',
                 ),
               ],
             ),
@@ -298,11 +323,23 @@ class _TodayTabState extends State<TodayTab> {
             height: 200,
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: false),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: true,
+                  verticalInterval: 1,
+                  getDrawingVerticalLine: (value) {
+                    return FlLine(
+                      color: Colors.grey.withOpacity(0.3),
+                      strokeWidth: 3,
+                    );
+                  },
+                  drawHorizontalLine: true,
+                ),
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
+
                       interval: 1,
                       reservedSize: 40,
                       getTitlesWidget: (value, meta) {

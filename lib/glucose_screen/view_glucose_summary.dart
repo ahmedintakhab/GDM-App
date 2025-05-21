@@ -4,12 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'dart:io';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:intl/intl.dart';
+
+import 'glucose_pdf_generator.dart';
 
 class ViewGlucoseSummary extends StatefulWidget {
   const ViewGlucoseSummary({super.key});
@@ -63,6 +60,7 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
           'time': timestamp != null ? DateFormat('h:mm a').format(timestamp) : '',
           'reading': data['glucoseLevel'] ?? '',
           'mealContext': data['mealOption'] ?? 'Unknown',
+          'isExpanded': false,
         };
       }).toList();
 
@@ -84,138 +82,9 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
     });
 
     try {
-      final pdf = pw.Document();
-
-      pdf.addPage(
-        pw.Page(
-          build: (pw.Context context) => pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                'Glucose Summary Report',
-                style: pw.TextStyle(
-                  fontSize: 24,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 20.h),
-              pw.Table(
-                border: pw.TableBorder.all(),
-                columnWidths: {
-                  0: const pw.FlexColumnWidth(2),
-                  1: const pw.FlexColumnWidth(1.5),
-                  2: const pw.FlexColumnWidth(1.5),
-                  3: const pw.FlexColumnWidth(2),
-                },
-                children: [
-                  pw.TableRow(
-                    decoration: const pw.BoxDecoration(),
-                    children: [
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          'Date',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          'Time',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          'Reading',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(10),
-                        child: pw.Text(
-                          'Meal Context',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  ..._glucoseData.map((entry) {
-                    return pw.TableRow(
-                      children: [
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(10),
-                          child: pw.Text(entry['date']),
-                        ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(10),
-                          child: pw.Text(entry['time']),
-                        ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(10),
-                          child: pw.Text(entry['reading']),
-                        ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(10),
-                          child: pw.Text(entry['mealContext']),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-
-      Directory? directory;
-      try {
-        directory = await getApplicationDocumentsDirectory();
-        if (kDebugMode) {
-          print('Documents directory: ${directory.path}');
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print('Failed to access documents directory: $e');
-        }
-        Utils().toastMessage('Failed to access documents directory: $e');
-        try {
-          directory = await getTemporaryDirectory();
-          if (kDebugMode) {
-            print('Temporary directory: ${directory.path}');
-          }
-        } catch (e) {
-          if (kDebugMode) {
-            print('Failed to access temporary directory: $e');
-          }
-          Utils().toastMessage('Failed to access temporary directory: $e');
-          return;
-        }
-      }
-
-      if (directory == null) {
-        Utils().toastMessage('Unable to access storage directory');
-        return;
-      }
-
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final file = File('${directory.path}/glucose_summary_$timestamp.pdf');
-
-      await file.writeAsBytes(await pdf.save());
-
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'Glucose Summary Report',
-      );
-
-      Utils().toastMessage('PDF report saved to ${file.path} and shared');
+      await generateAndSaveGlucosePdf(_glucoseData);
     } catch (e) {
-      if (kDebugMode) {
-        print('Error generating PDF: $e');
-      }
-      Utils().toastMessage('Error generating PDF: $e');
+      // Error is already handled in generateAndSaveGlucosePdf with toast
     } finally {
       setState(() {
         _isGeneratingPdf = false;
@@ -235,7 +104,7 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0XFF5AA189),
+        backgroundColor: const Color(0xFF5AA189),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -245,7 +114,7 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
         children: [
           Expanded(
             child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator(color: Color(0XFF5AA189)))
                 : _errorMessage != null
                 ? Center(
               child: Text(
@@ -264,7 +133,8 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
                   isExpanded: _glucoseData[index]['isExpanded'] ?? false,
                   onTap: () {
                     setState(() {
-                      _glucoseData[index]['isExpanded'] = !(_glucoseData[index]['isExpanded'] ?? false);
+                      _glucoseData[index]['isExpanded'] =
+                      !(_glucoseData[index]['isExpanded'] ?? false);
                     });
                   },
                 );
@@ -280,7 +150,8 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
                   children: [
                     CustomButton(
                       onTap: _isGeneratingPdf ? () {} : _generateAndSavePdf,
-                      buttonText: _isGeneratingPdf ? '' : 'Generate Report',
+                      buttonText: _isGeneratingPdf ? '' : 'Download PDF',
+                      leadingIcon: Icon(Icons.download, color: Colors.white,),
                     ),
                     if (_isGeneratingPdf)
                       const CircularProgressIndicator(
@@ -339,7 +210,7 @@ class _GlucoseEntryContainerState extends State<GlucoseEntryContainer> {
                       width: 30.w,
                       height: 30.h,
                       decoration: const BoxDecoration(
-                        color: Color(0XFF5AA189),
+                        color: Color(0xFF5AA189),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
