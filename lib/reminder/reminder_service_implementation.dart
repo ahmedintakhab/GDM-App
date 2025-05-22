@@ -46,6 +46,39 @@ class Reminder {
   }
 }
 
+class NotificationRecord {
+  final String id;
+  final String reminderId;
+  final String title;
+  final String body;
+  final Timestamp sentAt;
+  final String status;
+  final String? error;
+
+  NotificationRecord({
+    required this.id,
+    required this.reminderId,
+    required this.title,
+    required this.body,
+    required this.sentAt,
+    required this.status,
+    this.error,
+  });
+
+  factory NotificationRecord.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return NotificationRecord(
+      id: doc.id,
+      reminderId: data['reminderId'] ?? '',
+      title: data['title'] ?? '',
+      body: data['body'] ?? '',
+      sentAt: data['sentAt'] ?? Timestamp.now(),
+      status: data['status'] ?? '',
+      error: data['error'],
+    );
+  }
+}
+
 class ReminderService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -62,7 +95,7 @@ class ReminderService {
 
     try {
       print('Requesting notification permission');
-      await _requestNotificationPermission(); // Added to ensure permissions
+      await _requestNotificationPermission();
       print('Setting FCM auto-init');
       await _messaging.setAutoInitEnabled(true);
       print('Updating FCM token');
@@ -243,6 +276,32 @@ class ReminderService {
     } catch (e) {
       print('Error getting active reminders: $e');
       return [];
+    }
+  }
+
+  Stream<List<NotificationRecord>> getDisplayReminders({String? reminderId}) async* {
+    print('Entering getDisplayReminders() with reminderId: ${reminderId ?? 'all'}');
+    try {
+      final user = _auth.currentUser;
+      if (user == null) {
+        print('No user signed in');
+        throw Exception('No user signed in');
+      }
+      final collection = _firestore.collection('Users').doc(user.uid).collection('Display reminders');
+      print('Querying Display reminders from collection: ${collection.path}');
+
+      Query query = collection.orderBy('sentAt', descending: true);
+      if (reminderId != null) {
+        query = query.where('reminderId', isEqualTo: reminderId);
+      }
+
+      yield* query.snapshots().map((snapshot) {
+        print('Retrieved ${snapshot.docs.length} display reminders');
+        return snapshot.docs.map(NotificationRecord.fromDocument).toList();
+      });
+    } catch (e) {
+      print('Error getting display reminders: $e');
+      yield [];
     }
   }
 

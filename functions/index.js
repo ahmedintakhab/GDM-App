@@ -130,6 +130,23 @@ exports.scheduleReminders = functions
                 .then(async (response) => {
                   console.log(`Successfully sent notification for ${reminder.id}: ${response}`);
 
+                  // Save notification details to Display reminders subcollection (only for successful sends)
+                  const notificationData = {
+                    reminderId: reminder.id,
+                    title: message.notification.title,
+                    body: message.notification.body,
+                    sentAt: admin.firestore.FieldValue.serverTimestamp(),
+                    status: 'sent',
+                    fcmToken: fcmToken,
+                  };
+                  console.log(`Saving notification data for reminder ${reminder.id} to Display reminders`);
+                  await admin.firestore()
+                    .collection('Users')
+                    .doc(userId)
+                    .collection('Display reminders')
+                    .add(notificationData);
+                  console.log(`Notification data saved for reminder ${reminder.id}`);
+
                   // Handle frequency-based updates
                   console.log(`Updating Firestore for reminder ${reminder.id}, frequency: ${reminder.frequency}`);
                   if (reminder.frequency !== 'Once') {
@@ -163,6 +180,7 @@ exports.scheduleReminders = functions
                 })
                 .catch(async (error) => {
                   console.error(`Error sending notification for ${reminder.id}: ${error.message}`);
+                  // Update reminder with error details, but do not save to Display reminders
                   await reminderDoc.ref.update({
                     notificationError: error.message,
                     notificationErrorTimestamp: admin.firestore.FieldValue.serverTimestamp(),
@@ -265,6 +283,23 @@ exports.sendReminderNotification = functions
       console.log('Sending test FCM message');
       const response = await admin.messaging().send(message);
       console.log('Test notification sent successfully:', response);
+
+      // Save test notification details to Display reminders subcollection (only for successful sends)
+      const notificationData = {
+        reminderId: 'test-notification',
+        title: message.notification.title,
+        body: message.notification.body,
+        sentAt: admin.firestore.FieldValue.serverTimestamp(),
+        status: 'sent',
+        fcmToken: fcmToken,
+      };
+      await admin.firestore()
+        .collection('Users')
+        .doc(userId)
+        .collection('Display reminders')
+        .add(notificationData);
+      console.log('Test notification data saved to Display reminders');
+
       console.log('sendReminderNotification completed successfully');
       return { success: true, messageId: response };
     } catch (error) {
