@@ -110,6 +110,7 @@ Future<void> generateAndSaveGlucosePdf(List<Map<String, dynamic>> glucoseData) a
     await Share.shareXFiles([XFile(file.path)], text: 'Glucose Summary Report');
 
     Utils().toastMessage('PDF generated and shared successfully!');
+    print("PDF generated and Shared successfully!");
   } catch (e) {
     if (kDebugMode) {
       print('Error generating PDF: $e');
