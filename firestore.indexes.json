@@ -1,0 +1,18 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "gdmReminders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "snoozeUntil",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ]
+}

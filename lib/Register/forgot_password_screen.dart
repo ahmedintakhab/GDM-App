@@ -5,11 +5,14 @@ import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/reset_password_screen.dart';
 import 'package:get/get.dart';
 
+import '../reminder/reminder_service_implementation.dart';
 import '../utils/screen_size.dart';
 import '../widgets/intl_phone_field.dart';
 
 class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
+  final ReminderService reminderService;
+
+  const ForgotPassword({Key? key, required this.reminderService}) : super(key: key);
 
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
@@ -91,7 +94,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Center(
       child: GestureDetector(
         onTap: () {
-          Get.to(ResetPassword());
+          Get.to(ResetPassword(reminderService: widget.reminderService));
         },
         child: Container(
           height: 56.h,
@@ -123,7 +126,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               children: [
                 TextSpan(
                   recognizer: TapGestureRecognizer()..onTap = () {
-                    Get.off( LoginScreen());
+                    Get.off( LoginScreen(reminderService: widget.reminderService));
                   },
                   text: ' Login',
                   style:  TextStyle(

@@ -16,6 +16,10 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
+  final ReminderService reminderService;
+
+  const LoginScreen({super.key, required this.reminderService});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -73,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       await userProvider.fetchUserData();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          context, MaterialPageRoute(builder: (context) => HomeScreen(reminderService: widget.reminderService)));
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'An error occurred. Please try again.';
       if (e.code == 'user-not-found') {
@@ -211,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Get.to(UsersSignupScreen());
+                                  Get.to(UsersSignupScreen(reminderService: widget.reminderService));
                                 },
                               text: 'Sign up',
                               style: TextStyle(
@@ -238,7 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget forgotpassword() {
     return GestureDetector(
       onTap: () {
-        Get.to(const ForgotPassword());
+        Get.to( ForgotPassword(reminderService: widget.reminderService));
       },
       child: Align(
         alignment: Alignment.topRight,

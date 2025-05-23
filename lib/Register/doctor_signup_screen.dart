@@ -7,10 +7,14 @@ import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
 
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class DoctorSignupScreen extends StatefulWidget {
+  final ReminderService reminderService;
+  DoctorSignupScreen({super.key, required this.reminderService});
+
   @override
   _DoctorSignupScreenState createState() => _DoctorSignupScreenState();
 }
@@ -64,7 +68,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
       // Navigate only if validation is successful
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => LoginScreen(reminderService: widget.reminderService)),
       );
     }catch (error){
       Utils().toastMessage(error.toString());
@@ -205,7 +209,7 @@ class _DoctorSignupScreenState extends State<DoctorSignupScreen> {
                             TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Get.to( LoginScreen());
+                                  Get.to( LoginScreen(reminderService: widget.reminderService));
                                 },
                               text: 'Login',
                               style: TextStyle(

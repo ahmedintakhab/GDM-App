@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Register/measurement_schedule.dart';
 import 'package:gdm_app/Register/progress_bar.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 
 class BloodSugarGoalScreen extends StatefulWidget {
-  const BloodSugarGoalScreen({Key? key}) : super(key: key);
+  final ReminderService reminderService;
+
+  const BloodSugarGoalScreen({Key? key,required this.reminderService}) : super(key: key);
 
   @override
   State<BloodSugarGoalScreen> createState() => _BloodSugarGoalScreenState();
@@ -73,7 +76,7 @@ class _BloodSugarGoalScreenState extends State<BloodSugarGoalScreen> {
                 } else {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MeasurementScheduleScreen()),
+                    MaterialPageRoute(builder: (context) => MeasurementScheduleScreen(reminderService: widget.reminderService)),
                   );
                 }
               },

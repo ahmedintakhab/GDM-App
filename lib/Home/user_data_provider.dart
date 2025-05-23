@@ -26,6 +26,7 @@ class UserProvider extends ChangeNotifier {
   bool _isDisposed = false; // Add this flag
   String _lmp = '';
   String _dueDate = '';
+  bool _gdmTestDone = false;
   String? _personalInfoDocId; // To store the document ID
   String? _lastVisit;
   String? _nextVisit;
@@ -53,6 +54,7 @@ class UserProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   String get lmp => _lmp;
   String get dueDate => _dueDate;
+  bool get gdmTestDone => _gdmTestDone;
   String? get lastVisit => _lastVisit;
   String? get nextVisit => _nextVisit;
 
@@ -414,6 +416,7 @@ class UserProvider extends ChangeNotifier {
         final data = doc.data();
         _lmp = data['lmp'] ?? '';
         _dueDate = data['lmp dueDate'] ?? '';
+        _gdmTestDone = data['gdmTestDone'] ?? false;
         _personalInfoDocId = doc.id; // Store document ID
         _safeNotifyListeners();
       }
@@ -447,6 +450,30 @@ class UserProvider extends ChangeNotifier {
       return true;
     } catch (e) {
       print("Error updating pregnancy info: $e");
+      return false;
+    }
+  }
+  Future<bool> updateGdmTestStatus(bool status) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return false;
+
+      final docRef = FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user.uid)
+          .collection('Personal Information')
+          .doc(_personalInfoDocId ?? 'default_doc');
+
+      await docRef.set({
+        'gdmTestDone': status,
+        'timestamp': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      _gdmTestDone = status;
+      _safeNotifyListeners();
+      return true;
+    } catch (e) {
+      print("Error updating GDM test status: $e");
       return false;
     }
   }

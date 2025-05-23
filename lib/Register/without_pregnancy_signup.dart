@@ -5,11 +5,14 @@ import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/weight_input_field.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 
 class WithoutPregnancySignup extends StatefulWidget {
   final String selectedOption;
-  const WithoutPregnancySignup({Key? key, required this.selectedOption}): super (key: key);
+  final ReminderService reminderService;
+
+  const WithoutPregnancySignup({Key? key, required this.selectedOption, required this.reminderService}): super (key: key);
 
   @override
   State<WithoutPregnancySignup> createState() => _WithoutPregnancySignupState();
@@ -260,7 +263,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       // Navigate only if validation is successful
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                        MaterialPageRoute(builder: (context) => LoginScreen(reminderService: widget.reminderService)),
                       );
                     }
                     else {

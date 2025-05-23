@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,16 +10,37 @@ import 'package:gdm_app/Register/users_signup_screen.dart';
 import 'package:gdm_app/Register/without_pregnancy_signup.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:provider/provider.dart';
+
+import '../Home/user_data_provider.dart';
+import '../reminder/reminder_service_implementation.dart';
 
 
-void main() {
-  runApp(MaterialApp(
-    home: SelectionScreen(),
-  ));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  // Initialize ReminderService
+  final ReminderService reminderService = ReminderService();
+  await reminderService.init();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        Provider<ReminderService>.value(value: reminderService),
+      ],
+      child: MaterialApp(
+        home: SelectionScreen(reminderService: reminderService),
+      ),
+    ),
+  );
 }
 
 class SelectionScreen extends StatefulWidget {
-  const SelectionScreen({super.key});
+  final ReminderService reminderService;
+
+  const SelectionScreen({super.key, required this.reminderService});
 
   @override
   State<SelectionScreen> createState() => _SelectionScreenState();
@@ -64,19 +86,20 @@ class _SelectionScreenState extends State<SelectionScreen> {
       case 'Pregnant':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PregnancyRegistrationScreen(selectedOption: _selectedOption!)),
+          MaterialPageRoute(builder: (context) => PregnancyRegistrationScreen(selectedOption: _selectedOption!,
+              reminderService: widget.reminderService)),
         );
         break;
       case 'Not Pregnant':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => WithoutPregnancySignup(selectedOption: _selectedOption!)),
+          MaterialPageRoute(builder: (context) => WithoutPregnancySignup(selectedOption: _selectedOption!,reminderService: widget.reminderService)),
         );
         break;
       case 'Doctor':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => LoginScreen(reminderService: widget.reminderService)),
         );
         break;
     }
@@ -133,7 +156,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Get.to( UsersSignupScreen());
+                            Get.to( UsersSignupScreen(reminderService: widget.reminderService));
                           },
                         text: 'SignUp',
                         style: TextStyle(

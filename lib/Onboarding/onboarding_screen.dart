@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gdm_app/Register/personal_info_screen.dart';
-import 'package:gdm_app/Register/selection_screen.dart';
 import 'package:gdm_app/Register/users_signup_screen.dart';
+import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../utils/onboarding_data_model.dart';
@@ -9,7 +8,8 @@ import '../utils/pref_data.dart';
 import '../utils/screen_size.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+  final ReminderService reminderService;
+  const OnboardingScreen({Key? key, required this.reminderService}) : super(key: key);
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -113,7 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             PrefData.setIntro(true);
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) =>  UsersSignupScreen()),
+              MaterialPageRoute(builder: (context) =>  UsersSignupScreen(reminderService: widget.reminderService)),
             );
           } else {
             controller.nextPage(
@@ -153,7 +153,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.only(top: 25, right: 20),
       child: GestureDetector(
           onTap: () {
-            Get.to(UsersSignupScreen());
+            Get.to(UsersSignupScreen(reminderService: widget.reminderService));
             // setState(() {
             //   controller.nextPage(
             //       duration: const Duration(milliseconds: 100),

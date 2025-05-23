@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Register/pregnancy_question_screen.dart';
 import 'package:gdm_app/Register/progress_bar.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import 'diagnosis_option.dart';
@@ -9,7 +10,9 @@ import 'package:gdm_app/utils/utils.dart';
 
 class DiabetesTypeScreen extends StatefulWidget {
   final Map<String, dynamic> pregnancyData;
-  const DiabetesTypeScreen({Key? key, required this.pregnancyData}) : super(key: key);
+  final ReminderService reminderService;
+
+  const DiabetesTypeScreen({Key? key, required this.pregnancyData, required this.reminderService}) : super(key: key);
 
   @override
   State<DiabetesTypeScreen> createState() => _DiabetesTypeScreenState();
@@ -145,7 +148,7 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
                             MaterialPageRoute(
                               builder: (context) => PregnancyQuestionScreen1(
                                 pregnancyData: widget.pregnancyData,
-                                selectedDiagnoses: finalDiagnoses,
+                                selectedDiagnoses: finalDiagnoses,reminderService: widget.reminderService
                               ),
                             ),
                           );

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gdm_app/Home/home_main_screen.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/progress_bar.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 
 class MeasurementScheduleScreen extends StatefulWidget {
-  const MeasurementScheduleScreen({Key? key}) : super(key: key);
+  final ReminderService reminderService;
+
+  const MeasurementScheduleScreen({Key? key, required this.reminderService}) : super(key: key);
 
   @override
   State<MeasurementScheduleScreen> createState() => _MeasurementScheduleScreenState();
@@ -90,7 +93,7 @@ class _MeasurementScheduleScreenState extends State<MeasurementScheduleScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                  MaterialPageRoute(builder: (context) => HomeScreen(reminderService: widget.reminderService)),
                 );
               },
               buttonText: 'Submit',

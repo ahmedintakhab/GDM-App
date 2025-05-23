@@ -5,11 +5,14 @@ import 'package:gdm_app/Onboarding/onboarding_screen.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:get/get.dart';
 import '../Home/home_main_screen.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../utils/screen_size.dart';
 import '../utils/pref_data.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  final ReminderService reminderService;
+
+  const SplashScreen({Key? key, required this.reminderService}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -36,15 +39,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
       if (user != null) {
         // User is already logged in, navigate to HomeScreen
-        Get.off(const HomeScreen());
+        Get.off( HomeScreen(reminderService: widget.reminderService));
       } else {
         // User is not logged in, navigate based on intro and login status
         if (isIntro == false) {
-          Get.off(const OnboardingScreen());
+          Get.off( OnboardingScreen(reminderService: widget.reminderService));
         } else if (isLogin == false) {
-          Get.off(LoginScreen());
+          Get.off(LoginScreen(reminderService: widget.reminderService));
         } else {
-          Get.off(const HomeScreen());
+          Get.off( HomeScreen(reminderService: widget.reminderService));
         }
       }
     });

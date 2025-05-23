@@ -8,10 +8,14 @@ import 'package:gdm_app/Register/selection_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
 
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class UsersSignupScreen extends StatefulWidget {
+  final ReminderService reminderService;
+  const UsersSignupScreen({Key? key, required this.reminderService}) : super(key: key);
+
   @override
   _UsersSignupScreenState createState() => _UsersSignupScreenState();
 }
@@ -77,7 +81,7 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
       // Navigate only if validation is successful
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectionScreen()),
+        MaterialPageRoute(builder: (context) => SelectionScreen(reminderService: widget.reminderService)),
       );
     }catch (error){
       Utils().toastMessage(error.toString());
@@ -236,7 +240,7 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                             TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Get.to( LoginScreen());
+                                  Get.to( LoginScreen(reminderService: widget.reminderService));
                                 },
                               text: 'Login',
                               style: TextStyle(

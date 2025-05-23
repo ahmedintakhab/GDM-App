@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/Diabetes_type_screen.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/dropdown_widget.dart';
 
 class PregnancyRegistrationScreen extends StatefulWidget {
   final String selectedOption;
-  const PregnancyRegistrationScreen({Key? key, required this.selectedOption}): super (key: key);
+  final ReminderService reminderService;
+
+  const PregnancyRegistrationScreen({Key? key, required this.selectedOption, required this.reminderService}): super (key: key);
 
   @override
   _PregnancyRegistrationScreenState createState() => _PregnancyRegistrationScreenState();
@@ -248,7 +251,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
         // Navigate to the next screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DiabetesTypeScreen(pregnancyData : pregnancyData)),
+          MaterialPageRoute(builder: (context) => DiabetesTypeScreen(pregnancyData : pregnancyData, reminderService: widget.reminderService)),
         );
       }
     },

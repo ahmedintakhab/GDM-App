@@ -6,10 +6,13 @@ import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../utils/utils.dart';
 
 class UpdateProfile extends StatefulWidget {
-  UpdateProfile({super.key});
+  final ReminderService reminderService;
+
+  UpdateProfile({super.key, required this.reminderService});
 
   @override
   State<UpdateProfile> createState() => _UpdateProfileState();
@@ -112,7 +115,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => HomeScreen(reminderService: widget.reminderService)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

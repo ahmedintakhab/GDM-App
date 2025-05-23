@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:get/get.dart';
+import '../reminder/reminder_service_implementation.dart';
 import '../utils/screen_size.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({Key? key}) : super(key: key);
+  final ReminderService reminderService;
+
+  const ResetPassword({Key? key, required this.reminderService}) : super(key: key);
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -224,7 +227,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         child: GestureDetector(
           onTap: () {
 
-            Get.off(LoginScreen());
+            Get.off(LoginScreen(reminderService: widget.reminderService));
           },
           child: Container(
             height: 56.h,

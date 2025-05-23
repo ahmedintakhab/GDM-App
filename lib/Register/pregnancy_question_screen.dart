@@ -8,10 +8,14 @@ import 'package:gdm_app/Register/progress_bar.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/utils/utils.dart';
 
+import '../reminder/reminder_service_implementation.dart';
+
 class PregnancyQuestionScreen1 extends StatefulWidget {
   final Map<String, dynamic> pregnancyData;
   final Set<String> selectedDiagnoses;
-  const PregnancyQuestionScreen1({Key? key, required this.pregnancyData, required this.selectedDiagnoses}) : super(key: key);
+  final ReminderService reminderService;
+  const PregnancyQuestionScreen1({Key? key, required this.pregnancyData,
+    required this.selectedDiagnoses, required this.reminderService}) : super(key: key);
 
   @override
   State<PregnancyQuestionScreen1> createState() => _PregnancyQuestionScreen1State();
@@ -79,7 +83,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
       // Navigate to the LoginScreen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen(reminderService: widget.reminderService)),
       );
     } catch (e) {
       // Handle other errors

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -108,16 +109,21 @@ class ReminderService {
       });
       FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
+      const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+      const iosInit = DarwinInitializationSettings();
+      const initSettings = InitializationSettings(android: androidInit, iOS: iosInit);
+      await _localNotifications.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: _handleNotificationResponse,
+      );
+      print('Local notifications initialized');
+
       _isInitialized = true;
       print('init() completed successfully');
     } catch (e) {
       print('Error initializing ReminderService: $e');
       rethrow;
     }
-    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosInit = DarwinInitializationSettings();
-    const initSettings = InitializationSettings(android: androidInit, iOS: iosInit);
-    await _localNotifications.initialize(initSettings);
   }
 
   Future<void> _requestNotificationPermission() async {
@@ -186,10 +192,39 @@ class ReminderService {
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
+        payload: message.data['reminderId'],
       );
       print('Displayed local notification');
     } else {
       print('Foreground message received but no notification payload');
+    }
+  }
+
+  void _handleNotificationResponse(NotificationResponse response) async {
+    print('Entering _handleNotificationResponse()');
+    if (response.payload != null) {
+      print('Notification tapped with payload: ${response.payload}');
+      final reminderId = response.payload!;
+      if (reminderId.startsWith('gdm_')) {
+        print('GDM reminder tapped, showing response dialog');
+        // Note: Dialog requires context, handled in LinearProgressContainer
+      }
+    }
+  }
+
+  Future<void> handleGdmReminderResponse(String reminderId, String action, {String? snoozeDuration}) async {
+    print('Entering handleGdmReminderResponse() with reminderId: $reminderId, action: $action');
+    try {
+      final callable = FirebaseFunctions.instance.httpsCallable('handleGdmReminderResponse');
+      final response = await callable.call({
+        'reminderId': reminderId,
+        'action': action,
+        if (snoozeDuration != null) 'snoozeDuration': snoozeDuration,
+      });
+      print('GDM reminder response handled: ${response.data}');
+    } catch (e) {
+      print('Error handling GDM reminder response: $e');
+      rethrow;
     }
   }
 

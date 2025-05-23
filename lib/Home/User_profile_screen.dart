@@ -14,7 +14,8 @@ import '../Register/logout_dialog_widget.dart';
 import '../utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({super.key});
+  final ReminderService reminderService;
+  ProfileScreen({super.key, required this.reminderService});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -48,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             await Future.delayed(Duration.zero);
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (context) => LoginScreen(reminderService: widget.reminderService)),
             );
           } catch (e) {
             Navigator.of(context, rootNavigator: true).pop();
@@ -120,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => UpdateProfile()),
+                          MaterialPageRoute(builder: (context) => UpdateProfile(reminderService: widget.reminderService)),
                         );
                       },
                       child: Container(
