@@ -87,12 +87,17 @@ class ReminderService {
   final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
   bool _isInitialized = false;
 
-  Future<void> init() async {
+  // Add a callback for GDM reminder taps
+  Function(String)? onGdmReminderTapped;
+
+  Future<void> init({required Function(String) onGdmReminderTapped}) async {
     print('Entering init()');
     if (_isInitialized) {
       print('init() skipped: Already initialized');
       return;
     }
+
+    this.onGdmReminderTapped = onGdmReminderTapped; // Set the initial callback
 
     try {
       print('Requesting notification permission');
@@ -124,6 +129,12 @@ class ReminderService {
       print('Error initializing ReminderService: $e');
       rethrow;
     }
+  }
+
+  // New method to update the callback after initialization
+  void setGdmReminderTappedCallback(Function(String) callback) {
+    print('Updating onGdmReminderTapped callback');
+    this.onGdmReminderTapped = callback;
   }
 
   Future<void> _requestNotificationPermission() async {
@@ -199,15 +210,14 @@ class ReminderService {
       print('Foreground message received but no notification payload');
     }
   }
-
   void _handleNotificationResponse(NotificationResponse response) async {
     print('Entering _handleNotificationResponse()');
     if (response.payload != null) {
       print('Notification tapped with payload: ${response.payload}');
       final reminderId = response.payload!;
       if (reminderId.startsWith('gdm_')) {
-        print('GDM reminder tapped, showing response dialog');
-        // Note: Dialog requires context, handled in LinearProgressContainer
+        print('GDM reminder tapped, notifying listener');
+        onGdmReminderTapped?.call(reminderId); // Call the callback to notify LinearProgressContainer
       }
     }
   }

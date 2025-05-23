@@ -22,7 +22,11 @@ void main() async {
 
   // Initialize ReminderService
   final ReminderService reminderService = ReminderService();
-  await reminderService.init();
+  await reminderService.init(
+    onGdmReminderTapped: (reminderId) {
+      print('GDM reminder tapped in Selection screen (no-op): $reminderId');
+    },
+  );
 
   runApp(
     MultiProvider(

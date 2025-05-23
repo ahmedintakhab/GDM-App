@@ -24,11 +24,25 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = Provider.of<UserProvider>(context, listen: false);
       provider.fetchPregnancyInfo();
-      // Listen for GDM reminder taps
+
+      // Set the callback for GDM reminder taps
+      widget.reminderService.setGdmReminderTappedCallback(_showGdmResponseDialog);
+
+      // Listen for GDM reminder taps when the app is opened from terminated/background state
       FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
         final reminderId = message.data['reminderId'];
         if (reminderId != null && reminderId.startsWith('gdm_')) {
           _showGdmResponseDialog(reminderId);
+        }
+      });
+
+      // Handle initial message if the app was opened via notification
+      FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+        if (message != null) {
+          final reminderId = message.data['reminderId'];
+          if (reminderId != null && reminderId.startsWith('gdm_')) {
+            _showGdmResponseDialog(reminderId);
+          }
         }
       });
     });
@@ -138,7 +152,7 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
                     },
                     child: Text(
                       'Mark GDM Test as Done',
-                      style: TextStyle(fontSize: 14.sp),
+                      style: TextStyle(fontSize: 14.sp, color: Color(0XFF5AA189)),
                     ),
                   ),
               ],

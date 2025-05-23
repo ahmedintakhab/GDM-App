@@ -37,8 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null) {
-        await Provider.of<ReminderService>(context, listen: false).init();
-        await regenerateFcmToken(context); // Regenerate FCM token after auth state change
+        await regenerateFcmToken(context);
       }
     });
   }

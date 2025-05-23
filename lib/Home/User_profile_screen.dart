@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: 5.h),
                     Text(
-                      userProvider.email.isNotEmpty ? userProvider.email : '@username',
+                      userProvider.email.isNotEmpty ? userProvider.email : '',
                       style: TextStyle(
                         fontSize: 16.sp,
                         color: Colors.grey,
