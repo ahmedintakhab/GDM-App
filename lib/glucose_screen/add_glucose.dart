@@ -61,7 +61,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
         final time = _timeController.text;
 
         // Parse and validate glucose value
-        final glucoseValue = int.tryParse(_glucoseController.text);
+        final glucoseValue = double.tryParse(_glucoseController.text);
         if (glucoseValue == null) {
           Utils().toastMessage('Please enter a valid glucose value!');
           setState(() {
@@ -70,7 +70,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
           return;
         }
         // Combine glucose value and unit
-        final glucoseWithUnit = '$glucoseValue $_selectedUnit';
+        final glucoseWithUnit = '${glucoseValue.toStringAsFixed(2)} $_selectedUnit';
         print('Check new glucose:$glucoseWithUnit');
 
         // Combine date and time into a single DateTime object
@@ -80,6 +80,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
         final glucoseData = {
           'dateTime': Timestamp.fromDate(dateTime), // Save as Timestamp
           'glucoseLevel': glucoseWithUnit,
+          'glucoseValue': glucoseValue, // Store raw value for easier fetching
           'mealOption': _selectedMealOption,
         };
 
@@ -223,7 +224,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                           Expanded(
                             child: TextField(
                               controller: _glucoseController,
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.numberWithOptions(decimal: true),
                               decoration: const InputDecoration(
                                 hintText: 'Value',
                                 border: InputBorder.none,

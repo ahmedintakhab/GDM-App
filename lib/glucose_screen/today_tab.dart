@@ -166,8 +166,7 @@ class _TodayTabState extends State<TodayTab> {
   Widget _buildAverageGlucoseCard(UserProvider userProvider) {
     final glucoseValues = userProvider.glucoseData
         .where((data) => data['value'] != null)
-        .map((data) => data['value'] as int)
-        .toList();
+        .map((data) => (data['value'] as num).toDouble()).toList();
 
     final units = userProvider.glucoseData
         .where((data) => data['unit'] != null)
@@ -176,12 +175,16 @@ class _TodayTabState extends State<TodayTab> {
 
     final averageGlucose = glucoseValues.isNotEmpty
         ? glucoseValues.reduce((a, b) => a + b) / glucoseValues.length
-        : 0;
+        : 0.0;
     // Use the most recent unit if available, otherwise default to 'mg/dl'
     final unit = units.isNotEmpty ? units.first : 'mg/dl';
 
-    final mood = _getMoodForValue(averageGlucose.toDouble());
+    // Format average to show integer if no decimal part, else two decimal places (Line ~110)
+    final displayAverage = averageGlucose == averageGlucose.truncateToDouble()
+        ? averageGlucose.toInt().toString()
+        : averageGlucose.toStringAsFixed(2);
 
+    final mood = _getMoodForValue(averageGlucose);
     IconData moodIcon;
     Color moodColor;
 
@@ -240,8 +243,8 @@ class _TodayTabState extends State<TodayTab> {
               ),
               SizedBox(width: 8),
               Text(
-                '${averageGlucose.toInt()}',
-                style: TextStyle(
+                displayAverage, // Use formatted average
+                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: moodColor,
@@ -400,7 +403,7 @@ class _TodayTabState extends State<TodayTab> {
                       final data = entry.value;
                       return FlSpot(
                         index.toDouble(),
-                        (data['value'] as int).toDouble(),
+                        (data['value'] as num ).toDouble(),
                       );
                     }).toList(),
                     isCurved: true,
@@ -434,14 +437,14 @@ class _TodayTabState extends State<TodayTab> {
 
   double _calculateMaxY(List<dynamic> glucoseData) {
     final maxValue = glucoseData
-        .map((data) => data['value'] as int)
+        .map((data) => (data['value'] as num).toDouble())
         .reduce((a, b) => a > b ? a : b);
-    return (maxValue * 1).ceilToDouble();
+    return (maxValue * 1.2).ceilToDouble();
   }
 
   Color _getLineColor(List<dynamic> glucoseData) {
     final avg = glucoseData
-        .map((data) => data['value'] as int)
+        .map((data) => (data['value'] as num).toDouble())
         .reduce((a, b) => a + b) /
         glucoseData.length;
     if (avg < 80) return Colors.blue;
@@ -459,7 +462,7 @@ class _TodayTabState extends State<TodayTab> {
 
   Color _getAreaColor(List<dynamic> glucoseData) {
     final avg = glucoseData
-        .map((data) => data['value'] as int)
+        .map((data) => (data['value'] as double).toDouble())
         .reduce((a, b) => a + b) /
         glucoseData.length;
     if (avg < 80) return Colors.blue.withOpacity(0.1);

@@ -103,7 +103,7 @@ class WeeklyGlucoseChart extends StatelessWidget {
 
   double _calculateMaxY(Iterable<double> values) {
     final maxValue = values.reduce((a, b) => a > b ? a : b);
-    return (maxValue * 1).ceilToDouble();
+    return (maxValue * 1.2 ).ceilToDouble();
   }
 
   Color _getLineColor(List<FlSpot> spots) {

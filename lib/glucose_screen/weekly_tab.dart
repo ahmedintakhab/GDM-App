@@ -15,8 +15,9 @@ class WeeklyTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildAverageGlucoseCard(
-            userProvider.getWeeklyAverage().round(),
+            userProvider.getWeeklyAverage(),
             userProvider.getWeeklyMood(),
+            userProvider,
           ),
           SizedBox(height: 24),
           Container(
@@ -56,7 +57,12 @@ class WeeklyTab extends StatelessWidget {
     );
   }
 
-  Widget _buildAverageGlucoseCard(int value, String mood) {
+  Widget _buildAverageGlucoseCard(double value, String mood, UserProvider userProvider) {
+    final displayValue = value == value.truncateToDouble()
+        ? value.toInt().toString()
+        : value.toStringAsFixed(2);
+    final unit = userProvider.glucoseData.isNotEmpty ? userProvider.glucoseData.first['unit'] : 'mg/dl'; // Line ~50: Fetch unit
+
     IconData moodIcon;
     Color moodColor;
 
@@ -115,7 +121,7 @@ class WeeklyTab extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                '$value',
+                displayValue,
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -123,7 +129,7 @@ class WeeklyTab extends StatelessWidget {
                 ),
               ),
               Text(
-                ' mg/dl',
+                '$unit',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[600],

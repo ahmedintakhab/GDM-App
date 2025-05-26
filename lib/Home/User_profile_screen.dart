@@ -149,21 +149,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Column(
                         children: [
-                          CustomMenuItem(
-                            icon: Icons.add_alarm,
-                            text: 'Set Reminder',
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddReminders(reminderService: ReminderService()),
-                                ),
-                              );
-                            },
-                          ),
+                          // CustomMenuItem(
+                          //   icon: Icons.add_alarm,
+                          //   text: 'Set Reminder',
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) => AddReminders(reminderService: ReminderService()),
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
                           CustomMenuItem(
                             icon: Icons.list,
-                            text: 'All Reminders',
+                            text: 'Reminders',
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -175,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           CustomMenuItem(
                             icon: Icons.list,
-                            text: 'Add Weight',
+                            text: 'Weight Management',
                             onTap: () {
                               Navigator.push(
                                 context,

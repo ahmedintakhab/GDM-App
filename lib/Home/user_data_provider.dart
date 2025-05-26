@@ -516,12 +516,10 @@ class UserProvider extends ChangeNotifier {
         _glucoseData = glucoseSnapshot.docs.map((doc) {
           final data = doc.data() as Map<String, dynamic>;
           // Parse glucoseLevel string (e.g., "99 mmol/L")
-          final glucoseLevel = data['glucoseLevel'] as String;
-          final parts = glucoseLevel.split(' ');
-          final value = int.parse(parts[0]); // Extract number
-          final unit = parts[1]; // Extract unit
+          final glucoseValue = (data['glucoseValue'] as num?)?.toDouble() ?? double.parse(data['glucoseLevel'].split(' ')[0]);
+          final unit = data['glucoseLevel'].split(' ')[1];
           return {
-            'value': value,
+            'value': glucoseValue,
             'unit': unit,
             'timestamp': data['dateTime'],
             'mealOption': data['mealOption'] ?? 'Unknown', // Include mealOption
@@ -558,12 +556,12 @@ class UserProvider extends ChangeNotifier {
     }
 
     // Group data by day of week
-    final dailyValues = <int, List<int>>{};
+    final dailyValues = <int, List<double>>{};
     for (var data in _glucoseData) {
       if (data['timestamp'] != null && data['value'] != null) {
         final date = data['timestamp'].toDate();
         final dayOfWeek = date.weekday % 7; // Sunday = 0, Monday = 1, etc.
-        final value = data['value'] as int;
+        final value = data['value'] as double;
 
         dailyValues.putIfAbsent(dayOfWeek, () => []).add(value);
       }
@@ -586,7 +584,7 @@ class UserProvider extends ChangeNotifier {
 
     if (values.isEmpty) return 0;
     final average = values.reduce((a, b) => a + b) / values.length;
-    return average.floor().toDouble(); // Truncate decimals
+    return double.parse(average.toStringAsFixed(2)); // Keep two decimal places
      }
 
   String getWeeklyMood() {

@@ -99,7 +99,7 @@ class HomeContent extends StatelessWidget {
       builder: (context, userProvider, child) {
         final averageGlucoseValue = userProvider.glucoseData.isNotEmpty
             ? (userProvider.glucoseData)
-            .map((data) => data['value'] as int)
+            .map((data) => (data['value'] as num).toDouble())
             .reduce((a, b) => a + b) /
             userProvider.glucoseData.length
             : 0;
@@ -169,7 +169,10 @@ class HomeContent extends StatelessWidget {
                                 title: 'Glucose',
                                 value: userProvider.isLoading
                                     ? 'Loading...'
-                                    : '${averageGlucoseValue.toInt()} ${userProvider.glucoseData.isNotEmpty ? userProvider.glucoseData.first['unit'] : 'mg/dl'}',
+                                    : '${averageGlucoseValue == averageGlucoseValue.truncateToDouble() ? averageGlucoseValue.toInt()
+                                    : averageGlucoseValue.toStringAsFixed(2)} '
+                                    '${userProvider.glucoseData.isNotEmpty ?
+                                userProvider.glucoseData.first['unit'] : 'mg/dl'}', // Line ~10: Format double
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -179,7 +182,7 @@ class HomeContent extends StatelessWidget {
                                   );
                                 },
                               ),
-                            ),
+                            )
                           ],
                         ],
                       ),

@@ -55,10 +55,16 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
       _glucoseData = glucoseSnapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>;
         final timestamp = (data['dateTime'] as Timestamp?)?.toDate();
+        final glucoseValue = (data['glucoseValue'] as num?)?.toDouble() ?? 0.0;
+        final unit = data['glucoseLevel']?.split(' ')[1] ?? 'Unknown';
+        // Format value as integer if no decimal part, else two decimal places
+        final displayValue = glucoseValue == glucoseValue.truncateToDouble()
+            ? glucoseValue.toInt().toString()
+            : glucoseValue.toStringAsFixed(2);
         return {
           'date': timestamp != null ? DateFormat('MMMM d, yyyy').format(timestamp) : '',
           'time': timestamp != null ? DateFormat('h:mm a').format(timestamp) : '',
-          'reading': data['glucoseLevel'] ?? '',
+          'reading': '$displayValue $unit',
           'mealContext': data['mealOption'] ?? 'Unknown',
           'isExpanded': false,
         };

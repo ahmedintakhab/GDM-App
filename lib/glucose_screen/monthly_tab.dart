@@ -17,7 +17,7 @@ class MonthlyTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAverageGlucoseCard(monthlyAverage.round(), mood),
+          _buildAverageGlucoseCard(monthlyAverage, mood, userProvider),
           SizedBox(height: 24),
           _buildGlucoseLevelsCard(monthlyData),
         ],
@@ -36,14 +36,14 @@ class MonthlyTab extends StatelessWidget {
     }
 
     // Group data by day of month
-    final dailyValues = <int, List<int>>{};
+    final dailyValues = <int, List<double>>{};
     for (var data in glucoseData) {
       if (data['timestamp'] != null && data['value'] != null) {
         final date = data['timestamp'].toDate();
         // Only process data for current month
         if (date.month == now.month && date.year == now.year) {
           final day = date.day;
-          final value = data['value'] as int;
+          final value = (data['value'] as num).toDouble();
 
           dailyValues.putIfAbsent(day, () => []).add(value);
         }
@@ -70,7 +70,11 @@ class MonthlyTab extends StatelessWidget {
     return 'sad';
   }
 
-  Widget _buildAverageGlucoseCard(int value, String mood) {
+  Widget _buildAverageGlucoseCard(double value, String mood, UserProvider userProvider) {
+    final displayValue = value == value.truncateToDouble()
+        ? value.toInt().toString()
+        : value.toStringAsFixed(2);
+    final unit = userProvider.glucoseData.isNotEmpty ? userProvider.glucoseData.first['unit'] : 'mg/dl';
     IconData moodIcon;
     Color moodColor;
 
@@ -129,7 +133,7 @@ class MonthlyTab extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                '$value',
+                displayValue,
                 style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
@@ -137,7 +141,7 @@ class MonthlyTab extends StatelessWidget {
                 ),
               ),
               Text(
-                ' mg/dl',
+                '$unit',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[600],
