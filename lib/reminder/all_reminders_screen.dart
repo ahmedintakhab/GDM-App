@@ -131,6 +131,7 @@ class _AllRemindersState extends State<AllReminders> {
                   time: reminder.time,
                   frequency: reminder.frequency,
                   isActive: reminder.isActive,
+                  type: reminder.type,
                   onDelete: () => _deleteReminder(reminder.id),
                   onToggle: (value) => _toggleReminder(reminder.id, value),
                 );

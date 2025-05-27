@@ -112,7 +112,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Add Weight',
+          'Weight Management',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

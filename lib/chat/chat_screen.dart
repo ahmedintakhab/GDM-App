@@ -15,7 +15,6 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   bool _isLoading = false; // Flag to track loading state
 
-
   void onSendMessage() async {
     String userMessage = _textEditingController.text.trim();
     if (userMessage.isEmpty) {
@@ -29,7 +28,6 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
     setState(() {
       _messages.insert(0, message);
       _isLoading = true; // Start loading
-
     });
     // Add a loading message that will be replaced with the actual response
     Message loadingMessage = Message(text: "loading", isMe: false, isLoading: true);
@@ -38,7 +36,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
     });
 
     try {
-      String response = await sendMessageToDeepSeek(message.text);
+      String response = await sendMessageToGemini(message.text);
 
       setState(() {
         // Remove the loading message
@@ -64,27 +62,30 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
     }
   }
 
-  Future<String> sendMessageToDeepSeek(String message) async {
-    // Replace with the actual DeepSeek API endpoint
-    Uri uri = Uri.parse("https://openrouter.ai/api/v1/chat/completions");
+  Future<String> sendMessageToGemini(String message) async {
+    Uri uri = Uri.parse('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${APIKey.apiKey}');
 
-    // Replace with the correct request body for DeepSeek API
     Map<String, dynamic> body = {
-      "model": "deepseek/deepseek-r1", // Replace with the correct model name
-      "messages": [
-        {"role": "user", "content": message}
+      'contents': [
+        {
+          'parts': [
+            {'text': message}
+          ]
+        }
       ],
-      "max_tokens": 500, // Adjust as needed
+      'generationConfig': {
+        'temperature': 0.7,
+        'maxOutputTokens': 500,
+      },
     };
 
-    print('Sending request to DeepSeek API...');
+    print('Sending request to Gemini API...');
     print('Request body: ${json.encode(body)}');
 
     final response = await http.post(
       uri,
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer ${APIKey.apiKey}", // Use DeepSeek API key
+        'Content-Type': 'application/json',
       },
       body: json.encode(body),
     );
@@ -93,21 +94,18 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
     print('API Response Body: ${response.body}');
 
     if (response.statusCode != 200) {
-      // Handle non-200 responses
       Map<String, dynamic> errorResponse = json.decode(response.body);
-      String errorMessage = errorResponse['error']?['message'] ?? 'Unknown error';
+      String errorMessage = errorResponse['error']['message'] ?? 'Unknown error';
       throw Exception('API Error: $errorMessage');
     }
 
     Map<String, dynamic> parsedResponse = json.decode(response.body);
 
-    // Check if the response contains the expected data
-    if (parsedResponse['choices'] == null || parsedResponse['choices'].isEmpty) {
-      throw Exception('Invalid response format: No choices found');
+    if (parsedResponse['candidates'] == null || parsedResponse['candidates'].isEmpty) {
+      throw Exception('Invalid response format: No candidates found');
     }
 
-    // Extract the response text (adjust based on DeepSeek API response structure)
-    String reply = parsedResponse['choices'][0]['message']['content'];
+    String reply = parsedResponse['candidates'][0]['content']['parts'][0]['text'];
     return reply;
   }
 
@@ -132,6 +130,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
       ),
     );
   }
+
   Widget _buildLoadingIndicator() {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -141,7 +140,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
           height: 16,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0XFF5AA189)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF5AA189)),
           ),
         ),
         SizedBox(width: 8),
@@ -150,14 +149,15 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0XFF5AA189),
-        title: Text('GDM Assistant Chat', style: TextStyle(color: Colors.white,
-            fontWeight: FontWeight.bold),),
+        backgroundColor: Color(0xFF5AA189),
+        title: Text(
+          'GDM Assistant Chat',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -170,7 +170,6 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
               },
             ),
           ),
-          // Divider(height: 1.0),
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: CustomTextFormField(
@@ -182,52 +181,12 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
                 }
                 return null;
               },
-               suffixIcon: IconButton(
-                             icon: Icon(Icons.send, color: Color(0XFF5AA189)),
-                            onPressed: onSendMessage,
-                           ),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.send, color: Color(0xFF5AA189)),
+                onPressed: onSendMessage,
+              ),
             ),
           )
-          // Container(
-          //   padding: EdgeInsets.all( 15.0), // Bottom padding
-          //   decoration: BoxDecoration(
-          //     color: Theme.of(context).cardColor,
-          //     borderRadius: BorderRadius.circular(15.0), // Rounded corners
-          //     // border: Border.all(color: Colors.grey.shade300, width: 1.5), // Border color & width
-          //   ),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Expanded(
-          //         child: TextField(
-          //           controller: _textEditingController,
-          //           cursorColor: Color(0XFF5AA189), // Cursor color
-          //           decoration: InputDecoration(
-          //             contentPadding: EdgeInsets.all(10.0),
-          //             hintText: 'Type a message...',
-          //             border: OutlineInputBorder( // Border when enabled
-          //               borderRadius: BorderRadius.circular(15.0),
-          //               borderSide: BorderSide(color: Colors.blue, width: 1.5),
-          //             ),
-          //             enabledBorder: OutlineInputBorder( // Default border
-          //               borderRadius: BorderRadius.circular(15.0),
-          //               borderSide: BorderSide(color: Colors.grey.shade400, width: 1.5),
-          //             ),
-          //             focusedBorder: OutlineInputBorder( // Border when focused
-          //               borderRadius: BorderRadius.circular(15.0),
-          //               borderSide: BorderSide(color: Color(0XFF5AA189), width: 2.0),
-          //             ),
-          //             suffixIcon: IconButton(
-          //               icon: Icon(Icons.send, color: Color(0XFF5AA189)),
-          //               onPressed: onSendMessage,
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //
-          //     ],
-          //   ),
-          // )
-
         ],
       ),
     );

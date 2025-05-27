@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'delete_reminder_dialog.dart';
 
 class ReminderItem extends StatefulWidget {
   final String time;
   final String frequency;
+  final String type; // Line ~10: Added type parameter
   final bool isActive;
   final VoidCallback onDelete;
   final Function(bool) onToggle;
@@ -13,6 +15,7 @@ class ReminderItem extends StatefulWidget {
     Key? key,
     required this.time,
     required this.frequency,
+    required this.type, // Line ~20: Added type
     required this.isActive,
     required this.onDelete,
     required this.onToggle,
@@ -61,27 +64,42 @@ class _ReminderItemState extends State<ReminderItem> {
       ),
       child: Row(
         children: [
-          // Time and Frequency
+          // Time, Type, and Frequency
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.time,
+                  widget.type, // Line ~60: Added type display
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
-                SizedBox(height: 4),
-                Text(
-                  widget.frequency,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
+                SizedBox(height: 4.h),
+                Row(children: [
+                  Text(
+                    widget.frequency,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Colors.grey[600],
+                    ),
                   ),
-                ),
+                  SizedBox(width: 10.w),
+                  Text(
+                    widget.time,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+
+                ],
+
+                )
+
               ],
             ),
           ),
@@ -95,7 +113,7 @@ class _ReminderItemState extends State<ReminderItem> {
               });
               widget.onToggle(value);
             },
-            activeColor: Color(0XFF5AA189),
+            activeColor: Color(0xFF5AA189),
           ),
 
           // Delete Button
