@@ -5,6 +5,7 @@ import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'Home/user_data_provider.dart';
+import 'Meals_plain/meals_data_provider.dart';
 import 'Splash Screen/splash_screen.dart';
 
 void main() async {
@@ -25,6 +26,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => MealsProvider()),
+
         // Add other providers if needed
       ],
       child: MyApp(reminderService: reminderService),
