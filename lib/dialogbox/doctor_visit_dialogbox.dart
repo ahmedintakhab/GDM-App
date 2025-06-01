@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widgets/custom_text_form_field.dart';
 
 class DoctorVisitDialog extends StatefulWidget {
@@ -52,6 +52,7 @@ class _DoctorVisitDialogState extends State<DoctorVisitDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
       shape: RoundedRectangleBorder(
@@ -65,7 +66,7 @@ class _DoctorVisitDialogState extends State<DoctorVisitDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Update Doctor Visits',
+                l10n.updateDoctorVisits,
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
@@ -74,8 +75,8 @@ class _DoctorVisitDialogState extends State<DoctorVisitDialog> {
               SizedBox(height: 20.h),
               CustomTextFormField(
                 controller: _visitController,
-                hintText: 'Next Visit Date',
-                validator: (value) => value?.isEmpty ?? true ? 'Please enter date' : null,
+                hintText: l10n.nextVisitDate,
+                validator: (value) => value?.isEmpty ?? true ? l10n.pleaseEnterDate : null,
                 suffixIcon: IconButton(
                   icon: Icon(Icons.calendar_today),
                   color: Color(0XFF5AA189),
@@ -114,7 +115,7 @@ class _DoctorVisitDialogState extends State<DoctorVisitDialog> {
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                       ),
                       onPressed: () => Navigator.pop(context),
-                      child: Text('Cancel'),
+                      child: Text(l10n.cancel),
                     ),
                   ),
                   SizedBox(width: 10.w),
@@ -125,7 +126,7 @@ class _DoctorVisitDialogState extends State<DoctorVisitDialog> {
                           Navigator.pop(context, _visitController.text);
                         }
                       },
-                      child: Text('Submit',
+                      child: Text(l10n.submit,
                         style: TextStyle(color: Colors.white),),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0XFF5AA189),

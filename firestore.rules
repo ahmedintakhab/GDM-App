@@ -1,8 +1,166 @@
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false; // Deny all by default
-    }
+import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class LanguageChangeController with ChangeNotifier {
+  Locale? _appLocale;
+  Locale? get appLocale => _appLocale;
+
+  LanguageChangeController() {
+    _loadLocale(); // Load saved locale on initialization
+  }
+
+  // Load the saved locale from SharedPreferences
+  void _loadLocale() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    String? languageCode = sp.getString('language_code');
+    _appLocale = languageCode != null ? Locale(languageCode) : const Locale('en');
+    notifyListeners();
+  }
+
+  // Update locale and save to SharedPreferences
+  void changeLanguage(Locale type) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    _appLocale = type;
+    await sp.setString('language_code', type.languageCode);
+    notifyListeners();
+  }
+}
+
+
+
+
+
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:gdm_firebase/controller/language_change_controller.dart';
+import 'package:gdm_firebase/register/login_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LanguageChangeController()),
+      ],
+      child: Consumer<LanguageChangeController>(
+        builder: (context, provider, child) {
+          return MaterialApp(
+            title: 'Flutter Demo',
+            locale: provider.appLocale ?? const Locale('en'), // Fallback to English
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'),
+              Locale('ar'),
+            ],
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+            builder: (context, child) {
+              return Directionality(
+                textDirection: provider.appLocale?.languageCode == 'ar'
+                    ? TextDirection.rtl
+                    : TextDirection.ltr,
+                child: child!,
+              );
+            },
+            home:  LoginScreen(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:gdm_firebase/controller/language_change_controller.dart';
+import 'package:provider/provider.dart';
+import '../register/login_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+enum Language {English, Arabic}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: Text(AppLocalizations.of(context)!.appTitle),
+        actions: [
+
+              Consumer<LanguageChangeController>(builder: (context , provider,child){
+                return Row(
+                  children: [
+                    PopupMenuButton(
+                    onSelected: (Language item){
+                  if(Language.English.name == item.name)
+                  {
+                    provider.changeLanguage(Locale('en'));
+                  }else {
+                    provider.changeLanguage(Locale('ar'));
+
+                  }
+                },
+                itemBuilder: (BuildContext contex)=>
+                <PopupMenuEntry<Language>>[
+                PopupMenuItem(
+                value: Language.English,
+                child: Text('English')),
+                PopupMenuItem(
+                value: Language.Arabic,
+                child: Text('Arabic')),
+                ]),
+                    IconButton(
+                      icon: Icon(Icons.logout),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginScreen()),
+                        );
+                      },
+                    ),
+
+
+                  ],
+                );
+
+
+              }),
+
+
+        ],
+      ),
+      body: Center(
+        child: Text(AppLocalizations.of(context)!.welcomeMessage),
+      ),
+    );
   }
 }

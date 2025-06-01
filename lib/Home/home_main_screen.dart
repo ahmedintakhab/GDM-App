@@ -6,7 +6,6 @@ import 'package:gdm_app/Home/information_card_widget.dart';
 import 'package:gdm_app/Home/linear_progress_container.dart';
 import 'package:gdm_app/Home/progress_and_stepscount.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
-import 'package:gdm_app/Home/user_reports_screen.dart';
 import 'package:gdm_app/Meals_plain/meals_main_screen.dart';
 import 'package:gdm_app/feedback/feedback_container_widget.dart';
 import 'package:gdm_app/feedback/feedback_screen.dart';
@@ -21,6 +20,8 @@ import 'bottom_navigation_bar.dart';
 import 'glucose_card_widget.dart';
 import 'gulcose_chart.dart';
 import 'notification_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class HomeScreen extends StatefulWidget {
   final ReminderService reminderService; // Add reminderService
@@ -95,6 +96,7 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; // Access AppLocalizations
     return Consumer<UserProvider>(
       builder: (context, userProvider, child) {
         final averageGlucoseValue = userProvider.glucoseData.isNotEmpty
@@ -113,7 +115,7 @@ class HomeContent extends StatelessWidget {
                 children: [
                   Text(
                     userProvider.isLoading
-                        ? 'Hi, Loading...'
+                        ? l10n.hiLoading
                         : 'Hi, ${userProvider.name}',
                     style: TextStyle(
                       fontSize: 24,
@@ -140,13 +142,17 @@ class HomeContent extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                  if (userProvider.userType != 'Doctor' )...[
                       ProgressAndStepscount(),
+                      ],
                       SizedBox(height: 16),
+                   if( userProvider.userType != 'Not Pregnant') ...[
                       InformationCardWidget(
                         onTap: () {
                           Get.to(InformationScreen());
                         },
                       ),
+                      ],
                       SizedBox(height: 16),
                       if (userProvider.userType != 'Doctor' &&
                           userProvider.userType != 'Not Pregnant') ...[
@@ -156,19 +162,19 @@ class HomeContent extends StatelessWidget {
                       ],
                       Row(
                         children: [
-                          Expanded(
+                        if (userProvider.userType != 'Doctor' )...[
+                             Expanded(
                               child: FeedbackContainerWidget(
                                   onTap: () {
                                     Get.to(FeedbackScreen());
-                                  })),
-                          if (userProvider.userType != 'Doctor' &&
-                              userProvider.userType != 'Not Pregnant') ...[
+                                  })),],
+                          if (userProvider.userType != 'Doctor') ...[
                             SizedBox(width: 16.w),
                             Expanded(
                               child: GlucoseCardWidget(
-                                title: 'Glucose',
+                                title: l10n.glucose,
                                 value: userProvider.isLoading
-                                    ? 'Loading...'
+                                    ? l10n.loading
                                     : '${averageGlucoseValue == averageGlucoseValue.truncateToDouble() ? averageGlucoseValue.toInt()
                                     : averageGlucoseValue.toStringAsFixed(2)} '
                                     '${userProvider.glucoseData.isNotEmpty ?
@@ -190,7 +196,9 @@ class HomeContent extends StatelessWidget {
                       if (userProvider.userType != 'Doctor' &&
                           userProvider.userType != 'Not Pregnant') ...[
                         DoctorVisitContainer(),
+                        ],
                         SizedBox(height: 16),
+                        if (userProvider.userType != 'Doctor')...[
                         Container(
                           padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -207,7 +215,7 @@ class HomeContent extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Glucose, week avg',
+                                l10n.glucoseWeeklyAvg,
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -222,8 +230,8 @@ class HomeContent extends StatelessWidget {
                             ],
                           ),
                         ),
+                              ]
                       ],
-                    ],
                   ),
                 ),
               ),

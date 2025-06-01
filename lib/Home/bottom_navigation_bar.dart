@@ -26,17 +26,7 @@ class BottomNavigation extends StatelessWidget {
           icon: Icon(Icons.notifications),
           label: 'Notification',
         ),
-        // BottomNavigationBarItem(
-        //   icon: Container(
-        //     decoration: BoxDecoration(
-        //       color: Color(0xFF5AA189),
-        //       shape: BoxShape.circle,
-        //     ),
-        //     padding: EdgeInsets.all(12),
-        //     child: Icon(Icons.add, color: Colors.white),
-        //   ),
-        //   label: '',
-        // ),
+
         BottomNavigationBarItem(
           icon: Icon(Icons.alarm_add),
           label: 'Reminder',

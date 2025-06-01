@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,12 +7,14 @@ import 'package:gdm_app/Home/change_password_screen.dart';
 import 'package:gdm_app/Home/update_profile_screen.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:gdm_app/reminder/all_reminders_screen.dart';
-import 'package:gdm_app/reminder/add_reminders_screen.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:gdm_app/weight/add_weight_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../Register/login_screen.dart';
 import '../Register/logout_dialog_widget.dart';
+import '../controller/language_change_controller.dart';
 import '../utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -20,6 +24,7 @@ class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
+enum Language {English, Arabic}
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -35,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _handleLogout(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     showDialog(
@@ -45,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             await _auth.signOut();
             userProvider.resetUserData();
             Navigator.of(context, rootNavigator: true).pop();
-            Utils().toastMessage('User successfully Logout!');
+            Utils().toastMessage(l10n.logoutSuccess);
             await Future.delayed(Duration.zero);
             Navigator.pushReplacement(
               context,
@@ -53,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           } catch (e) {
             Navigator.of(context, rootNavigator: true).pop();
-            Utils().toastMessage('Failed to logout: $e');
+            Utils().toastMessage('${l10n.failedToLogout}$e');
           }
         },
       ),
@@ -62,6 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -76,19 +83,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.arrow_back, color: Colors.black),
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                        Spacer(),
-                        IconButton(
-                          icon: Icon(Icons.logout, color: Colors.black),
-                          onPressed: () => _handleLogout(context),
-                        ),
-                      ],
+
+              Consumer<LanguageChangeController>(builder: (context , provider,child) {
+                print('Current locale: ${provider.appLocale}');
+                print('Available translations: ${AppLocalizations.supportedLocales}');
+                print('Current translations: ${AppLocalizations.of(context)?.logout}');
+                print('Current translations: ${AppLocalizations.of(context)!.logout}');
+                return Row(
+                  children: [
+                    PopupMenuButton(
+                        onSelected: (Language item) {
+                          if (Language.English.name == item.name) {
+                            provider.changeLanguage(Locale('en'));
+                          } else {
+                            provider.changeLanguage(Locale('ar'));
+                          }
+                        },
+                        itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<Language>>[
+                          PopupMenuItem(
+                              value: Language.English,
+                              child: Text('English'),
+                          ),
+                          PopupMenuItem(
+                              value: Language.Arabic,
+                              child: Text('Arabic')),
+                        ]),
+                    Spacer(),
+                    IconButton(
+                      icon: Icon(Icons.logout, color: Colors.black),
+                      onPressed: () => _handleLogout(context),
                     ),
+                  ],
+                );
+
+              }),
                     SizedBox(height: 20.h),
                     CircleAvatar(
                       radius: 60.r,
@@ -121,7 +150,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => UpdateProfile(reminderService: widget.reminderService)),
+                          MaterialPageRoute(builder: (context) =>
+                              UpdateProfile(reminderService: widget.reminderService)),
                         );
                       },
                       child: Container(
@@ -131,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
-                          'Edit Profile',
+                          l10n.editProfile,
                           style: TextStyle(
                             fontSize: 18.sp,
                             color: Color(0XFF5AA189),
@@ -163,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           // ),
                           CustomMenuItem(
                             icon: Icons.list,
-                            text: 'Reminders',
+                            text: l10n.reminders,
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -175,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           CustomMenuItem(
                             icon: Icons.list,
-                            text: 'Weight Management',
+                            text: l10n.weightManagement,
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -188,7 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           CustomMenuItem(
                             icon: Icons.lock,
-                            text: 'Change Password',
+                            text: l10n.changePassword,
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -201,7 +231,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           CustomMenuItem(
                             icon: Icons.logout,
-                            text: 'Logout',
+                            text: l10n.logout,
                             textColor: Colors.red,
                             iconColor: Colors.red,
                             onTap: () => _handleLogout(context),
@@ -211,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-              ),
+            )
             );
           },
         ),

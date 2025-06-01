@@ -8,6 +8,7 @@ import 'package:gdm_app/Register/users_signup_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../Home/home_main_screen.dart';
 import '../Home/user_data_provider.dart';
@@ -31,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordHidden = true;
    final _auth = FirebaseAuth.instance;
+  AppLocalizations? _l10n; // Store AppLocalizations instance
 
   @override
   void initState() {
@@ -70,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text.trim(),
       );
 
-      Utils().toastMessage('User Login Successfully!');
+      Utils().toastMessage(_l10n!.loginSuccess);
 
       // Fetch new user data after successful login
       final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -78,18 +80,35 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomeScreen(reminderService: widget.reminderService)));
     } on FirebaseAuthException catch (e) {
-      String errorMessage = 'An error occurred. Please try again.';
-      if (e.code == 'user-not-found') {
-        Utils().toastMessage('No user found for this email.');
-
-      } else if (e.code == 'wrong-password') {
-        Utils().toastMessage('Incorrect password. Please try again.');
-      } else {
-        errorMessage = e.message ?? errorMessage;
+      String errorMessage;
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = _l10n!.userNotFound;
+          break;
+        case 'wrong-password':
+          errorMessage = _l10n!.wrongPassword;
+          break;
+        case 'invalid-email':
+          errorMessage = _l10n!.invalidEmail;
+          break;
+        case 'user-disabled':
+          errorMessage = _l10n!.userDisabled;
+          break;
+        case 'too-many-requests':
+          errorMessage = _l10n!.tooManyRequests;
+          break;
+        case 'invalid-credential':
+          errorMessage = _l10n!.invalidCredential;
+          break;
+        case 'operation-not-allowed':
+          errorMessage = _l10n!.operationNotAllowed;
+          break;
+        default:
+          errorMessage = 'Login failed. Please try again.';
       }
       Utils().toastMessage(errorMessage);
     } catch (e) {
-      Utils().toastMessage('Something went wrong. Please try again.');
+      Utils().toastMessage(_l10n!.genericError);
     } finally {
       setState(() {
         loading = false;
@@ -97,9 +116,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    _l10n = AppLocalizations.of(context); // Initialize _l10n
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -123,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 38.0),
                         child: Text(
-                          "Login",
+                          _l10n!.login,
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             fontSize: 28.sp,
@@ -156,14 +175,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     CustomTextFormField(
                       controller: emailController,
-                      hintText: "Email",
+                      hintText: _l10n!.emailLabel,
                       validator: (val) {
                         if (val!.isEmpty) {
-                          return 'Enter the email';
+                          return _l10n!.pleaseEnterEmail;
                         } else {
                           if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
                               .hasMatch(val)) {
-                            return 'Please enter a valid email address';
+                            return _l10n!.invalidEmail;
                           }
                         }
                         return null;
@@ -174,11 +193,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Password Field with Eye Icon Toggle
                     CustomTextFormField(
                       controller: passwordController,
-                      hintText: "Password",
+                      hintText: _l10n!.passwordLabel,
                       isPasswordField: true,
                       obscureText: isPasswordHidden,
                       validator: (val) {
-                        if (val == null || val.isEmpty) return 'Enter the password';
+                        if (val == null || val.isEmpty) return _l10n!.pleaseEnterPassword;
                         return null;
                       },
                       suffixIcon: GestureDetector(
@@ -196,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     CustomButton(
                       onTap: Login,
-                      buttonText: "Login",
+                      buttonText: _l10n!.login,
                       loading: loading,
                     ),
 
@@ -205,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: RichText(
                         text: TextSpan(
-                          text: 'Don\'t have an account? ',
+                          text: _l10n!.signUpPrompt,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 15.sp,
@@ -216,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ..onTap = () {
                                   Get.to(UsersSignupScreen(reminderService: widget.reminderService));
                                 },
-                              text: 'Sign up',
+                              text: _l10n!.signUp,
                               style: TextStyle(
                                 color: Color(0XFF000000),
                                 fontSize: 15.sp,
@@ -246,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Align(
         alignment: Alignment.topRight,
         child: Text(
-          "Forgot password?",
+          _l10n!.forgotPassword,
           style: TextStyle(
             fontFamily: 'Gilroy',
             fontWeight: FontWeight.w700,

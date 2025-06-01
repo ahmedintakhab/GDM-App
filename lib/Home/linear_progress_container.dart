@@ -7,6 +7,8 @@ import 'package:gdm_app/utils/utils.dart';
 import '../dialogbox/due_date_dialogbox.dart';
 import '../reminder/gdm_response_dialog.dart';
 import '../reminder/reminder_service_implementation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LinearProgressContainer extends StatefulWidget {
   final ReminderService reminderService;
@@ -49,6 +51,7 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
   }
 
   void _openDueDateDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final provider = Provider.of<UserProvider>(context, listen: false);
     final result = await showDialog<bool>(
       context: context,
@@ -62,7 +65,7 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
     );
 
     if (result != null && mounted) {
-      Utils().toastMessage(result ? 'Due date updated successfully!' : 'Failed to update due date');
+      Utils().toastMessage(result ? l10n.dueDateUpdated : l10n.failedToUpdateDueDate);
     }
   }
 
@@ -78,9 +81,10 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<UserProvider>(
       builder: (context, provider, child) {
-        final progressData = _calculateProgressAndWeeks(provider.lmp, provider.dueDate);
+        final progressData = _calculateProgressAndWeeks(provider.lmp, provider.dueDate, l10n);
 
         return GestureDetector(
           onTap: () => _openDueDateDialog(context),
@@ -104,7 +108,7 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
                 Row(
                   children: [
                     Text(
-                      'Expected due date',
+                      l10n.expectedDueDate,
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
@@ -112,11 +116,11 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
                     ),
                     const Spacer(),
                     Text(
-                      progressData['weeksLeft'] ?? 'Set due date',
+                      progressData['weeksLeft'] ?? l10n.setDueDate,
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: progressData['weeksLeft'] == 'Due date passed'
+                        color: progressData['weeksLeft'] == l10n.dueDatePassed
                             ? Colors.red
                             : Colors.black,
                       ),
@@ -133,7 +137,7 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
                 ),
                 SizedBox(height: 12.h),
                 Text(
-                  provider.dueDate.isNotEmpty ? provider.dueDate : 'No due date set',
+                  provider.dueDate.isNotEmpty ? provider.dueDate : l10n.noDueDateSet,
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: provider.dueDate.isNotEmpty ? Colors.black54 : Colors.grey,
@@ -145,13 +149,13 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
                     onPressed: () async {
                       final success = await provider.updateGdmTestStatus(true);
                       if (success) {
-                        Utils().toastMessage('GDM test marked as done!');
+                        Utils().toastMessage(l10n.gdmTestDone);
                       } else {
-                        Utils().toastMessage('Failed to mark GDM test as done');
+                        Utils().toastMessage(l10n.failedToMarkGdmTest);
                       }
                     },
                     child: Text(
-                      'Mark GDM Test as Done',
+                      l10n.markGdmTestDone,
                       style: TextStyle(fontSize: 14.sp, color: Color(0XFF5AA189)),
                     ),
                   ),
@@ -163,11 +167,11 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
     );
   }
 
-  Map<String, dynamic> _calculateProgressAndWeeks(String lmp, String dueDate) {
+  Map<String, dynamic> _calculateProgressAndWeeks(String lmp, String dueDate,AppLocalizations l10n) {
     if (lmp.isEmpty || dueDate.isEmpty) {
       return {
         'progressValue': 0.0,
-        'weeksLeft': 'Set due date',
+        'weeksLeft': l10n.setDueDate,
       };
     }
 
@@ -186,11 +190,11 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
 
       String weeksLeft;
       if (daysRemaining < 0) {
-        weeksLeft = 'Due date passed';
+        weeksLeft = l10n.dueDatePassed;
       } else if (weeksRemaining == 0) {
-        weeksLeft = 'Due this week';
+        weeksLeft = l10n.dueThisWeek;
       } else {
-        weeksLeft = '$weeksRemaining week${weeksRemaining == 1 ? '' : 's'} left';
+        weeksLeft = '$weeksRemaining week${weeksRemaining == 1 ? '' : 's'}${l10n.left}';
       }
 
       return {
@@ -200,7 +204,7 @@ class _LinearProgressContainerState extends State<LinearProgressContainer> {
     } catch (e) {
       return {
         'progressValue': 0.0,
-        'weeksLeft': 'Invalid date',
+        'weeksLeft': l10n.invalidDate,
       };
     }
   }

@@ -5,6 +5,8 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class StepsCountContainer extends StatefulWidget {
   const StepsCountContainer({Key? key}) : super(key: key);
@@ -25,8 +27,10 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
   final Duration _minStepInterval = Duration(milliseconds: 300);
   final Duration _walkingTimeout = Duration(seconds: 2);
   DateTime _lastWalkingTime = DateTime.now();
-  String _debugText = "Initializing...";
+  String _debugText = " ";
   double _varianceValue = 0.0;
+  AppLocalizations? _l10n; // Store AppLocalizations instance
+
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -34,6 +38,7 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
   @override
   void initState() {
     super.initState();
+    _debugText = "Initializing...";
     _loadStepsFromFirestore();
     _startStepCounting();
   }
@@ -140,7 +145,9 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
           if (mounted) {
             setState(() {
               steps++;
-              _debugText = "Step detected! Variance: ${variance.toStringAsFixed(2)}";
+              _debugText = _l10n != null
+                  ? "${_l10n!.stepDetected} ${variance.toStringAsFixed(2)}"
+                  : "Step detected! Variance: ${variance.toStringAsFixed(2)}";
             });
           }
           _lastStepTime = now;
@@ -155,7 +162,9 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
     if (mounted && (_isWalking != previousWalkingState || steps % 5 == 0)) {
       setState(() {
         if (!_isWalking) {
-          _debugText = "Not walking. Variance: ${variance.toStringAsFixed(2)}";
+          _debugText = _l10n != null
+              ? "${_l10n!.notWalking} ${variance.toStringAsFixed(2)}"
+              : "Not walking. Variance: ${variance.toStringAsFixed(2)}";
         }
       });
     }
@@ -163,6 +172,10 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
 
   @override
   Widget build(BuildContext context) {
+    _l10n = AppLocalizations.of(context); // Initialize _l10n
+    if (_debugText == "Initializing...") {
+      _debugText = _l10n!.initializing; // Localize initial debug text
+    }
     return Expanded(
       flex: 2,
       child: Container(
@@ -237,7 +250,7 @@ class _StepsCountContainerState extends State<StepsCountContainer> {
                     ],
                   ),
                   Text(
-                    'steps',
+                    _l10n!.steps,
                     style: TextStyle(
                       fontSize: 16,
                       color: Color(0xFF5AA189),

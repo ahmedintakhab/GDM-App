@@ -7,6 +7,7 @@ import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/selection_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
@@ -32,6 +33,8 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String phoneNumber = '';
+  AppLocalizations? _l10n; // Store AppLocalizations instance
+
 
   void togglePasswordVisibility() {
     setState(() {
@@ -49,51 +52,81 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
       return;
     }
     if (_passwordController.text != _confirmpasswordController.text) {
-      Utils().toastMessage("Passwords do not match!");
+      Utils().toastMessage(_l10n!.passwordsDoNotMatch);
       return;
     }
+
     setState(() {
       loading = true;
     });
+
     try {
-      UserCredential userCredential = await _auth
-          .createUserWithEmailAndPassword(
-        email: _emailController.text.toString(),
-        password: _passwordController.text.toString(),);
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-      //Save user data to firestore
-      await _firestore.collection('Users').doc(
-          userCredential.user!.uid).set({
-        'name' : _nameController.text,
-        'email': _emailController.text,
-        'password': _passwordController.text,
-        'confirm password': _confirmpasswordController.text
-
+      // Save user data to Firestore
+      await _firestore.collection('Users').doc(userCredential.user!.uid).set({
+        'name': _nameController.text.trim(),
+        'email': _emailController.text.trim(),
+        // Avoid storing passwords in Firestore for security reasons
+        // 'password': _passwordController.text,
+        // 'confirm password': _confirmpasswordController.text
       });
-      //Clear all fields
+
+      // Clear all fields
       _nameController.clear();
       _emailController.clear();
       _passwordController.clear();
       _confirmpasswordController.clear();
-      // phoneNumber.trim();
-      //Show success toast
-      Utils().toastMessage('User successfully Regitered!');
-      // Navigate only if validation is successful
+
+      // Show success toast
+      Utils().toastMessage(_l10n!.signUpSuccess);
+
+      // Navigate to SelectionScreen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SelectionScreen(reminderService: widget.reminderService)),
+        MaterialPageRoute(
+          builder: (context) => SelectionScreen(reminderService: widget.reminderService),
+        ),
       );
-    }catch (error){
-      Utils().toastMessage(error.toString());
+    } catch (error) {
+      String errorMessage = _l10n!.genericError;
+
+      // Handle specific Firebase Auth errors
+      if (error is FirebaseAuthException) {
+        switch (error.code) {
+          case 'email-already-in-use':
+            errorMessage = _l10n!.emailAlreadyInUse;
+            break;
+          case 'invalid-email':
+            errorMessage = _l10n!.invalidEmail;
+            break;
+          case 'weak-password':
+            errorMessage = _l10n!.weakPassword;
+            break;
+          case 'operation-not-allowed':
+            errorMessage = _l10n!.operationNotAllowed;
+            break;
+          case 'too-many-requests':
+            errorMessage = _l10n!.tooManyRequests;
+            break;
+          default:
+            errorMessage = _l10n!.genericError;
+        }
+      }
+
+      Utils().toastMessage(errorMessage);
     } finally {
       setState(() {
         loading = false;
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
+    _l10n = AppLocalizations.of(context); // Initialize _l10n
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -117,7 +150,7 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(right: 38.0),
                         child: Text(
-                          "Sign Up",
+                          _l10n!.signUp,
                           style: TextStyle(
                             fontWeight: FontWeight.w900,
                             fontSize: 28.sp,
@@ -136,13 +169,9 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
 
               // Added Image Above Email Field
               Center(
-                  child:Text("Create an Account!",style: TextStyle(fontSize: 22,
+                  child:Text(_l10n!.createAccount,style: TextStyle(fontSize: 22,
                       fontWeight: FontWeight.w500),)
 
-                // Image.asset(
-                //   "assets/images/splash.png",
-                //   height: 120.h,
-                // ),
               ),
 
               SizedBox(height: 30.h),
@@ -153,10 +182,10 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                   children: [
                     CustomTextFormField(
                       controller: _nameController,
-                      hintText: 'Name',
+                      hintText: _l10n!.nameLabel,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
+                          return _l10n!.pleaseEnterName;
                         }
                         return null;
                       },
@@ -165,14 +194,14 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
 
                     CustomTextFormField(
                       controller: _emailController,
-                      hintText: "Email",
+                      hintText: _l10n!.emailLabel,
                       validator: (val) {
                         if (val!.isEmpty) {
-                          return 'Enter the email';
+                          return _l10n!.pleaseEnterEmail;
                         } else {
                           if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
                               .hasMatch(val)) {
-                            return 'Please enter a valid email address';
+                            return _l10n!.invalidEmail;
                           }
                         }
                         return null;
@@ -182,11 +211,11 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                     // Password Field with Eye Icon Toggle
                     CustomTextFormField(
                       controller: _passwordController,
-                      hintText: "Password",
+                      hintText: _l10n!.passwordLabel,
                       isPasswordField: true,
                       obscureText: isPasswordHidden,
                       validator: (val) {
-                        if (val == null || val.isEmpty) return 'Enter the password';
+                        if (val == null || val.isEmpty) return _l10n!.pleaseEnterPassword;
                         return null;
                       },
                       suffixIcon: GestureDetector(
@@ -202,11 +231,11 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                     // Confirm Password Field with Eye Icon Toggle
                     CustomTextFormField(
                       controller: _confirmpasswordController,
-                      hintText: "Password",
+                      hintText: _l10n!.passwordLabel,
                       isPasswordField: true,
                       obscureText: isConfirmPasswordHidden,
                       validator: (val) {
-                        if (val == null || val.isEmpty) return 'Enter the confirm password';
+                        if (val == null || val.isEmpty) return _l10n!.pleaseEnterConfirmPassword;
                         return null;
                       },
                       suffixIcon: GestureDetector(
@@ -222,7 +251,7 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
 
                     CustomButton(
                       onTap: Signup,
-                      buttonText: "Sign Up",
+                      buttonText: _l10n!.signUp,
                       loading: loading,
                     ),
 
@@ -231,7 +260,7 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                     Center(
                       child: RichText(
                         text: TextSpan(
-                          text: 'Already have an account?  ',
+                          text: _l10n!.signUpPrompt,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 15.sp,
@@ -242,7 +271,7 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                                 ..onTap = () {
                                   Get.to( LoginScreen(reminderService: widget.reminderService));
                                 },
-                              text: 'Login',
+                              text: _l10n!.login,
                               style: TextStyle(
                                 color: Color(0XFF000000),
                                 fontSize: 17.sp,

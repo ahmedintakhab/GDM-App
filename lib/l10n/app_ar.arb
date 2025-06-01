@@ -1,0 +1,1417 @@
+{
+  "appTitle": "تطبيق GDM Firebase",
+  "login": "تسجيل الدخول",
+  "emailLabel": "البريد الإلكتروني",
+  "passwordLabel": "كلمة المرور",
+  "pleaseEnterEmail": "أدخل البريد الإلكتروني",
+  "pleaseEnterPassword": "أدخل كلمة المرور",
+  "loginSuccess": "تم تسجيل دخول المستخدم بنجاح!",
+   "loginfailedTryAgain_ar": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+  "userNotFound": "لم يتم العثور على مستخدم لهذا البريد الإلكتروني.",
+  "wrongPassword": "كلمة المرور غير صحيحة. حاول مرة أخرى.",
+  "invalidEmail": "تنسيق البريد الإلكتروني غير صالح. أدخل بريدًا إلكترونيًا صالحًا.",
+  "userDisabled": "تم تعطيل هذا الحساب.",
+  "tooManyRequests": "محاولات تسجيل دخول كثيرة جدًا. حاول مرة أخرى لاحقًا.",
+  "invalidCredential": "بيانات اعتماد غير صالحة. تحقق من بريدك الإلكتروني وكلمة المرور.",
+  "operationNotAllowed": "تسجيل الدخول باستخدام البريد الإلكتروني/كلمة المرور غير مفعل.",
+  "genericError": "حدث خطأ غير متوقع. حاول مرة أخرى.",
+  "signUpPrompt": "ليس لديك حساب؟ اشترك",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "signUp": "اشتراك",
+  "createAccount": "إنشاء حساب!",
+  "nameLabel": "الاسم",
+  "pleaseEnterName": "أدخل اسمك",
+  "pleaseEnterConfirmPassword": "أدخل تأكيد كلمة المرور",
+  "passwordsDoNotMatch": "كلمات المرور غير متطابقة!",
+  "emailAlreadyInUse": "البريد الإلكتروني مستخدم بالفعل! حاول ببريد إلكتروني آخر.",
+  "weakPassword": "كلمة المرور ضعيفة جدًا. استخدم كلمة مرور أقوى.",
+  "signUpSuccess": "تم تسجيل المستخدم بنجاح!",
+  "permissionDenied": "تم رفض الإذن. تحقق من حقوق الوصول الخاصة بك.",
+  "firestoreUnavailable": "خدمة Firestore غير متوفرة. حاول مرة أخرى لاحقًا.",
+  "notFound": "لم يتم العثور على المستند أو المجموعة المطلوبة.",
+  "operationCancelled": "تم إلغاء العملية. حاول مرة أخرى.",
+  "deadlineExceeded": "انتهت مهلة العملية. حاول مرة أخرى.",
+  "firestoreGenericError": "فشل في حفظ البيانات. حاول مرة أخرى.",
+  "noUserLoggedIn": "لا يوجد مستخدم مسجل دخوله حاليًا",
+  "tellUsAboutYourself": "أخبرنا عن نفسك",
+  "personalizationMessage": "معاييرك الفردية مهمة\nللتخصيص المتعمق.",
+  "genderLabel": "الجنس",
+  "maleOption": "ذكر",
+  "femaleOption": "أنثى",
+  "weightLabel": "الوزن",
+  "pleaseEnterWeight": "أدخل وزنك",
+  "weightInKg": "أدخل وزنك بالكيلوغرام",
+  "weightInLbs": "أدخل وزنك بالباوند",
+  "kgUnit": "كجم",
+  "lbsUnit": "باوند",
+  "ageLabel": "أدخل عمرك",
+  "heightLabel": "أدخل طولك",
+  "ethnicityLabel": "أدخل عرقيتك",
+  "diabetesLabel": "أدخل بيانات السكري",
+  "waistLabel": "أدخل محيط الخصر",
+  "hypertensionLabel": "تاريخ ارتفاع ضغط الدم",
+  "submit": "إرسال",
+  "personalInfoSaved": "تم حفظ المعلومات الشخصية بنجاح!",
+  "welcomeToGDMCareHub": "مرحبًا بك في GDMCare+ Hub",
+  "welcomeToGDMCareHubDescription": "مرحبًا بك في GDMCare+ Hub – منصتك المفضلة لإدارة السكري أثناء الحمل وتمكين الجميع بوعي حول السكري!",
+  "understandingDiabetes": "فهم السكري",
+  "understandingDiabetesDescription": "السكري هو حالة مزمنة يعاني فيها الجسم من صعوبة في التحكم بمستويات السكر في الدم.",
+  "type2Diabetes": "السكري من النوع الثاني",
+  "type2DiabetesDescription": "السكري من النوع الثاني هو الشكل الأكثر شيوعًا، وغالبًا ما يكون مرتبطًا بسوء التغذية وقلة التمارين الرياضية.",
+  "risksOfGestationalDiabetes": "مخاطر السكري الحملي",
+  "risksOfGestationalDiabetesDescription": "يزيد من مخاطر المضاعفات للأم والطفل، وكذلك السكري من النوع الثاني في المستقبل.",
+  "selectOption": "اختر خيارًا",
+  "diabetesTestDate": "متى تم إجراء اختبار السكري؟",
+  "phoneLabel": "رقم الهاتف",
+  "timeLabel": "الوقت",
+  "amLabel": "صباحًا",
+  "pmLabel": "مساءً",
+  "confirm": "تأكيد",
+  "userSelection": "اختيار المستخدم",
+  "chooseOption": "اختر خيارًا للتنقل بسلاسة!",
+  "iAm": "أنا",
+  "pregnant": "حامل",
+  "notPregnant": "غير حامل",
+  "doctor": "طبيب",
+  "pleaseSelectOption": "يرجى اختيار خيار",
+  "next": "التالي",
+  "pregnancyRegistration": "تسجيل الحمل",
+  "lmpLabel": "آخر دورة شهرية (LMP)",
+  "dueDateLabel": "تاريخ الولادة المتوقع (للقراءة فقط)",
+  "pleaseEnterLMP": "أدخل آخر دورة شهرية",
+  "pleaseEnterLMPToCalculate": "أدخل آخر دورة شهرية لحساب التاريخ",
+  "diabetesTestLabel": "هل أجريت اختبار السكري أثناء هذا الحمل؟",
+  "yes": "نعم",
+  "no": "لا",
+  "notSure": "غير متأكد",
+  "weightInKgCm": "أدخل وزنك (كجم)",
+  "heightInCm": "أدخل طولك (سم)",
+  "familyHistoryDiabetes": "تاريخ عائلي للسكري من النوع الثاني",
+  "numberOfPregnancies": "عدد حالات الحمل",
+  "numberOfDeliveries": "عدد الولادات السابقة",
+  "numberOfMiscarriages": "عدد الإجهاضات",
+  "numberOfStillbirths": "عدد الولادات الميتة",
+  "numberOfChildrenAlive": "عدد الأطفال الأحياء",
+  "back": "رجوع",
+  "pregnancyDiagnosis": "تشخيص الحمل",
+  "q1GdmThisPregnancy": "1. هل تم تشخيصك بمرض السكري الحملي خلال هذا الحمل؟",
+  "q2HypertensionThisPregnancy": "2. هل تم تشخيصك بارتفاع ضغط الدم خلال هذا الحمل؟",
+  "q3GdmPreviousPregnancies": "3. هل تم تشخيصك بمرض السكري الحملي خلال حالات الحمل السابقة؟",
+  "q4HypertensionPreviousPregnancies": "4. هل تم تشخيصك بارتفاع ضغط الدم خلالي حالة الحمل السابقة؟",
+  "q5Baby4kgOrMore": "5. هل أنجبت طفلاً يزن 4 كجم أو أكثر؟",
+  "q6CaesareanSection": "6. هل خضعت لعملية قيصرية من قبل؟",
+  "pregnancyInfoSaved": "تم حفظ معلومات الحمل بنجاح!",
+  "measurementUnitsQuestion": "ما وحدات القياس التي تستخدمها؟",
+    "mgDlUnit": "ملغ/ديسيلتر",
+    "mmolLUnit": "ممول/لتر",
+    "pleaseSelectUnit": "يرجى اختيار وحدة",
+    "logoutConfirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+    "cancel": "إلغاء",
+    "logout": "تسجيل الخروج",
+    "home": "الرئيسية",
+    "notification": "إشعار",
+    "reminder": "تذكير",
+    "meals": "الوجبات",
+    "profile": "الملف الشخصي",
+    "doctorCheckUp": "فحص الطبيب",
+    "lastVisit": "آخر زيارة",
+    "notAvailable": "غير متوفر",
+    "nextVisit": "الزيارة القادمة",
+    "notScheduled": "غير مجدول",
+    "nextVisitUpdated": "تم تحديث الزيارة القادمة بنجاح!",
+    "failedToUpdateNextVisit": "فشل في تحديث الزيارة القادمة",
+    "sunday": "الأحد",
+    "monday": "الإثنين",
+    "tuesday": "الثلاثاء",
+    "wednesday": "الأربعاء",
+    "thursday": "الخميس",
+    "friday": "الجمعة",
+    "saturday": "السبت",
+    "hiLoading": "مرحبًا، جارٍ التحميل...",
+    "glucose": "الجلوكوز",
+    "glucoseWeeklyAvg": "الجلوكوز، المتوسط الأسبوعي",
+    "gdm": "سكري الحمل (GDM)",
+    "whatYouNeedToKnow": "ما تحتاج إلى معرفته",
+    "dueDateUpdated": "تم تحديث تاريخ الولادة بنجاح!",
+    "failedToUpdateDueDate": "فشل في تحديث تاريخ الولادة",
+    "setDueDate": "تحديد تاريخ الولادة",
+    "noDueDateSet": "لم يتم تحديد تاريخ الولادة",
+    "dueDatePassed": "تجاوز تاريخ الولادة",
+    "gdmTestDone": "تم تسجيل اختبار السكري الحملي كمنتهي!",
+    "failedToMarkGdmTest": "فشل في تسجيل اختبار السكري الحملي كمنتهي",
+    "markGdmTestDone": "تسجيل اختبار السكري الحملي كمنتهي",
+    "errorLoadingNotifications": "خطأ في تحميل الإشعارات:",
+    "noNotificationsAvailable": "لا توجد إشعارات متوفرة",
+    "deleteAll": "حذف الكل",
+    "allNotificationsDeleted": "تم حذف جميع الإشعارات",
+    "errorDeletingNotifications": "خطأ في حذف الإشعارات:",
+    "newNotification": "جديد",
+    "steps": "خطوات",
+    "notWalking": "لا يمشي. التباين:",
+    "stepDetected": "تم اكتشاف خطوة! التباين:",
+    "initializing": "جارٍ التهيئة...",
+    "changePassword": "تغيير كلمة المرور",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+    "pleaseEnterPassword": "أدخل كلمة المرور",
+    "passwordMinLength": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+    "pleaseConfirmPassword": "يرجى تأكيد كلمة المرور",
+    "passwordUpdated": "تم تحديث كلمة المرور بنجاح",
+    "failedToUpdatePassword": "فشل في تحديث كلمة المرور:",
+    "editProfile": "تعديل الملف الشخصي",
+      "updateProfile": "تحديث الملف الشخصي",
+      "profileUpdated": "تم تحديث الملف الشخصي بنجاح",
+      "failedToUpdateProfile": "فشل في تحديث الملف الشخصي:",
+      "feedbackSurvey": "استبيان التغذية الراجعة",
+      "impact": "التأثير",
+       "feedback": "تعليقات",
+       "invalidDate": "تاريخ غير صالح",
+       "left": "بقي",
+        "dueThisWeek": "مستحق هذا الأسبوع",
+         "expectedDueDate": "تاريخ الاستحقاق المتوقع",
+      "perceivedUsefulness": "الفائدة المدركة",
+      "perceivedEaseOfUse": "سهولة الاستخدام المدركة",
+      "userControl": "التحكم بالمستخدم",
+      "feedbackQ1": "أعتقد أن التطبيق سيكون إضافة إيجابية لسكان الإمارات/ النساء الحوامل/ الأطباء.",
+      "feedbackQ2": "أعتقد أن هذا التطبيق سيحسن جودة حياة مرضى السكري الحملي.",
+      "feedbackQ3": "هذا التطبيق جزء مهم في تلبية احتياجاتي المعلوماتية المتعلقة بالسكري الحملي.",
+      "feedbackQ4": "استخدام هذا التطبيق يجعل الحصول على معلومات حول السكري الحملي أسهل.",
+      "feedbackQ5": "استخدام هذا التطبيق يمكنني من تقييم مخاطر السكري الحملي بنفسي.",
+      "feedbackQ6": "استخدام هذا التطبيق يزيد من احتمالية فحص السكري الحملي في الوقت المناسب.",
+      "feedbackQ7": "أنا راضٍ عن هذا التطبيق لاكتساب معرفة حول السكري الحملي.",
+      "feedbackQ8": "أنا راضٍ عن هذا التطبيق للإدارة الذاتية للسكري الحملي أو عوامل المخاطر.",
+      "feedbackQ9": "استخدام هذا التطبيق يزيد من قدرتي على مراقبة تناولي الغذائي.",
+      "feedbackQ10": "استخدام هذا التطبيق يزيد من قدرتي على الحفاظ على النشاط البدني.",
+      "feedbackQ11": "أستطيع مراقبة سكر الدم ذاتيًا باستخدام هذا التطبيق.",
+      "feedbackQ12": "كطبيب، أجد معلومات التطبيق حول فحص وتشخيص السكري الحملي مفيدة.",
+      "feedbackQ13": "أنا مرتاح لقدرتي على استخدام هذا التطبيق.",
+      "feedbackQ14": "تعلم تشغيل هذا التطبيق سهل بالنسبة لي.",
+      "feedbackQ15": "من السهل بالنسبة لي أن أصبح ماهرًا في استخدام هذا التطبيق.",
+      "feedbackQ16": "أجد هذا التطبيق سهل الاستخدام.",
+      "feedbackQ17": "أستطيع دائمًا تذكر كيفية تسجيل الدخول واستخدام هذا التطبيق.",
+      "feedbackQ18": "التطبيق نادرًا ما يتعطل أو يسبب مشاكل على هاتفي.",
+      "feedbackQ19": "عندما أرتكب خطأ أثناء استخدام التطبيق، أستعيد بسهولة وسرعة.",
+      "feedbackQ20": "المعلومات (مثل المساعدة عبر الإنترنت، الرسائل على الشاشة، والوثائق الأخرى) المقدمة مع التطبيق واضحة.",
+      "submitFeedback": "إرسال التغذية الراجعة",
+      "logoutSuccess": "تم تسجيل خروج المستخدم بنجاح!",
+      "failedToLogout": "فشل في تسجيل الخروج:",
+      "reminders": "التذكيرات",
+      "weightManagement": "إدارة الوزن",
+      "mealPlan": "خطة الوجبات",
+      "myMeals": "وجباتي",
+      "loading": "جارٍ التحميل",
+      "you": "أنت",
+      "gdmAI": "ذكاء السكري الحملي",
+      "typing": "يكتب...",
+      "typeMessage": "اكتب رسالة...",
+      "pleaseEnterQuestion": "أدخل سؤالاً",
+      "failedToGetResponse": "فشل في الحصول على رد:",
+      "updateDoctorVisits": "تحديث زيارات الطبيب",
+      "nextVisitDate": "تاريخ الزيارة القادمة",
+      "pleaseEnterDate": "أدخل التاريخ",
+      "setDueDate": "تحديد تاريخ الولادة",
+      "update": "تحديث",
+      "giveFeedback": "قدم تغذيتك الراجعة",
+      "question": "سؤال",
+      "agree": "موافق",
+      "disagree": "غير موافق",
+      "success": "نجاح!!",
+      "feedbackAdded": "تم إضافة تغذيتك الراجعة بنجاح!",
+      "continueButton": "متابعة",
+      "weightHistory": "سجل الوزن",
+      "score": "النتيجة",
+      "questionAboutGDM": "سؤال حول السكري الحملي",
+      "glucoseTitle": "الجلوكوز",
+        "selectTimeHint": "اختر الوقت (ساعة:دقيقة)",
+        "selectDateHint": "اختر التاريخ (سنة-شهر-يوم)",
+        "valueHint": "القيمة",
+        "pleaseSelectTime": "يرجى اختيار الوقت",
+        "pleaseSelectDate": "يرجى اختيار التاريخ",
+        "glucoseLevel": "مستوى الجلوكوز",
+        "beforeBreakfast": "قبل الإفطار",
+        "afterBreakfast": "بعد الإفطار",
+        "beforeLunch": "قبل الغداء",
+        "afterLunch": "بعد الغداء",
+        "beforeDinner": "قبل العشاء",
+        "afterDinner": "بعد العشاء",
+        "save": "حفظ",
+        "invalidGlucoseValue": "أدخل قيمة جلوكوز صالحة!",
+        "glucoseDataAdded": "تم إضافة بيانات الجلوكوز بنجاح!",
+        "userNotFound": "لم يتم العثور على المستخدم في أي مجموعة!",
+        "mmolLUnit": "ممول/لتر",
+        "glucoseSummaryReport": "تقرير ملخص الجلوكوز",
+        "generatedOn": "تم إنشاؤه في:",
+        "date": "التاريخ",
+        "time": "الوقت",
+        "reading": "القراءة",
+        "mealContext": "سياق الوجبة",
+        "pdfGenerated": "تم إنشاء ومشاركة ملف PDF بنجاح!",
+        "errorGeneratingPdf": "خطأ في إنشاء ملف PDF:",
+        "glucoseSummary": "ملخص الجلوكوز",
+        "errorFetchingGlucose": "خطأ في جلب بيانات الجلوكوز:",
+        "downloadPdf": "تحميل ملف PDF",
+        "daily": "يومي",
+        "weekly": "أسبوعي",
+        "monthly": "شهري",
+        "monthlyAvgBloodGlucose": "متوسط الجلوكوز في الدم الشهري",
+        "monthGlucoseLevels": "مستويات الجلوكوز الشهرية",
+        "yourGlucose": "جلوكوزك",
+        "retrying": "جارٍ إعادة المحاولة...",
+          "retry": "إعادة المحاولة",
+          "todayAvgBloodGlucose": "متوسط جلوكوز الدم اليوم",
+          "todayGlucoseLevels": "مستويات الجلوكوز اليوم",
+          "glucoseButton": "الجلوكوز",
+          "summaryButton": "الملخص",
+          "addGlucoseTooltip": "إضافة جلوكوز",
+          "viewGlucoseSummaryTooltip": "عرض ملخص الجلوكوز",
+          "dataLoadedSuccess": "تم تحميل البيانات بنجاح",
+          "failedToLoadData": "فشل في تحميل البيانات بعد",
+          "glucoseDataAdded": "تم إضافة بيانات الجلوكوز",
+          "weeklyAvgBloodGlucose": "متوسط جلوكوز الدم الأسبوعي",
+          "glucoseWeekAvg": "الجلوكوز، متوسط الأسبوع",
+          "helpCenter": "مركز المساعدة",
+            "searchByTopics": "ابحث حسب الموضوعات",
+            "gdmAssistanceHub": "مساعدة السكري الحملي + المركز",
+            "whatIsGDM": "ما هو السكري الحملي؟",
+            "whatIsGDMDescription": "السكري الحملي (GDM) هو حالة تتطور فيها مستويات السكر في الدم لدى المرأة الحامل. يحدث عادة خلال الثلث الثاني أو الثالث من الحمل ويزول بعد الولادة. يتطلب مراقبة دقيقة لضمان صحة الأم والطفل.",
+            "whoIsAtRisk": "من هم المعرضون للخطر؟",
+            "whoIsAtRiskDescription": "أنتِ أكثر عرضة للخطر إذا:\n1. كان لديكِ تاريخ عائلي للسكري\n2. كنتِ تعانين من زيادة الوزن/السمنة أو أسلوب حياة خامل\n3. كنتِ أكبر من 35 عامًا\n4. كنتِ مصابة بالسكري الحملي في حمل سابق\n5. كنتِ تعانين من متلازمة تكيس المبايض (PCOS)\n6. تنتمين إلى مجموعة عرقية ذات مخاطر عالية للسكري (بما في ذلك السكان الشرق أوسطيين)",
+            "signsAndSymptoms": "العلامات والأعراض",
+            "signsAndSymptomsDescription": "لا تعاني معظم النساء من أعراض، لذا الفحص ضروري. قد تعاني بعضهن من:\n● زيادة العطش والتبول المتكرر\n● الإرهاق\n● ضبابية الرؤية",
+            "screeningAndDiagnosis": "الفحص والتشخيص",
+            "screeningAndDiagnosisDescription": "في الإمارات:\n1. يُوصى بفحص السكري الحملي بين 24-28 أسبوعًا من الحمل.\n2. يُستخدم اختبار تحمل الجلوكوز (OGTT) للتشخيص.",
+            "complicationsOfGDM": "مضاعفات السكري الحملي",
+            "complicationsOfGDMDescription": "⚠️ إذا لم يُتحكم به، يمكن أن يؤدي السكري الحملي إلى:\n1. زيادة وزن المواليد (التضخم)\n2. الولادة المبكرة أو الولادة القيصرية\n3. تسمم الحمل (ارتفاع ضغط الدم أثناء الحمل)\n4. زيادة مخاطر الإصابة بالسكري من النوع الثاني للأم والطفل لاحقًا",
+            "managingGDM": "إدارة السكري الحملي",
+            "managingGDMDescription": "1. الأكل الصحي\n. اتبعي خطة وجبات متوازنة تحتوي على الحبوب الكاملة، البروتين الخالي من الدهون، والألياف\n2. النشاط البدني المنتظم\n. اهدفي إلى 30 دقيقة من التمارين المعتدلة (مثل المشي)\n3. مراقبة سكر الدم\n. تحققي من مستويات الجلوكوز حسب نصيحة الطبيب\n4. الأدوية\n. إذا لزم الأمر، قد يُوصف الأنسولين أو علاجات أخرى",
+            "postpartumCare": "رعاية ما بعد الولادة",
+            "postpartumCareDescription": "1. عادةً ما يزول السكري الحملي بعد الولادة، لكن النساء المصابات به لديهن مخاطر بنسبة 50% للإصابة بالسكري من النوع الثاني في المستقبل\n2. الرضاعة الطبيعية تساعد في تنظيم سكر الدم وتقلل من مخاطر السكري المستقبلية\n3. يُوصى بإجراء اختبار السكري بعد 6-12 أسبوعًا من الولادة وكل 1-3 سنوات بعد ذلك",
+            "preventionOfGDM": "الوقاية من السكري الحملي – نصائح خاصة بالإمارات",
+            "preventionOfGDMDescription": "1. الأكل الصحي للوقاية من السكري الحملي\n● اختيار الأطعمة الغنية بالعناصر الغذائية المناسبة للإمارات\n. اختاري خبز الحبوب الكاملة العربي، الأرز البني، الكينوا، والشوفان بدلاً من الخبز الأبيض أو الحبوب المكررة\n. أدرجي الأسماك المشوية (مثل الهامور أو السلمون)، الدجاج، لحم الضأن الخالي من الدهون، والبروتينات النباتية مثل العدس، الحمص، والفول\n. استخدمي زيت الزيتون والمكسرات (اللوز، الجوز، الفستق) بدلاً من الزبدة أو السمن الزائد\n. استمتعي بالخيارات المحلية الغنية بالألياف مثل التمر (باعتدال)، الخيار، الطماطم، البامية، والكوسا\n. اختاري لبن قليل الدسم، زبادي يوناني، أو عيران بدلاً من الألبان كاملة الدسم\n● الأطعمة التي يجب الحد منها\n. قللي من الأطباق الإماراتية عالية الكربوهيدرات (مثل الأرز الأبيض الزائد في البرياني أو الهريس – اختاري النسخ الكاملة الحبوب)\n. تجنبي المشروبات السكرية (مثل شاي الكرك بالسكر، المشروبات الغازية، عصائر الفواكه – استبدليها بالشاي غير المحلى أو الماء المنكه)\n. قللي من الحلويات (مثل اللقيمات، البقلاوة – استمتعي بها باعتدال واختاري بدائل صحية مثل التمر مع المكسرات)\n2. البقاء نشطًا في مناخ الإمارات\n● نصائح للتمارين رغم الحرارة\n. امشي داخل المولات (مثل مول الإمارات، ياس مول) أو صالات الجيم الداخلية\n. جربي السباحة، خيار رائع منخفض التأثير للياقة المناسبة للحمل\n. قومي بالمشي في الهواء الطلق في المساء في حدائق مثل حديقة البرشاء، حديقة الصفا، أو الكورنيش عندما يكون الجو أبرد\n. انضمي إلى دروس يوغا أو بيلاتس للحوامل، التي تُقدم في العديد من الصالات الرياضية ومراكز الأمومة مع خيارات للنساء فقط\n3. إدارة العادات الغذائية الثقافية والاجتماعية\n● اختيارات ذكية في التجمعات\n. مارسي التحكم في الحصص: استمتعي بكميات صغيرة من الأرز والخبز، واملئي طبقك باللحوم المشوية والخضروات\n. قومي بتبديلات صحية: استبدلي السمبوسة المقلية بالمخبوزة أو اللحوم المشوية\n. اختاري وجبات إفطار متوازنة: تجنبي الحلويات الزائدة بعد الإفطار؛ اختاري الفواكه، اللبن، أو المكسرات بدلاً من ذلك\n. حافظي على الترطيب: اشربي الكثير من الماء بدلاً من العصائر المحلاة",
+            "understandingGDM": "فهم السكري الحملي",
+            "understandingGDMDescription": "نظرة شاملة على السكري الحملي، أسبابه، عوامل الخطر، وكيفية تأثيره على الحمل.",
+            "gdmAndPregnancy": "السكري الحملي والحمل",
+            "gdmAndPregnancyDescription": "حقائق رئيسية حول السكري الحملي، عمليات الفحص، والآثار الصحية طويلة الأمد.",
+            "addReminder": "إضافة تذكير",
+              "selectLabel": "اختر التسمية",
+              "selectReminderLabel": "اختر تسمية التذكير",
+              "glucoseReading": "قراءة الجلوكوز",
+              "logCalories": "تسجيل السعرات",
+              "weightCheck": "فحص الوزن",
+              "stepCount": "عدد الخطوات",
+              "gdmFacts": "حقائق السكري الحملي",
+              "pleaseFillAllFields": "يرجى ملء جميع الحقول",
+              "ringOnce": "رنة واحدة",
+              "customFrequency": "مخصص",
+              "everyday": "كل يوم",
+              "weekdays": "أيام الأسبوع",
+              "monToFri": "من الإثنين إلى الجمعة",
+              "repeat": "تكرار",
+              "daySun": "ح",
+              "dayMon": "ن",
+              "dayTue": "ث",
+              "dayWed": "أ",
+              "dayThu": "خ",
+              "dayFri": "ج",
+              "daySat": "س",
+              "repeatPrefix": "التكرار:",
+              "reminderAddedSuccess": "تم إضافة التذكير بنجاح!",
+              "failedToAddReminder": "فشل في إضافة التذكير:",
+              "allReminders": "جميع التذكيرات",
+              "noRemindersYet": "لا توجد تذكيرات بعد",
+              "addReminderToStart": "أضف تذكيرًا للبدء",
+              "reminderDeletedSuccess": "تم حذف التذكير بنجاح",
+              "failedToDeleteReminder": "فشل في حذف التذكير:",
+              "reminderActivated": "تم تفعيل التذكير",
+              "reminderDeactivated": "تم إلغاء تفعيل التذكير",
+              "failedToUpdateReminder": "فشل في تحديث التذكير:",
+              "deleteReminder": "حذف التذكير",
+              "confirmDeleteReminder": "هل أنت متأكد من رغبتك في الحذف؟",
+              "delete": "حذف",
+              "gdmTestReminder": "تذكير اختبار السكري الحملي",
+              "gdmTestReminderMessage": "تذكير بالذهاب لإجراء اختبار السكري في المستشفى (بين 24 إلى 28 أسبوعًا)؟",
+              "thanksForReminder": "شكرًا على التذكير",
+              "iHaveDoneIt": "لقد أكملته",
+              "snoozeReminder": "تأجيل التذكير",
+              "snoozeFor3Days": "تأجيل لمدة 3 أيام",
+              "snoozeFor1Week": "تأجيل لمدة أسبوع",
+              "addWeight": "إضافة الوزن",
+                "pleaseEnterDateAndWeight": "يرجى إدخال التاريخ والوزن",
+                "weightDataAddedSuccess": "تم إضافة بيانات الوزن بنجاح!",
+                "weightDataUpdatedSuccess": "تم تحديث بيانات الوزن بنجاح!",
+                "errorAddingWeight": "خطأ في إضافة الوزن:",
+                "weightManagement": "إدارة الوزن",
+                "noUserLoggedIn": "لا يوجد مستخدم مسجل",
+                "pdfButton": "ملف PDF",
+                "weightButton": "الوزن",
+                "downloadPdfTooltip": "تنزيل ملف PDF",
+                "errorFetchingWeightData": "خطأ في جلب بيانات الوزن:",
+                "weightTrackingReport": "تقرير تتبع الوزن",
+                "generatedOn": "تم إنشاؤه في:",
+                "dateHeader": "التاريخ",
+                "weightHeader": "الوزن",
+                "unitHeader": "الوحدة",
+                "pdfGeneratedSuccess": "تم إنشاء ومشاركة ملف PDF بنجاح!",
+                "errorGeneratingPdf": "خطأ في إنشاء ملف PDF:",
+                "noWeightData": "لا توجد بيانات وزن متوفرة",
+                "currentWeight": "الوزن الحالي:",
+                "noWeightDataPastWeek": "لا توجد بيانات وزن متاحة للأسبوع الماضي",
+                "notApplicable": "غير متاح",
+
+"@appTitle": {
+    "description": "عنوان التطبيق"
+  },
+  "@login": {
+    "description": "نص لعنوان وزر تسجيل الدخول"
+  },
+  "@emailLabel": {
+    "description": "تسمية حقل إدخال البريد الإلكتروني"
+  },
+  "@passwordLabel": {
+    "description": "تسمية حقول إدخال كلمة المرور وتأكيد كلمة المرور"
+  },
+  "@pleaseEnterEmail": {
+    "@description": "رسالة التحقق للحقل البريد الإلكتروني الفارغ"
+  },
+  "@pleaseEnterPassword": {
+    "description": "رسالة التحقق للحقل كلمة المرور الفارغ"
+  },
+  "@loginSuccess": {
+    "description": "رسالة نجاح تسجيل الدخول"
+  },
+  "@userNotFound": {
+    "description": "رسالة خطأ عند عدم العثور على مستخدم"
+  },
+  "@wrongPassword": {
+    "description": "رسالة خطأ لكلمة مرور غير صحيحة"
+  },
+  "@invalidEmail": {
+    "description": "رسالة خطأ لتنسيق بريد إلكتروني غير صالح"
+  },
+  "@userDisabled": {
+    "description": "رسالة خطأ لحساب معطل"
+  },
+  "@tooManyRequests": {
+    "description": "رسالة خطأ لمحاولات تسجيل دخول كثيرة جدًا"
+  },
+  "@invalidCredential": {
+    "description": "رسالة خطأ لبيانات اعتماد غير صالحة"
+  },
+  "@operationNotAllowed": {
+    "description": "رسالة خطأ لتسجيل دخول بريد إلكتروني/كلمة مرور غير مفعل"
+  },
+  "@genericError": {
+    "description": "رسالة خطأ عامة لأخطاء غير متوقعة"
+  },
+  "@signUpPrompt": {
+    "description": "موجه للانتقال إلى شاشة التسجيل"
+  },
+  "@forgotPassword": {
+    "description": "نص رابط نسيت كلمة المرور"
+  },
+  "@signUp": {
+    "description": "نص لعنوان وزر التسجيل والرابط"
+  },
+  "@createAccount": {
+    "description": "نص يشجع على إنشاء حساب"
+  },
+  "@nameLabel": {
+    "description": "تسمية حقل إدخال الاسم"
+  },
+  "@pleaseEnterName": {
+    "description": "رسالة التحقق للحقل الاسم الفارغ"
+  },
+  "@pleaseEnterConfirmPassword": {
+    "description": "رسالة التحقق للحقل تأكيد كلمة المرور الفارغ"
+  },
+  "@passwordsDoNotMatch": {
+    "description": "رسالة التحقق لعدم تطابق كلمتي المرور"
+  },
+  "@emailAlreadyInUse": {
+    "description": "رسالة خطأ للبريد الإلكتروني المستخدم بالفعل"
+  },
+  "@weakPassword": {
+    "description": "رسالة خطأ لكلمة مرور ضعيفة"
+  },
+  "@signUpSuccess": {
+    "description": "رسالة نجاح التسجيل"
+  },
+  "@permissionDenied": {
+    "description": "رسالة خطأ لرفض الإذن في Firestore"
+  },
+  "@firestoreUnavailable": {
+    "description": "رسالة خطأ لعدم توفر خدمة Firestore"
+  },
+  "@notFound": {
+    "description": "رسالة خطأ لعدم العثور على مستند أو مجموعة في Firestore"
+  },
+  "@operationCancelled": {
+    "description": "رسالة خطأ لإلغاء عملية Firestore"
+  },
+  "@deadlineExceeded": {
+    "description": "رسالة خطأ لانتهاء مهلة عملية Firestore"
+  },
+  "@firestoreGenericError": {
+    "description": "رسالة خطأ عامة لأخطاء Firestore"
+  },
+  "@noUserLoggedIn": {
+    "description": "رسالة خطأ عند عدم وجود مستخدم مسجل دخوله"
+  },
+  "@tellUsAboutYourself": {
+    "description": "عنوان شاشة إدخال المعلومات الشخصية"
+  },
+  "@personalizationMessage": {
+    "description": "وصف أهمية المعلومات الشخصية للتخصيص"
+  },
+  "@genderLabel": {
+    "description": "تسمية حقل اختيار الجنس"
+  },
+  "@maleOption": {
+    "description": "خيار الجنس الذكر"
+  },
+  "@femaleOption": {
+    "description": "خيار الجنس الأنثى"
+  },
+  "@weightLabel": {
+    "description": "تسمية حقل إدخال الوزن"
+  },
+  "@pleaseEnterWeight": {
+    "description": "رسالة التحقق للحقل الوزن الفارغ"
+  },
+  "@weightInKg": {
+    "description": "نص تلميح للوزن بالكيلوغرام"
+  },
+  "@weightInLbs": {
+    "description": "نص تلميح للوزن بالباوند"
+  },
+  "@kgUnit": {
+    "description": "تسمية وحدة الكيلوغرام"
+  },
+  "@lbsUnit": {
+    "description": "تسمية وحدة الباوند"
+  },
+  "@ageLabel": {
+    "description": "تسمية ورسالة التحقق لحقل إدخال العمر"
+  },
+  "@heightLabel": {
+    "description": "تسمية ورسالة التحقق لحقل إدخال الطول"
+  },
+  "@ethnicityLabel": {
+    "description": "تسمية ورسالة التحقق لحقل إدخال العرقية"
+  },
+  "@diabetesLabel": {
+    "description": "تسمية ورسالة التحقق لحقل إدخال السكري"
+  },
+  "@waistLabel": {
+    "description": "تسمية ورسالة التحقق لققل إدخال محيط الخصر"
+  },
+  "@hypertensionLabel": {
+    "description": "تسمية ورسالة التحقق لحقل إدخال تاريخ ارتفاع ضغط الدم"
+  },
+  "@submit": {
+    "description": "تسمية زر الإرسال"
+  },
+  "@personalInfoSaved": {
+    "description": "رسالة نجاح حفظ المعلومات الشخصية"
+  },
+  "@welcomeToGDMCareHub": {
+    "description": "عنوان شريحة الترحيب في التوجيه"
+  },
+  "@welcomeToGDMCareHubDescription": {
+    "description": "وصف شريحة الترحيب في التوجيه"
+  },
+  "@understandingDiabetes": {
+    "description": "عنوان شريحة شرح السكري في التوجيه"
+  },
+  "@understandingDiabetesDescription": {
+    "description": "وصف شريحة شرح السكري في التوجيه"
+  },
+  "@type2Diabetes": {
+    "description": "عنوان شريحة السكري من النوع الثاني في التوجيه"
+  },
+  "@type2DiabetesDescription": {
+    "description": "وصف شريحة السكري من النوع الثاني في التوجيه"
+  },
+  "@risksOfGestationalDiabetes": {
+    "description": "عنوان شريحة مخاطر السكري الحملي في التوجيه"
+  },
+  "@risksOfGestationalDiabetesDescription": {
+    "description": "وصف شريحة مخاطر السكري الحملي في التوجيه"
+  },
+  "@selectOption": {
+    "description": "نص تلميح للحقل القائمة المنسدلة أو الاختيار"
+  },
+  "@diabetesTestDate": {
+    "description": "تسمية حقل إدخال تاريخ اختبار السكري"
+  },
+  "@phoneLabel": {
+    "description": "تسمية حقل إدخال رقم الهاتف"
+  },
+  "@timeLabel": {
+    "description": "تسمية حقل إدخال الوقت"
+  },
+  "@amLabel": {
+    "description": "تسمية فترة الصباح"
+  },
+  "@pmLabel": {
+    "description": "تسمية فترة المساء"
+  },
+  "@confirm": {
+    "description": "تسمية زر التأكيد"
+  },
+  "@userSelection": {
+    "description": "عنوان شاشة اختيار المستخدم"
+  },
+  "@chooseOption": {
+    "description": "تعليمات اختيار خيار"
+  },
+  "@iAm": {
+    "description": "تسمية اختيار نوع المستخدم"
+  },
+  "@pregnant": {
+    "description": "خيار المستخدم الحامل"
+  },
+  "@notPregnant": {
+    "description": "خيار المستخدم غير الحامل"
+  },
+  "@doctor": {
+    "description": "خيار المستخدم الطبيب"
+  },
+  "@pleaseSelectOption": {
+    "description": "رسالة التحقق لعدم اختيار خيار"
+  },
+  "@next": {
+    "description": "تسمية زر التالي"
+  },
+  "@pregnancyRegistration": {
+    "description": "عنوان شاشة تسجيل الحمل"
+  },
+  "@lmpLabel": {
+    "description": "تسمية حقل إدخال آخر دورة شهرية"
+  },
+  "@dueDateLabel": {
+    "description": "تسمية حقل تاريخ الولادة المتوقع"
+  },
+  "@pleaseEnterLMP": {
+    "description": "رسالة التحقق للحقل آخر دورة شهرية الفارغ"
+  },
+  "@pleaseEnterLMPToCalculate": {
+    "description": "رسالة التحقق لحساب تاريخ الولادة"
+  },
+  "@diabetesTestLabel": {
+    "description": "تسمية سؤال اختبار السكري"
+  },
+  "@yes": {
+    "description": "خيار القائمة المنسدلة نعم"
+  },
+  "@no": {
+    "description": "خيار القائمة المنسدلة لا"
+  },
+  "@notSure": {
+    "description": "خيار القائمة المنسدلة غير متأكد"
+  },
+  "@weightInKgCm": {
+    "description": "نص تلميح للوزن بالكيلوغرام (خاص بشاشة الحمل)"
+  },
+  "@heightInCm": {
+    "description": "نص تلميح للطول بالسنتيمتر"
+  },
+  "@familyHistoryDiabetes": {
+    "description": "تسمية التاريخ العائلي للسكري من النوع الثاني"
+  },
+  "@numberOfPregnancies": {
+    "description": "تسمية عدد حالات الحمل"
+  },
+  "@numberOfDeliveries": {
+    "description": "تسمية عدد الولادات السابقة"
+  },
+  "@numberOfMiscarriages": {
+    "description": "تسمية عدد الإجهاضات"
+  },
+  "@numberOfStillbirths": {
+    "description": "تسمية عدد الولادات الميتة"
+  },
+  "@numberOfChildrenAlive": {
+    "description": "تسمية عدد الأطفال الأحياء"
+  },
+  "@back": {
+    "description": "تسمية زر الرجوع"
+  },
+  "@pregnancyDiagnosis": {
+    "description": "عنوان شاشة تشخيص الحمل"
+  },
+  "@q1GdmThisPregnancy": {
+    "description": "سؤال عن تشخيص السكري الحملي في الحمل الحالي"
+  },
+  "@q2HypertensionThisPregnancy": {
+    "description": "سؤال عن تشخيص ارتفاع ضغط الدم في الحمل الحالي"
+  },
+  "@q3GdmPreviousPregnancies": {
+    "description": "سؤال عن تشخيص السكري الحملي في حالات الحمل السابقة"
+  },
+  "@q4HypertensionPreviousPregnancies": {
+    "description": "سؤال عن تشخيص ارتفاع ضغط الدم في حالات الحمل السابقة"
+  },
+  "@q5Baby4kgOrMore": {
+    "description": "سؤال عن إنجاب طفل يزن 4 كجم أو أكثر"
+  },
+  "@q6CaesareanSection": {
+    "description": "سؤال عن العملية القيصرية السابقة"
+  },
+  "@pregnancyInfoSaved": {
+    "description": "رسالة نجاح حفظ معلومات الحمل"
+  },
+   "@measurementUnitsQuestion": {
+      "description": "سؤال حول وحدات القياس المفضلة"
+    },
+    "@mgDlUnit": {
+      "description": "خيار وحدة لملغ/ديسيلتر"
+    },
+    "@mmolLUnit": {
+      "description": "خيار وحدة لممول/لتر"
+    },
+    "@pleaseSelectUnit": {
+      "description": "رسالة التحقق لعدم اختيار وحدة"
+    },
+    "@logoutConfirmation": {
+      "description": "رسالة تأكيد تسجيل الخروج"
+    },
+    "@cancel": {
+      "description": "تسمية زر الإلغاء"
+    },
+    "@logout": {
+      "description": "تسمية زر تسجيل الخروج"
+    },
+    "@home": {
+      "description": "تسمية عنصر التنقل الرئيسي"
+    },
+    "@notification": {
+      "description": "تسمية عنصر الإشعار"
+    },
+    "@reminder": {
+      "description": "تسمية عنصر التذكير"
+    },
+    "@meals": {
+      "description": "تسمية عنصر الوجبات"
+    },
+    "@profile": {
+      "description": "تسمية عنصر الملف الشخصي"
+    },
+    "@doctorCheckUp": {
+      "description": "عنوان قسم فحص الطبيب"
+    },
+    "@lastVisit": {
+      "description": "تسمية لآخر زيارة للطبيب"
+    },
+    "@notAvailable": {
+      "description": "رسالة عند عدم توفر آخر زيارة"
+    },
+    "@nextVisit": {
+      "description": "تسمية للزيارة الطبية القادمة"
+    },
+    "@notScheduled": {
+      "description": "رسالة عند عدم جدولة الزيارة القادمة"
+    },
+    "@nextVisitUpdated": {
+      "description": "رسالة نجاح تحديث الزيارة القادمة"
+    },
+    "@failedToUpdateNextVisit": {
+      "description": "رسالة فشل تحديث الزيارة القادمة"
+    },
+    "@sunday": {
+      "description": "اختصار الأحد"
+    },
+    "@monday": {
+      "description": "اختصار الإثنين"
+    },
+    "@tuesday": {
+      "description": "اختصار الثلاثاء"
+    },
+    "@wednesday": {
+      "description": "اختصار الأربعاء"
+    },
+    "@thursday": {
+      "description": "اختصار الخميس"
+    },
+    "@friday": {
+      "description": "اختصار الجمعة"
+    },
+    "@saturday": {
+      "description": "اختصار السبت"
+    },
+    "@hiLoading": {
+      "description": "تحية أثناء تحميل بيانات المستخدم"
+    },
+    "@glucose": {
+      "description": "عنوان بيانات الجلوكوز"
+    },
+    "@glucoseWeeklyAvg": {
+      "description": "عنوان متوسط بيانات الجلوكوز الأسبوعي"
+    },
+    "@gdm": {
+      "description": "عنوان سكري الحمل"
+    },
+    "@whatYouNeedToKnow": {
+      "description": "عنوان قسم معلومات سكري الحمل"
+    },
+    "@dueDateUpdated": {
+      "description": "رسالة نجاح تحديث تاريخ الولادة"
+    },
+    "@failedToUpdateDueDate": {
+      "description": "رسالة فشل تحديث تاريخ الولادة"
+    },
+    "@setDueDate": {
+      "description": "تسمية تحديد تاريخ الولادة"
+    },
+    "@noDueDateSet": {
+      "description": "رسالة عند عدم تحديد تاريخ الولادة"
+    },
+    "@dueDatePassed": {
+      "description": "رسالة عند تجاوز تاريخ الولادة"
+    },
+    "@gdmTestDone": {
+      "description": "رسالة تسجيل اختبار السكري الحملي كمنتهي"
+    },
+    "@failedToMarkGdmTest": {
+      "description": "رسالة فشل تسجيل اختبار السكري الحملي"
+    },
+    "@markGdmTestDone": {
+      "description": "تسمية تسجيل اختبار السكري الحملي كمنتهي"
+    },
+    "@errorLoadingNotifications": {
+      "description": "بادئة رسالة خطأ تحميل الإشعارات"
+    },
+    "@noNotificationsAvailable": {
+      "description": "رسالة عند عدم توفر إشعارات"
+    },
+    "@deleteAll": {
+      "description": "تسمية لحذف جميع الإشعارات"
+    },
+    "@allNotificationsDeleted": {
+      "description": "رسالة حذف جميع الإشعارات"
+    },
+    "@errorDeletingNotifications": {
+      "description": "بادئة رسالة خطأ حذف الإشعارات"
+    },
+    "@newNotification": {
+      "description": "تسمية للإشعار الجديد"
+    },
+    "@steps": {
+      "description": "تسمية لعدد الخطوات"
+    },
+    "@notWalking": {
+      "description": "رسالة تصحيح لعدم المشي"
+    },
+    "@stepDetected": {
+      "description": "رسالة تصحيح اكتشاف خطوة"
+    },
+    "@initializing": {
+      "description": "رسالة التهيئة"
+    },
+    "@changePassword": {
+      "description": "عنوان شاشة تغيير كلمة المرور"
+    },
+    "@newPassword": {
+      "description": "تسمية حقل كلمة المرور الجديدة"
+    },
+    "@confirmNewPassword": {
+      "description": "تأكيد حقل كلمة المرور الجديدة"
+    },
+    "@pleaseEnterPassword": {
+      "description": "رسالة التحقق للحقل كلمة المرور الفارغ"
+    },
+    "@passwordMinLength": {
+      "description": "رسالة التحقق لطول كلمة المرور"
+    },
+    "@pleaseConfirmPassword": {
+      "description": "رسالة التحقق للحقل تأكيد كلمة المرور الفارغ"
+    },
+    "@passwordUpdated": {
+      "description": "رسالة نجاح تحديث كلمة المرور"
+    },
+    "@failedToUpdatePassword": {
+      "description": "بادئة رسالة فشل تحديث كلمة المرور"
+    },
+     "@editProfile": {
+        "description": "عنوان شاشة تعديل الملف الشخصي"
+      },
+      "@updateProfile": {
+        "description": "تسمية زر تحديث الملف الشخصي"
+      },
+      "@profileUpdated": {
+        "description": "رسالة نجاح تحديث الملف الشخصي"
+      },
+      "@failedToUpdateProfile": {
+        "description": "بادئة رسالة فشل تحديث الملف الشخصي"
+      },
+      "@feedbackSurvey": {
+        "description": "عنوان شاشة استبيان التغذية الراجعة"
+      },
+      "@impact": {
+        "description": "عنوان قسم التأثير في استبيان التغذية الراجعة"
+      },
+      "@perceivedUsefulness": {
+        "description": "عنوان قسم الفائدة المدركة في استبيان التغذية الراجعة"
+      },
+      "@perceivedEaseOfUse": {
+        "description": "عنوان قسم سهولة الاستخدام المدركة في استبيان التغذية الراجعة"
+      },
+      "@userControl": {
+        "description": "عنوان قسم التحكم بالمستخدم في استبيان التغذية الراجعة"
+      },
+      "@feedbackQ1": {
+        "description": "سؤال تغذية راجعة حول الإضافة الإيجابية للتطبيق"
+      },
+      "@feedbackQ2": {
+        "description": "سؤال تغذية راجعة حول تحسين جودة الحياة"
+      },
+      "@feedbackQ3": {
+        "description": "سؤال تغذية راجعة حول تلبية احتياجات معلومات السكري الحملي"
+      },
+      "@feedbackQ4": {
+        "description": "سؤال تغذية راجعة حول سهولة الحصول على معلومات السكري الحملي"
+      },
+      "@feedbackQ5": {
+        "description": "سؤال تغذية راجعة حول تقييم مخاطر السكري الحملي ذاتيًا"
+      },
+      "@feedbackQ6": {
+        "description": "سؤال تغذية راجعة حول الفحص المناسب للسكري الحملي"
+      },
+      "@feedbackQ7": {
+        "description": "سؤال تغذية راجعة حول الرضا بمعرفة السكري الحملي"
+      },
+      "@feedbackQ8": {
+        "description": "سؤال تغذية راجعة حول الرضا بالإدارة الذاتية للسكري الحملي"
+      },
+      "@feedbackQ9": {
+        "description": "سؤال تغذية راجعة حول مراقبة التناول الغذائي"
+      },
+      "@feedbackQ10": {
+        "description": "سؤال تغذية راجعة حول الحفاظ على النشاط البدني"
+      },
+      "@feedbackQ11": {
+        "description": "سؤال تغذية راجعة حول مراقبة سكر الدم ذاتيًا"
+      },
+      "@feedbackQ12": {
+        "description": "سؤال تغذية راجعة حول معلومات فحص السكري الحملي للأطباء"
+      },
+      "@feedbackQ13": {
+        "description": "سؤال تغذية راجعة حول الراحة في استخدام التطبيق"
+      },
+      "@feedbackQ14": {
+        "description": "سؤال تغذية راجعة حول سهولة تعلم التطبيق"
+      },
+      "@feedbackQ15": {
+        "description": "سؤال تغذية راجعة حول اكتساب مهارة استخدام التطبيق"
+      },
+      "@feedbackQ16": {
+        "description": "سؤال تغذية راجعة حول سهولة استخدام التطبيق"
+      },
+      "@feedbackQ17": {
+        "description": "سؤال تغذية راجعة حول تذكر استخدام التطبيق"
+      },
+      "@feedbackQ18": {
+        "description": "سؤال تغذية راجعة حول استقرار التطبيق"
+      },
+      "@feedbackQ19": {
+        "description": "سؤال تغذية راجعة حول التعافي من الأخطاء"
+      },
+      "@feedbackQ20": {
+        "description": "سؤال تغذية راجعة حول وضوح معلومات التطبيق"
+      },
+      "@submitFeedback": {
+        "description": "تسمية زر إرسال التغذية الراجعة"
+      },
+      "@logoutSuccess": {
+        "description": "رسالة نجاح تسجيل الخروج"
+      },
+      "@failedToLogout": {
+        "description": "بادئة رسالة فشل تسجيل الخروج"
+      },
+      "@reminders": {
+        "description": "تسمية عنصر قائمة التذكيرات"
+      },
+      "@weightManagement": {
+        "description": "تسمية عنصر قائمة إدارة الوزن"
+      },
+      "@mealPlan": {
+        "description": "تسمية عنصر قائمة خطة الوجبات"
+      },
+      "@myMeals": {
+        "description": "تسمية عنصر قائمة وجباتي"
+      },
+      "@loading": {
+        "description": "رسالة تشير إلى حالة التحميل"
+      },
+      "@you": {
+        "description": "تسمية المستخدم في الدردشة"
+      },
+      "@gdmAI": {
+        "description": "تسمية ذكاء السكري الحملي في الدردشة"
+      },
+      "@typing": {
+        "description": "رسالة تشير إلى حالة الكتابة"
+      },
+      "@typeMessage": {
+        "description": "نص تلميح لإدخال الدردشة"
+      },
+      "@pleaseEnterQuestion": {
+        "description": "رسالة التحقق لإدخال دردشة فارغ"
+      },
+      "@failedToGetResponse": {
+        "description": "بادئة رسالة فشل استجابة الدردشة"
+      },
+      "@updateDoctorVisits": {
+        "description": "عنوان تحديث زيارات الطبيب"
+      },
+      "@nextVisitDate": {
+        "description": "نص تلميح لإدخال تاريخ الزيارة القادمة"
+      },
+      "@pleaseEnterDate": {
+        "description": "رسالة التحقق للحقل تاريخ فارغ"
+      },
+      "@setDueDate": {
+        "description": "عنوان تحديد تاريخ الولادة"
+      },
+      "@update": {
+        "description": "تسمية زر التحديث"
+      },
+      "@giveFeedback": {
+        "description": "موجه لتقديم التغذية الراجعة"
+      },
+      "@question": {
+        "description": "بادئة رقم سؤال التغذية الراجعة"
+      },
+      "@agree": {
+        "description": "خيار الموافقة على سؤال التغذية الراجعة"
+      },
+      "@disagree": {
+        "description": "خيار عدم الموافقة على سؤال التغذية الراجعة"
+      },
+      "@success": {
+        "description": "عنوان حوار النجاح"
+      },
+      "@feedbackAdded": {
+        "description": "رسالة نجاح إضافة التغذية الراجعة"
+      },
+     "@continueButton": {
+        "description": "تسمية زر المتابعة"
+      },
+      "@weightHistory": {
+        "description": "تسمية عنصر قائمة سجل الوزن"
+      },
+      "@score": {
+        "description": "تسمية عنصر قائمة النتيجة"
+      },
+      "@questionAboutGDM": {
+        "description": "تسمية سؤال حول السكري الحملي"
+      },
+      "@glucoseTitle": {
+          "description": "عنوان شاشة إدخال الجلوكوز"
+        },
+        "@selectTimeHint": {
+          "description": "نص تلميح لاختيار الوقت"
+        },
+        "@selectDateHint": {
+          "description": "نص تلميح لاختيار التاريخ"
+        },
+        "@valueHint": {
+          "description": "نص تلميح لإدخال قيمة الجلوكوز"
+        },
+        "@pleaseSelectTime": {
+          "description": "رسالة التحقق للحقل وقت فارغ"
+        },
+        "@pleaseSelectDate": {
+          "description": "رسالة التحقق للحقل تاريخ فارغ"
+        },
+        "@glucoseLevel": {
+          "description": "تسمية قسم إدخال مستوى الجلوكوز"
+        },
+        "@beforeBreakfast": {
+          "description": "تسمية خيار الوجبة قبل الإفطار"
+        },
+        "@afterBreakfast": {
+          "description": "تسمية خيار الوجبة بعد الإفطار"
+        },
+        "@beforeLunch": {
+          "description": "تسمية خيار الوجبة قبل الغداء"
+        },
+        "@afterLunch": {
+          "description": "تسمية خيار الوجبة بعد الغداء"
+        },
+        "@beforeDinner": {
+          "description": "تسمية خيار الوجبة قبل العشاء"
+        },
+        "@afterDinner": {
+          "description": "تسمية خيار الوجبة بعد العشاء"
+        },
+        "@save": {
+          "description": "تسمية زر حفظ بيانات الجلوكوز"
+        },
+        "@invalidGlucoseValue": {
+          "description": "رسالة نجاح لقيمة جلوكوز غير صالحة"
+        },
+        "@glucoseDataAdded": {
+          "description": "رسالة نجاح إضافة بيانات الجلوكوز"
+        },
+        "@userNotFound": {
+          "description": "رسالة لعدم العثور على المستخدم"
+        },
+        "@mmolLUnit": {
+          "description": "خيار وحدة لممول/لتر"
+        },
+        "@glucoseSummaryReport": {
+          "description": "عنوان تقرير ملخص الجلوكوز بصيغة PDF"
+        },
+        "@generatedOn": {
+          "description": "بادئة تاريخ إنشاء ملف PDF"
+        },
+        "@date": {
+          "description": "رأس جدول التاريخ في PDF وواجهة المستخدم"
+        },
+        "@time": {
+          "description": "رأس جدول الوقت في PDF وواجهة المستخدم"
+        },
+        "@reading": {
+          "description": "رأس جدول قراءة الجلوكوز في PDF وواجهة المستخدم"
+        },
+        "@mealContext": {
+          "description": "رأس جدول سياق الوجبة في PDF وواجهة المستخدم"
+        },
+        "@pdfGenerated": {
+          "description": "رسالة نجاح إنشاء ملف PDF"
+        },
+        "@errorGeneratingPdf": {
+          "description": "بادئة رسالة خطأ إنشاء ملف PDF"
+        },
+        "@glucoseSummary": {
+          "description": "عنوان شاشة ملخص الجلوكوز"
+        },
+        "@errorFetchingGlucose": {
+          "description": "بادئة رسالة خطأ جلب بيانات الجلوكوز"
+        },
+        "@downloadPdf": {
+          "description": "تسمية زر تحميل ملف PDF"
+        },
+        "@daily": {
+          "description": "تسمية علامة تبويب العرض اليومي"
+        },
+        "@weekly": {
+          "description": "تسمية علامة تبويب العرض الأسبوعي"
+        },
+        "@monthly": {
+          "description": "تسمية علامة تبويب العرض الشهري"
+        },
+        "@monthlyAvgBloodGlucose": {
+          "description": "عنوان متوسط الجلوكوز في الدم الشهري"
+        },
+        "@monthGlucoseLevels": {
+          "description": "عنوان مستويات الجلوكوز الشهرية"
+        },
+        "@yourGlucose": {
+          "description": "عنوان بيانات جلوكوز المستخدم"
+        },
+        "@retrying": {
+            "description": "رسالة تشير إلى جارٍ إعادة المحاولة"
+          },
+          "@retry": {
+            "description": "تسمية زر إعادة المحاولة"
+          },
+          "@todayAvgBloodGlucose": {
+            "description": "عنوان بطاقة متوسط جلوكوز الدم اليوم"
+          },
+          "@todayGlucoseLevels": {
+            "description": "عنوان مخطط مستويات الجلوكوز اليوم"
+          },
+          "@glucoseButton": {
+            "description": "تسمية زر الجلوكوز العائم"
+          },
+          "@summaryButton": {
+            "description": "تسمية زر الملخص العائم"
+          },
+          "@addGlucoseTooltip": {
+            "description": "تلميح زر إضافة الجلوكوز"
+          },
+          "@viewGlucoseSummaryTooltip": {
+            "description": "تلميح زر عرض ملخص الجلوكوز"
+          },
+          "@dataLoadedSuccess": {
+            "description": "رسالة نجاح تحميل البيانات"
+          },
+          "@failedToLoadData": {
+            "description": "بادئة رسالة فشل تحميل البيانات"
+          },
+          "@glucoseDataAdded": {
+            "description": "رسالة نجاح إضافة بيانات الجلوكوز"
+          },
+          "@weeklyAvgBloodGlucose": {
+            "description": "عنوان بطاقة متوسط جلوكوز الدم الأسبوعي"
+          },
+          "@glucoseWeekAvg": {
+            "description": "عنوان مخطط متوسط الجلوكوز الأسبوعي"
+          },
+          "@helpCenter": {
+              "description": "عنوان شاشة مركز المساعدة"
+            },
+            "@searchByTopics": {
+              "description": "نص تلميح لحقل البحث"
+            },
+            "@gdmAssistanceHub": {
+              "description": "عنوان حاوية مساعدة السكري الحملي"
+            },
+            "@whatIsGDM": {
+              "description": "عنوان بطاقة معلومات السكري الحملي"
+            },
+            "@whatIsGDMDescription": {
+              "description": "وصف بطاقة ما هو السكري الحملي"
+            },
+            "@whoIsAtRisk": {
+              "description": "عنوان بطاقة من هم المعرضون للخطر"
+            },
+            "@whoIsAtRiskDescription": {
+              "description": "وصف بطاقة من هم المعرضون للخطر"
+            },
+            "@signsAndSymptoms": {
+              "description": "عنوان بطاقة العلامات والأعراض"
+            },
+            "@signsAndSymptomsDescription": {
+              "description": "وصف بطاقة العلامات والأعراض"
+            },
+            "@screeningAndDiagnosis": {
+              "description": "عنوان بطاقة الفحص والتشخيص"
+            },
+            "@screeningAndDiagnosisDescription": {
+              "description": "وصف بطاقة الفحص والتشخيص"
+            },
+            "@complicationsOfGDM": {
+              "description": "عنوان بطاقة مضاعفات السكري الحملي"
+            },
+            "@complicationsOfGDMDescription": {
+              "description": "وصف بطاقة مضاعفات السكري الحملي"
+            },
+            "@managingGDM": {
+              "description": "عنوان بطاقة إدارة السكري الحملي"
+            },
+            "@managingGDMDescription": {
+              "description": "وصف بطاقة إدارة السكري الحملي"
+            },
+            "@postpartumCare": {
+              "description": "عنوان بطاقة رعاية ما بعد الولادة"
+            },
+            "@postpartumCareDescription": {
+              "description": "وصف بطاقة رعاية ما بعد الولادة"
+            },
+            "@preventionOfGDM": {
+              "description": "عنوان بطاقة الوقاية من السكري الحملي"
+            },
+            "@preventionOfGDMDescription": {
+              "description": "وصف بطاقة الوقاية من السكري الحملي"
+            },
+            "@understandingGDM": {
+              "description": "عنوان حاوية فهم السكري الحملي"
+            },
+            "@understandingGDMDescription": {
+              "description": "وصف حاوية فهم السكري الحملي"
+            },
+            "@gdmAndPregnancy": {
+              "description": "عنوان حاوية السكري الحملي والحمل"
+            },
+            "@gdmAndPregnancyDescription": {
+              "description": "وصف حاوية السكري الحملي والحمل"
+            },
+            "@addReminder": {
+                "description": "عنوان شاشة إضافة التذكير وزر"
+              },
+              "@selectLabel": {
+                "description": "نص تلميح لقائمة تسمية التذكير"
+              },
+              "@selectReminderLabel": {
+                "description": "تسمية لقائمة تسمية التذكير"
+              },
+              "@glucoseReading": {
+                "description": "خيار قائمة لتذكير قراءة الجلوكوز"
+              },
+              "@logCalories": {
+                "description": "خيار قائمة لتذكير تسجيل السعرات"
+              },
+              "@weightCheck": {
+                "description": "خيار قائمة لتذكير فحص الوزن"
+              },
+              "@stepCount": {
+                "description": "خيار قائمة لتذكير عدد الخطوات"
+              },
+              "@gdmFacts": {
+                "description": "خيار قائمة لتذكير بحقائق السكري الحملي"
+              },
+              "@pleaseFillAllFields": {
+                "description": "رسالة التحقق لنموذج تذكير غير مكتمل"
+              },
+              "@ringOnce": {
+                "description": "خيار التكرار لتذكير لمرة واحدة"
+              },
+              "@customFrequency": {
+                "description": "خيار التكرار لجدول تذكير مخصص"
+              },
+              "@everyday": {
+                "description": "خيار التكرار لتذكيرات يومية"
+              },
+              "@weekdays": {
+                "description": "خيار التكرار لتذكيرات أيام الأسبوع"
+              },
+              "@monToFri": {
+                "description": "خيار التكرار لتذكيرات من الإثنين إلى الجمعة"
+              },
+              "@repeat": {
+                "description": "عنوان قسم تكرار التذكير"
+              },
+              "@daySun": {
+                "description": "اختصار ليوم الأحد"
+              },
+              "@dayMon": {
+                "description": "اختصار ليوم الإثنين"
+              },
+              "@dayTue": {
+                "description": "اختصار ليوم الثلاثاء"
+              },
+              "@dayWed": {
+                "description": "اختصار ليوم الأربعاء"
+              },
+              "@dayThu": {
+                "description": "اختصار ليوم الخميس"
+              },
+              "@dayFri": {
+                "description": "اختصار ليوم الجمعة"
+              },
+              "@daySat": {
+                "description": "اختصار ليوم السبت"
+              },
+              "@repeatPrefix": {
+                "description": "بادئة لعرض التكرار المحدد"
+              },
+              "@reminderAddedSuccess": {
+                "description": "رسالة نجاح إضافة التذكير"
+              },
+              "@failedToAddReminder": {
+                "description": "بادئة رسالة فشل إضافة التذكير"
+              },
+              "@allReminders": {
+                "description": "عنوان شاشة جميع التذكيرات"
+              },
+              "@noRemindersYet": {
+                "description": "رسالة لقائمة تذكيرات فارغة"
+              },
+              "@addReminderToStart": {
+                "description": "دعوة لإضافة تذكير"
+              },
+              "@reminderDeletedSuccess": {
+                "description": "رسالة نجاح حذف التذكير"
+              },
+              "@failedToDeleteReminder": {
+                "description": "بادئة رسالة فشل حذف التذكير"
+              },
+              "@reminderActivated": {
+                "description": "رسالة تفعيل التذكير"
+              },
+              "@reminderDeactivated": {
+                "description": "رسالة إلغاء تفعيل التذكير"
+              },
+              "@failedToUpdateReminder": {
+                "description": "بادئة رسالة فشل تحديث التذكير"
+              },
+              "@deleteReminder": {
+                "description": "عنوان نافذة حذف التذكير"
+              },
+              "@confirmDeleteReminder": {
+                "description": "رسالة تأكيد حذف التذكير"
+              },
+              "@delete": {
+                "description": "تسمية زر الحذف"
+              },
+              "@gdmTestReminder": {
+                "description": "عنوان تذكير اختبار السكري الحملي"
+              },
+              "@gdmTestReminderMessage": {
+                "description": "رسالة تذكير اختبار السكري الحملي"
+              },
+              "@thanksForReminder": {
+                "description": "تسمية زر شكر التذكير"
+              },
+              "@iHaveDoneIt": {
+                "description": "تسمية زر تأكيد إكمال المهمة"
+              },
+              "@snoozeReminder": {
+                "description": "عنوان نافذة تأجيل التذكير"
+              },
+              "@snoozeFor3Days": {
+                "description": "خيار تأجيل التذكير لمدة 3 أيام"
+              },
+              "@snoozeFor1Week": {
+                "description": "خيار تأجيل التذكير لمدة أسبوع"
+              },
+               "@addWeight": {
+                  "description": "عنوان نافذة إضافة الوزن وتلميح الزر"
+                },
+                "@pleaseEnterDateAndWeight": {
+                  "description": "رسالة التحقق للتاريخ أو الوزن المفقود"
+                },
+                "@weightDataAddedSuccess": {
+                  "description": "رسالة نجاح إضافة بيانات الوزن"
+                },
+                "@weightDataUpdatedSuccess": {
+                  "description": "رسالة نجاح تحديث بيانات الوزن"
+                },
+                "@errorAddingWeight": {
+                  "description": "بادئة رسالة فشل إضافة بيانات الوزن"
+                },
+                "@weightManagement": {
+                  "description": "عنوان شاشة إدارة الوزن"
+                },
+                "@noUserLoggedIn": {
+                  "description": "رسالة خطأ لغياب مستخدم مسجل"
+                },
+                "@pdfButton": {
+                  "description": "تسمية زر إنشاء ملف PDF"
+                },
+                "@weightButton": {
+                  "description": "تسمية زر إضافة الوزن"
+                },
+                "@downloadPdfTooltip": {
+                  "description": "تلميح زر تنزيل ملف PDF"
+                },
+                "@errorFetchingWeightData": {
+                  "description": "بادئة رسالة فشل جلب بيانات الوزن"
+                },
+                "@weightTrackingReport": {
+                  "description": "عنوان تقرير تتبع الوزن في ملف PDF"
+                },
+                "@generatedOn": {
+                  "description": "بادئة عنوان تاريخ إنشاء ملف PDF"
+                },
+                "@dateHeader": {
+                  "description": "رأس جدول التاريخ في ملف PDF"
+                },
+                "@weightHeader": {
+                  "description": "رأس جدول الوزن في ملف PDF"
+                },
+                "@unitHeader": {
+                  "description": "رأس جدول الوحدة في ملف PDF"
+                },
+                "@pdfGeneratedSuccess": {
+                  "description": "رسالة نجاح إنشاء ومشاركة ملف PDF"
+                },
+                "@errorGeneratingPdf": {
+                  "description": "بادئة رسالة فشل إنشاء ملف PDF"
+                },
+                "@noWeightData": {
+                  "description": "رسالة لقائمة بيانات الوزن الفارغة"
+                },
+                "@currentWeight": {
+                  "description": "تسمية عرض الوزن الحالي"
+                },
+                "@noWeightDataPastWeek": {
+                  "description": "رسالة لغياب بيانات الوزن في الأسبوع الماضي"
+                },
+                "@notApplicable": {
+                  "description": "قيمة احتياطية لبيانات الوزن المفقودة"
+                }
+}

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:gdm_app/utils/utils.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../dialogbox/doctor_visit_dialogbox.dart';
 
@@ -27,6 +27,7 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<UserProvider>(
       builder: (context, provider, child) {
         return GestureDetector(
@@ -51,7 +52,7 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Doctor Check up',
+                      l10n.doctorCheckUp,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18.sp,
@@ -74,7 +75,7 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Last Visit',
+                          l10n.lastVisit,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.sp,
@@ -85,7 +86,7 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
                         Text(
                           provider.lastVisit?.isNotEmpty == true
                               ? provider.lastVisit!
-                              : 'Not available',
+                              : l10n.notAvailable,
                           style: TextStyle(
                             color: provider.lastVisit?.isNotEmpty == true
                                 ? Colors.grey
@@ -100,7 +101,7 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          'Next Visit',
+                          l10n.nextVisit,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.sp,
@@ -111,7 +112,7 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
                         Text(
                           provider.nextVisit?.isNotEmpty == true
                               ? provider.nextVisit!
-                              : 'Not scheduled',
+                              : l10n.notScheduled,
                           style: TextStyle(
                             color: provider.nextVisit?.isNotEmpty == true
                                 ? Colors.grey
@@ -133,6 +134,7 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
   }
 
   Future<void> _showVisitDialog(BuildContext context, UserProvider provider) async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await showDialog<String>(
       context: context,
       builder: (context) => DoctorVisitDialog(
@@ -144,9 +146,9 @@ class _DoctorVisitContainerState extends State<DoctorVisitContainer> {
     if (result != null) {
       try {
         await provider.updateDoctorVisits(result);
-        Utils().toastMessage('Next Visit updated successfully!');
+        Utils().toastMessage(l10n.nextVisitUpdated);
       } catch (e) {
-        Utils().toastMessage('Failed to update Next Visit');
+        Utils().toastMessage(l10n.failedToUpdateNextVisit);
       }
     }
   }

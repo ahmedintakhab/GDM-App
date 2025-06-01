@@ -23,6 +23,9 @@ class _WeightInputFieldState extends State<WeightInputField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Weight Input Field
+          _buildWeightField(),
+          const SizedBox(height: 8),
           // Container for Radio Buttons with same padding as TextFormField
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -63,9 +66,7 @@ class _WeightInputFieldState extends State<WeightInputField> {
               },
             ),
           ),
-          const SizedBox(height: 8),
-          // Weight Input Field
-          _buildWeightField(),
+
         ],
       ),
     );

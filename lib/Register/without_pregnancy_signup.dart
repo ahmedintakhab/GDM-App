@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gdm_app/Register/login_screen.dart';
+import 'package:gdm_app/Home/home_main_screen.dart';
 import 'package:gdm_app/Register/weight_input_field.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class WithoutPregnancySignup extends StatefulWidget {
   final String selectedOption;
@@ -22,7 +24,6 @@ final _formKey = GlobalKey<FormState>();
 class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
   bool loading =false;
   final  _ageController = TextEditingController();
-  final  _genderController = TextEditingController();
   final  _heightController = TextEditingController();
   final  _ethnicityController = TextEditingController();
   final  _diabetesController = TextEditingController();
@@ -30,13 +31,15 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
   final  _hypertensionController = TextEditingController();
   final _weightController = TextEditingController();
   final ValueNotifier<String> _selectedUnit = ValueNotifier<String>('kg');
+  AppLocalizations? _l10n; // Store AppLocalizations instance
+
   // String phoneNumber = '';
+  String? _selectedGender; // To store selected gender (Male or Female)
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
   @override
   void dispose() {
     _ageController.dispose();
-    _genderController.dispose();
     _heightController.dispose();
     _ethnicityController.dispose();
     _diabetesController.dispose();
@@ -49,6 +52,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
 
   @override
   Widget build(BuildContext context) {
+    _l10n = AppLocalizations.of(context); // Initialize _l10n
     print("Check the selected option: ${widget.selectedOption}");
     return Scaffold(
       body: SafeArea(
@@ -60,9 +64,9 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children:  [
                   Text(
-                    'Tell us about yourself',
+                    _l10n!.tellUsAboutYourself,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -70,7 +74,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Your individual parameters are important for\nthe in-depth personalization.',
+                    _l10n!.personalizationMessage,
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
@@ -89,43 +93,50 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // CustomTextFormField(
-                      //   controller: _nameController,
-                      //   hintText: 'Enter your name',
-                      //   validator: (value) => value?.isEmpty ?? true ? 'Please enter name' : null,
-                      // ),
-                      // SizedBox(height: 16),
-                      //
-                      // CustomTextFormField(
-                      //   controller: _emailController,
-                      //   hintText: 'Enter your email',
-                      //   validator: (value) => value?.isEmpty ?? true ? 'Please enter email' : null,
-                      // ),
-                      // SizedBox(height: 16),
-                      // CustomTextFormField(
-                      //   controller: _passwordController,
-                      //   hintText: 'Enter your password',
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return 'Please enter password';
-                      //     } else if (value.length < 6) {
-                      //       return 'Password must be at least 6 characters';
-                      //     }
-                      //     return null;
-                      //   },
-                      // ),
 
-                      SizedBox(height: 16),
-                      // Gender Selection
-                      CustomTextFormField(
-                        controller: _genderController,
-                        hintText: 'Male or Female',
-                        validator: (value) {
-                          // if (value == null || value.isEmpty) {
-                          //   return 'Please enter your gender';
-                          // }
-                          return null;
-                        },
+                      // Gender Selection (Radio Buttons)
+                       Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          _l10n!.genderLabel,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 1, right: 70),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: RadioListTile<String>(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(_l10n!.maleOption),
+                                value: 'Male',
+                                groupValue: _selectedGender,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedGender = value;
+                                  });
+                                },
+                              ),
+                            ),
+                            Flexible(
+                              child: RadioListTile<String>(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(_l10n!.femaleOption),
+                                value: 'Female',
+                                groupValue: _selectedGender,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedGender = value;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 16),
                       // Weight Input
@@ -137,7 +148,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       // Age Input
                       CustomTextFormField(
                         controller: _ageController,
-                        hintText: 'Enter your age',
+                        hintText: _l10n!.ageLabel,
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           // if (value == null || value.isEmpty) {
@@ -150,7 +161,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       // Height Input
                       CustomTextFormField(
                         controller: _heightController,
-                        hintText: 'Enter your height',
+                        hintText: _l10n!.heightLabel,
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           // if (value == null || value.isEmpty) {
@@ -163,7 +174,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       // Ethnicity
                       CustomTextFormField(
                         controller: _ethnicityController,
-                        hintText: 'Enter your Ethnicity',
+                        hintText: _l10n!.ethnicityLabel,
                         validator: (value) {
                           // if (value == null || value.isEmpty) {
                           //   return 'Please enter your Ethnicity';
@@ -175,7 +186,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       // Diabetes
                       CustomTextFormField(
                         controller: _diabetesController,
-                        hintText: 'Enter your Diabetes',
+                        hintText: _l10n!.diabetesLabel,
                         validator: (value) {
                           // if (value == null || value.isEmpty) {
                           //   return 'Please enter your diabetes';
@@ -187,7 +198,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       // Waist field
                       CustomTextFormField(
                         controller: _waistController,
-                        hintText: 'Enter your waist',
+                        hintText: _l10n!.waistLabel,
                         keyboardType: TextInputType.phone,
                         validator: (value) {
                           // if (value == null || value.isEmpty) {
@@ -200,7 +211,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       // Hypertension
                       CustomTextFormField(
                         controller: _hypertensionController,
-                        hintText: 'History of hypertension',
+                        hintText: _l10n!.hypertensionLabel,
                         validator: (value) {
                           // if (value == null || value.isEmpty) {
                           //   return 'Please enter your hypertension';
@@ -236,7 +247,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                         // 'name': _nameController.text,
                         // 'email': _emailController.text,
                         // 'phone Number': phoneNumber,
-                        'gender': _genderController.text,
+                        'gender': _selectedGender,
                         'age': _ageController.text,
                         'height': _heightController.text,
                         'ethnicity': _ethnicityController.text,
@@ -250,27 +261,54 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                       // _nameController.clear();
                       // _emailController.clear();
                       // _passwordController.clear();
-                      _genderController.clear();
                       _ageController.clear();
                       _heightController.clear();
                       _ethnicityController.clear();
                       _diabetesController.clear();
                       _waistController.clear();
                       _hypertensionController.clear();
+                      setState(() {
+                        _selectedGender = null; // Clear gender selection
+                      });
 
                       //Show success toast
-                      Utils().toastMessage('Personal information saved successfully!');
+                      Utils().toastMessage(_l10n!.personalInfoSaved);
                       // Navigate only if validation is successful
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginScreen(reminderService: widget.reminderService)),
+                        MaterialPageRoute(builder: (context) => HomeScreen(reminderService: widget.reminderService)),
                       );
                     }
                     else {
-                      Utils().toastMessage('No user is currently logged in');
+                      Utils().toastMessage(_l10n!.noUserLoggedIn);
                     }
-                  } catch (error){
-                    Utils().toastMessage(error.toString());
+                  } catch (error) {
+                    String errorMessage = _l10n!.firestoreGenericError;
+
+                    // Handle specific Firestore errors
+                    if (error is FirebaseException) {
+                      switch (error.code) {
+                        case 'permission-denied':
+                          errorMessage = _l10n!.permissionDenied;
+                          break;
+                        case 'unavailable':
+                          errorMessage = _l10n!.firestoreUnavailable;
+                          break;
+                        case 'not-found':
+                          errorMessage = _l10n!.notFound;
+                          break;
+                        case 'cancelled':
+                          errorMessage = _l10n!.operationCancelled;
+                          break;
+                        case 'deadline-exceeded':
+                          errorMessage = _l10n!.deadlineExceeded;
+                          break;
+                        default:
+                          errorMessage = _l10n!.firestoreGenericError;
+                      }
+                    }
+
+                    Utils().toastMessage(errorMessage);
                   } finally {
                     setState(() {
                       loading = false;
@@ -278,7 +316,7 @@ class _WithoutPregnancySignupState extends State<WithoutPregnancySignup> {
                   }
                 }
               },
-              buttonText: 'Submit',
+              buttonText: _l10n!.submit,
               loading: loading,
             ),
             const SizedBox(height: 20),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class DueDateDialogBox extends StatefulWidget {
   final String initialDueDate;
@@ -62,6 +64,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
       shape: RoundedRectangleBorder(
@@ -82,7 +85,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Set Due Date',
+                  l10n.setDueDate,
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.bold,
@@ -94,7 +97,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
                 TextFormField(
                   controller: _lmpController,
                   decoration: InputDecoration(
-                    hintText: 'Last Menstrual Period (LMP)',
+                    hintText: l10n.lmpLabel,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.r),
                     ),
@@ -105,7 +108,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
                     ),
                   ),
                   validator: (value) =>
-                  value?.isEmpty ?? true ? 'Please enter LMP' : null,
+                  value?.isEmpty ?? true ? l10n.pleaseEnterLMP : null,
                   readOnly: true,
                   onTap: () => _selectDate(context),
                 ),
@@ -114,7 +117,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
                 TextFormField(
                   controller: _dueDateController,
                   decoration: InputDecoration(
-                    hintText: 'Expected Due Date (Read only)',
+                    hintText: l10n.dueDateLabel,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.r),
                     ),
@@ -125,7 +128,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
                     ),
                   ),
                   validator: (value) => value?.isEmpty ?? true
-                      ? 'Please enter LMP to calculate'
+                      ? l10n.pleaseEnterLMP
                       : null,
                   readOnly: true,
                 ),
@@ -147,7 +150,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
                           ),
                           onPressed: () => Navigator.of(context).pop(false),
                           child: Text(
-                            'Back',
+                            l10n.back,
                             style: TextStyle(
                               fontSize: 16.sp,
                               color: Colors.black,
@@ -179,7 +182,7 @@ class _DueDateDialogBoxState extends State<DueDateDialogBox> {
                             }
                           },
                           child: Text(
-                            'Update',
+                            l10n.update,
                             style: TextStyle(
                               fontSize: 16.sp,
                               color: Colors.white,

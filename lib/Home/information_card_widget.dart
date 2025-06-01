@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class InformationCardWidget extends StatelessWidget {
   final VoidCallback onTap;
@@ -10,6 +12,7 @@ class InformationCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -25,7 +28,7 @@ class InformationCardWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Gestational Diabetes Mellitus (GDM)",
+                  l10n.gdm,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -39,7 +42,7 @@ class InformationCardWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "What You Need to Know",
+              l10n.whatYouNeedToKnow,
               style: TextStyle(
                 color: Colors.grey[600],
               ),

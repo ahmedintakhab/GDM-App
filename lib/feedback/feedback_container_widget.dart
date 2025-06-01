@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class FeedbackContainerWidget extends StatelessWidget {
   final VoidCallback onTap;
@@ -10,6 +12,7 @@ class FeedbackContainerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -25,7 +28,7 @@ class FeedbackContainerWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Feedback",
+                  l10n.feedback,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -39,7 +42,7 @@ class FeedbackContainerWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Give your feedback",
+              l10n.giveFeedback,
               style: TextStyle(
                 color: Colors.grey[600],
               ),

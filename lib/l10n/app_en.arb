@@ -1,0 +1,1417 @@
+{
+  "appTitle": "GDM Firebase",
+  "login": "Login",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "pleaseEnterEmail": "Enter the email",
+  "pleaseEnterPassword": "Enter the password",
+  "loginSuccess": "User Login Successfully!",
+  "loginfailedTryAgain": "Login failed. Please try again.",
+  "userNotFound": "No user found for this email.",
+  "wrongPassword": "Incorrect password. Please try again.",
+  "invalidEmail": "Invalid email format. Please enter a valid email.",
+  "userDisabled": "This account has been disabled.",
+  "tooManyRequests": "Too many login attempts. Please try again later.",
+  "invalidCredential": "Invalid credentials. Please check your email and password.",
+  "operationNotAllowed": "Email/password login is not enabled.",
+  "genericError": "An unexpected error occurred. Please try again.",
+  "signUpPrompt": "Don't have an account? Sign up",
+  "forgotPassword": "Forgot password?",
+  "signUp": "Sign Up",
+  "createAccount": "Create an Account!",
+  "nameLabel": "Name",
+  "pleaseEnterName": "Please enter your name",
+  "pleaseEnterConfirmPassword": "Enter the confirm password",
+  "passwordsDoNotMatch": "Passwords do not match!",
+  "emailAlreadyInUse": "Email already exists! Please try another email.",
+  "weakPassword": "Password is too weak. Please use a stronger password.",
+  "signUpSuccess": "User successfully registered!",
+  "permissionDenied": "Permission denied. Please check your access rights.",
+  "firestoreUnavailable": "Firestore service is unavailable. Please try again later.",
+  "notFound": "Requested document or collection not found.",
+  "operationCancelled": "Operation was cancelled. Please try again.",
+  "deadlineExceeded": "Operation timed out. Please try again.",
+  "firestoreGenericError": "Failed to save data. Please try again.",
+  "noUserLoggedIn": "No user is currently logged in",
+  "tellUsAboutYourself": "Tell us about yourself",
+  "personalizationMessage": "Your individual parameters are important for\nthe in-depth personalization.",
+  "genderLabel": "Gender",
+  "maleOption": "Male",
+  "femaleOption": "Female",
+  "weightLabel": "Weight",
+  "pleaseEnterWeight": "Please enter your weight",
+  "weightInKg": "Enter your weight in kg",
+  "weightInLbs": "Enter your weight in lbs",
+  "kgUnit": "kg",
+  "lbsUnit": "lbs",
+  "ageLabel": "Enter your age",
+  "heightLabel": "Enter your height",
+  "ethnicityLabel": "Enter your Ethnicity",
+  "diabetesLabel": "Enter your Diabetes",
+  "waistLabel": "Enter your waist",
+  "hypertensionLabel": "History of hypertension",
+  "submit": "Submit",
+  "personalInfoSaved": "Personal information saved successfully!",
+  "welcomeToGDMCareHub": "Welcome to GDMCare+ Hub",
+  "welcomeToGDMCareHubDescription": "Welcome to GDMCare+ Hub – your go-to platform for managing diabetes in pregnancy and empowering everyone with diabetes awareness!",
+  "understandingDiabetes": "Understanding Diabetes",
+  "understandingDiabetesDescription": "Diabetes is a chronic condition where the body struggles to control blood sugar levels.",
+  "type2Diabetes": "Type 2 Diabetes",
+  "type2DiabetesDescription": "Type 2 diabetes is the most common form, often linked to poor diet and lack of exercise.",
+  "risksOfGestationalDiabetes": "Risks of Gestational Diabetes",
+  "risksOfGestationalDiabetesDescription": "It increases the risk of complications for both mother and baby, and future Type 2 diabetes.",
+  "selectOption": "Select Option",
+  "diabetesTestDate": "When was the diabetes test done?",
+  "phoneLabel": "Phone Number",
+  "timeLabel": "Time",
+  "amLabel": "am",
+  "pmLabel": "pm",
+  "confirm": "Confirm",
+  "userSelection": "User Selection",
+  "chooseOption": "Choose an option to navigate smoothly!",
+  "iAm": "I am",
+  "pregnant": "Pregnant",
+  "notPregnant": "Not Pregnant",
+  "doctor": "Doctor",
+  "pleaseSelectOption": "Please select an option",
+  "next": "Next",
+  "pregnancyRegistration": "Pregnancy Registration",
+  "lmpLabel": "Last Menstrual Period (LMP)",
+  "dueDateLabel": "Expected Due Date (Read only)",
+  "pleaseEnterLMP": "Please enter LMP",
+  "pleaseEnterLMPToCalculate": "Please enter LMP to calculate",
+  "diabetesTestLabel": "Did you have a test for diabetes during this pregnancy?",
+  "yes": "Yes",
+  "no": "No",
+  "notSure": "Not Sure",
+  "weightInKgCm": "Enter your weight (kg)",
+  "heightInCm": "Enter your height (cm)",
+  "familyHistoryDiabetes": "Family History of Type 2 Diabetes",
+  "numberOfPregnancies": "Number of Pregnancies",
+  "numberOfDeliveries": "Number of Previous Deliveries",
+  "numberOfMiscarriages": "Number of Miscarriages",
+  "numberOfStillbirths": "Number of Stillbirths",
+  "numberOfChildrenAlive": "Number of Children Alive",
+  "back": "Back",
+  "pregnancyDiagnosis": "Pregnancy Diagnosis",
+  "q1GdmThisPregnancy": "1. Have you been diagnosed with GDM during this pregnancy?",
+  "q2HypertensionThisPregnancy": "2. Have you been diagnosed with hypertension during this pregnancy?",
+  "q3GdmPreviousPregnancies": "3. Have you been diagnosed with GDM during previous pregnancies?",
+  "q4HypertensionPreviousPregnancies": "4. Have you been diagnosed with hypertension during previous pregnancies?",
+  "q5Baby4kgOrMore": "5. Have you had a baby that weighed 4kg or more?",
+  "q6CaesareanSection": "6. Have you had Caesarean Section (CS) before?",
+  "pregnancyInfoSaved": "Pregnancy information saved successfully!",
+  "measurementUnitsQuestion": "What measurement units do you use?",
+    "mgDlUnit": "mg/dl",
+    "mmolLUnit": "mmol/l",
+    "pleaseSelectUnit": "Please select a unit",
+    "logoutConfirmation": "Are you sure you want to logout?",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "home": "Home",
+    "notification": "Notification",
+    "reminder": "Reminder",
+    "meals": "Meals",
+    "profile": "Profile",
+    "doctorCheckUp": "Doctor Check up",
+    "lastVisit": "Last Visit",
+    "notAvailable": "Not available",
+    "nextVisit": "Next Visit",
+    "notScheduled": "Not scheduled",
+    "nextVisitUpdated": "Next Visit updated successfully!",
+    "failedToUpdateNextVisit": "Failed to update Next Visit",
+    "sunday": "Sun",
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "hiLoading": "Hi, Loading...",
+    "glucose": "Glucose",
+    "glucoseWeeklyAvg": "Glucose, Weekly Avg",
+    "gdm": "Gestational Diabetes Mellitus (GDM)",
+    "whatYouNeedToKnow": "What You Need to Know",
+    "dueDateUpdated": "Due date updated successfully!",
+    "failedToUpdateDueDate": "Failed to update due date",
+    "setDueDate": "Set due date",
+    "noDueDateSet": "No due date set",
+    "dueDatePassed": "Due date passed",
+    "gdmTestDone": "GDM test marked as done!",
+    "failedToMarkGdmTest": "Failed to mark GDM test as done",
+    "markGdmTestDone": "Mark GDM Test as Done",
+    "errorLoadingNotifications": "Error loading notifications:",
+    "noNotificationsAvailable": "No notifications available",
+    "deleteAll": "Delete all",
+    "allNotificationsDeleted": "All notifications deleted",
+    "errorDeletingNotifications": "Error deleting notifications:",
+    "newNotification": "New",
+    "steps": "steps",
+    "notWalking": "Not walking. Variance:",
+    "stepDetected": "Step detected! Variance:",
+    "initializing": "Initializing...",
+    "changePassword": "Change Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "pleaseEnterPassword": "Please enter a password",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "pleaseConfirmPassword": "Please confirm your password",
+    "passwordUpdated": "Password updated successfully",
+    "failedToUpdatePassword": "Failed to update password:",
+    "editProfile": "Edit Profile",
+      "updateProfile": "Update Profile",
+      "profileUpdated": "Profile updated successfully",
+      "failedToUpdateProfile": "Failed to update profile:",
+      "feedbackSurvey": "Feedback Survey",
+      "impact": "Impact",
+      "feedback": "FeedBack",
+      "invalidDate": "Invalid Date",
+      "left": "left",
+      "dueThisWeek": "Due this week",
+      "expectedDueDate": "Expected due date",
+      "perceivedUsefulness": "Perceived Usefulness",
+      "perceivedEaseOfUse": "Perceived Ease of Use",
+      "userControl": "User Control",
+      "feedbackQ1": "I think the App would be a positive addition for UAE population/ pregnant women/ Physicians.",
+      "feedbackQ2": "I think this App would improve the Quality of Life of GDM patients.",
+      "feedbackQ3": "This App is an important part of meeting my information needs related to GDM.",
+      "feedbackQ4": "Using this App makes it easier to get info on GDM.",
+      "feedbackQ5": "Using this App enables me to self-assess my GDM risk.",
+      "feedbackQ6": "Using this App makes it more likely that I get screened for GDM on time.",
+      "feedbackQ7": "I am satisfied with this App for gaining GDM knowledge.",
+      "feedbackQ8": "I am satisfied with this App for self-management of GDM or GDM risk factors.",
+      "feedbackQ9": "Using this App increases my ability to monitor my dietary intake.",
+      "feedbackQ10": "Using this App increases my ability to maintain physical activity.",
+      "feedbackQ11": "I am able to do self-monitoring of blood sugar using this App.",
+      "feedbackQ12": "As a physician I find the App’s info on GDM Screening and Diagnosis useful.",
+      "feedbackQ13": "I am comfortable with my ability to use this App.",
+      "feedbackQ14": "Learning to operate this App is easy for me.",
+      "feedbackQ15": "It is easy for me to become skillful at using this App.",
+      "feedbackQ16": "I find this App easy to use.",
+      "feedbackQ17": "I can always remember how to log on to and use this App.",
+      "feedbackQ18": "The app rarely crashes or causes problems on my phone.",
+      "feedbackQ19": "Whenever I make a mistake using this App, I recover easily and quickly.",
+      "feedbackQ20": "The information (such as on-line help, on-screen messages and other documentation) provided with this App is clear.",
+      "submitFeedback": "Submit Feedback",
+      "logoutSuccess": "User successfully Logout!",
+      "failedToLogout": "Failed to logout:",
+      "reminders": "Reminders",
+      "weightManagement": "Weight Management",
+      "mealPlan": "Meal plan",
+      "myMeals": "My meals",
+      "loading": "loading",
+      "you": "You",
+      "gdmAI": "GDM AI",
+      "typing": "Typing...",
+      "typeMessage": "Type a message...",
+      "pleaseEnterQuestion": "Please enter a question",
+      "failedToGetResponse": "Failed to get response:",
+      "updateDoctorVisits": "Update Doctor Visits",
+      "nextVisitDate": "Next Visit Date",
+      "pleaseEnterDate": "Please enter date",
+      "setDueDate": "Set Due Date",
+      "update": "Update",
+      "giveFeedback": "Give feedback",
+      "question": "Question",
+      "agree": "Agree",
+      "disagree": "Disagree",
+      "success": "Success!!",
+      "feedbackAdded": "Your feedback added Successfully!",
+      "continueButton": "Continue",
+      "weightHistory": "Weight History",
+      "score": "Score",
+      "questionAboutGDM": "Question about GDM",
+      "glucoseTitle": "GLUCOSE",
+        "selectTimeHint": "Select time (HH:mm)",
+        "selectDateHint": "Select date (yyyy-MM-dd)",
+        "valueHint": "Value",
+        "pleaseSelectTime": "Please select time",
+        "pleaseSelectDate": "Please select date",
+        "glucoseLevel": "Glucose level",
+        "beforeBreakfast": "Before Breakfast",
+        "afterBreakfast": "After Breakfast",
+        "beforeLunch": "Before Lunch",
+        "afterLunch": "After Lunch",
+        "beforeDinner": "Before Dinner",
+        "afterDinner": "After Dinner",
+        "save": "Save",
+        "invalidGlucoseValue": "Please enter a valid glucose value!",
+        "glucoseDataAdded": "Successfully added glucose data!",
+        "userNotFound": "User not found in any collection!",
+        "mmolLUnit": "mmol/L",
+        "glucoseSummaryReport": "Glucose Summary Report",
+        "generatedOn": "Generated on:",
+        "date": "Date",
+        "time": "Time",
+        "reading": "Reading",
+        "mealContext": "Meal Context",
+        "pdfGenerated": "PDF generated and shared successfully!",
+        "errorGeneratingPdf": "Error generating PDF:",
+        "glucoseSummary": "Glucose Summary",
+        "errorFetchingGlucose": "Error fetching glucose data:",
+        "downloadPdf": "Download PDF",
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "monthlyAvgBloodGlucose": "Monthly Avg Blood Glucose",
+        "monthGlucoseLevels": "MONTH GLUCOSE LEVELS",
+        "yourGlucose": "Your glucose",
+        "retrying": "Retrying...",
+          "retry": "Retry",
+          "todayAvgBloodGlucose": "Today's Avg Blood Glucose",
+          "todayGlucoseLevels": "TODAY'S GLUCOSE LEVELS",
+          "glucoseButton": "Glucose",
+          "summaryButton": "Summary",
+          "addGlucoseTooltip": "Add Glucose",
+          "viewGlucoseSummaryTooltip": "View Glucose Summary",
+          "dataLoadedSuccess": "Data loaded successfully",
+          "failedToLoadData": "Failed to load data after",
+          "glucoseDataAdded": "Glucose data added",
+          "weeklyAvgBloodGlucose": "Weekly Avg Blood Glucose",
+          "glucoseWeekAvg": "Glucose, week avg",
+            "helpCenter": "Help Center",
+            "searchByTopics": "Search by topics",
+            "gdmAssistanceHub": "GDM Assistance + HUB",
+            "whatIsGDM": "What is GDM?",
+            "whatIsGDMDescription": "Gestational Diabetes Mellitus (GDM) is a condition where a pregnant woman develops high blood sugar levels. It usually occurs during the second or third trimester and resolves after delivery. It requires careful monitoring to ensure the health of both mother and baby.",
+            "whoIsAtRisk": "Who is at Risk?",
+            "whoIsAtRiskDescription": "You are at higher risk if you:\n1. Have a family history of diabetes\n2. Are overweight/obese or have a sedentary lifestyle\n3. Are older than 35 years\n4. Have had GDM in a previous pregnancy\n5. Have polycystic ovary syndrome (PCOS)\n6. Belong to an ethnic group with a high diabetes risk (including Middle Eastern populations)",
+            "signsAndSymptoms": "Signs & Symptoms",
+            "signsAndSymptomsDescription": "Most women do not have symptoms, so screening is essential. Some may experience:\n● Increased thirst and frequent urination\n● Fatigue\n● Blurred vision",
+            "screeningAndDiagnosis": "Screening & Diagnosis",
+            "screeningAndDiagnosisDescription": "In the UAE:\n1. Screening for GDM is recommended between 24-28 weeks of pregnancy.\n2. A glucose tolerance test (OGTT) is used for diagnosis.",
+            "complicationsOfGDM": "Complications of GDM",
+            "complicationsOfGDMDescription": "⚠️ If left uncontrolled, GDM can lead to:\n1. High birth weight in babies (macrosomia)\n2. Preterm birth or C-section delivery\n3. Preeclampsia (high blood pressure during pregnancy)\n4. Increased risk of Type 2 Diabetes for both mother & child later in life",
+            "managingGDM": "Managing GDM",
+            "managingGDMDescription": "1 Healthy eating\n. Follow a balanced meal plan with whole grains, lean protein, and fiber\n2 Regular physical activity\n. Aim for 30 minutes of moderate exercise (e.g., walking)\n3 Blood sugar monitoring\n. Check your glucose levels as advised by your doctor\n4 Medications\n. If needed, insulin or other treatments may be prescribed",
+            "postpartumCare": "Postpartum Care",
+            "postpartumCareDescription": "1. GDM usually resolves after birth, but women with GDM have a 50% risk of developing Type 2 Diabetes in the future\n2. Breastfeeding helps regulate blood sugar and lowers future diabetes risk\n3. A follow-up diabetes test is recommended 6-12 weeks postpartum and every 1-3 years thereafter",
+            "preventionOfGDM": "Prevention of GDM – UAE-Specific Tips",
+            "preventionOfGDMDescription": "1. Healthy Eating for GDM Prevention\n● Choose Nutrient-Rich UAE-Friendly Foods\n. Opt for whole-wheat Arabic bread, brown rice, quinoa, and oats instead of white bread or refined grains\n. Include grilled fish (like hammour or salmon), chicken, lean lamb, and plant-based proteins like lentils, chickpeas, and fava beans (foul)\n. Use olive oil and nuts (almonds, walnuts, pistachios) instead of excessive butter or ghee\n. Enjoy local fiber-rich options like dates (in moderation), cucumbers, tomatoes, okra, and zucchini\n. Choose low-fat Laban, Greek yogurt, or Ayran instead of full-fat dairy\n● Foods to Limit\n. Limit high-carb Emirati dishes (e.g., excess white rice in biryani or Harees – opt for whole-grain versions)\n. Avoid sugary beverages (e.g., Karak tea with sugar, soft drinks, fruit juices – replace with unsweetened tea or infused water)\n. Reduce desserts and sweets (e.g., Luqaimat, Baklava – enjoy in moderation and opt for healthier alternatives like dates with nuts)\n2. Staying Active in the UAE Climate\n● Exercise Tips Despite the Heat\n. Walk indoors in malls (e.g., Mall of the Emirates, Yas Mall) or indoor gyms\n. Try swimming, a great low-impact option for pregnancy-friendly fitness\n. Take evening outdoor walks at parks like Al Barsha Pond Park, Safa Park, or Corniche when it’s cooler\n. Join prenatal yoga or Pilates classes, offered at many gyms and maternity centers with women-only options\n3. Managing Cultural & Social Eating Habits\n● Smart Choices at Gatherings\n. Practice portion control: enjoy small portions of rice and bread, filling up on grilled meats and vegetables\n. Make healthy swaps: replace fried samosas with baked versions or grilled meats\n. Choose balanced Iftar meals: avoid excessive sweets after Iftar; opt for fruit, Laban, or nuts instead\n. Stay hydrated: drink plenty of water instead of sweetened juices",
+            "understandingGDM": "Understanding Gestational Diabetes (GDM)",
+            "understandingGDMDescription": "A comprehensive overview of GDM, its causes, risk factors, and how it affects pregnancy.",
+            "gdmAndPregnancy": "GDM and Pregnancy",
+            "gdmAndPregnancyDescription": "Key facts about GDM, screening processes, and long-term health implications.",
+            "addReminder": "Add Reminder",
+              "selectLabel": "Select label",
+              "selectReminderLabel": "Select Reminder label",
+              "glucoseReading": "Glucose Reading",
+              "logCalories": "Log Calories",
+              "weightCheck": "Weight Check",
+              "stepCount": "Step Count",
+              "gdmFacts": "GDM Facts",
+              "pleaseFillAllFields": "Please fill all fields",
+              "ringOnce": "Ring Once",
+              "customFrequency": "Custom",
+              "everyday": "Everyday",
+              "weekdays": "Weekdays",
+              "monToFri": "Mon to Fri",
+              "repeat": "Repeat",
+              "daySun": "S",
+              "dayMon": "M",
+              "dayTue": "T",
+              "dayWed": "W",
+              "dayThu": "T",
+              "dayFri": "F",
+              "daySat": "S",
+              "repeatPrefix": "Repeat:",
+              "reminderAddedSuccess": "Reminder added successfully!",
+              "failedToAddReminder": "Failed to add reminder:",
+              "allReminders": "All Reminders",
+              "noRemindersYet": "No reminders yet",
+              "addReminderToStart": "Add a reminder to get started",
+              "reminderDeletedSuccess": "Reminder deleted successfully",
+              "failedToDeleteReminder": "Failed to delete reminder:",
+              "reminderActivated": "Reminder activated",
+              "reminderDeactivated": "Reminder deactivated",
+              "failedToUpdateReminder": "Failed to update reminder:",
+              "deleteReminder": "Delete Reminder",
+              "confirmDeleteReminder": "Are you sure you want to delete?",
+              "delete": "Delete",
+              "gdmTestReminder": "GDM Test Reminder",
+              "gdmTestReminderMessage": "Reminder to go and test for diabetes at the hospital (between 24 to 28 weeks)?",
+              "thanksForReminder": "Thanks for the reminder",
+              "iHaveDoneIt": "I have done it",
+              "snoozeReminder": "Snooze Reminder",
+              "snoozeFor3Days": "Snooze for 3 days",
+              "snoozeFor1Week": "Snooze for 1 week",
+              "addWeight": "Add Weight",
+                "pleaseEnterDateAndWeight": "Please enter both date and weight",
+                "weightDataAddedSuccess": "Weight data successfully added!",
+                "weightDataUpdatedSuccess": "Weight data successfully updated!",
+                "errorAddingWeight": "Error adding weight:",
+                "weightManagement": "Weight Management",
+                "noUserLoggedIn": "No user logged in",
+                "pdfButton": "PDF",
+                "weightButton": "Weight",
+                "downloadPdfTooltip": "Download PDF",
+                "errorFetchingWeightData": "Error fetching weight data:",
+                "weightTrackingReport": "Weight Tracking Report",
+                "generatedOn": "Generated on:",
+                "dateHeader": "Date",
+                "weightHeader": "Weight",
+                "unitHeader": "Unit",
+                "pdfGeneratedSuccess": "PDF generated and shared successfully!",
+                "errorGeneratingPdf": "Error generating PDF:",
+                "noWeightData": "No weight data available",
+                "currentWeight": "Current Weight:",
+                "noWeightDataPastWeek": "No weight data available for the past week",
+                "notApplicable": "N/A",
+
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "@login": {
+    "description": "Text for login title and button"
+  },
+  "@emailLabel": {
+    "description": "Label for email input field"
+  },
+  "@passwordLabel": {
+    "description": "Label for password and confirm password input fields"
+  },
+  "@pleaseEnterEmail": {
+    "description": "Validation message for empty email field"
+  },
+  "@pleaseEnterPassword": {
+    "description": "Validation message for empty password field"
+  },
+  "@loginSuccess": {
+    "description": "Toast message for successful login"
+  },
+  "@userNotFound": {
+    "description": "Error message when no user is found"
+  },
+  "@wrongPassword": {
+    "description": "Error message for incorrect password"
+  },
+  "@invalidEmail": {
+    "description": "Error message for invalid email format"
+  },
+  "@userDisabled": {
+    "description": "Error message for disabled account"
+  },
+  "@tooManyRequests": {
+    "description": "Error message for too many login attempts"
+  },
+  "@invalidCredential": {
+    "description": "Error message for invalid credentials"
+  },
+  "@operationNotAllowed": {
+    "description": "Error message for disabled email/password login"
+  },
+  "@genericError": {
+    "description": "Generic error message for unexpected errors"
+  },
+  "@signUpPrompt": {
+    "description": "Prompt to navigate to sign-up screen"
+  },
+  "@forgotPassword": {
+    "description": "Text for forgot password link"
+  },
+  "@signUp": {
+    "description": "Text for sign-up title, button, and link"
+  },
+  "@createAccount": {
+    "description": "Text encouraging account creation"
+  },
+  "@nameLabel": {
+    "description": "Label for name input field"
+  },
+  "@pleaseEnterName": {
+    "description": "Validation message for empty name field"
+  },
+  "@pleaseEnterConfirmPassword": {
+    "description": "Validation message for empty confirm password field"
+  },
+  "@passwordsDoNotMatch": {
+    "description": "Validation message for mismatched passwords"
+  },
+  "@emailAlreadyInUse": {
+    "description": "Error message for email already in use"
+  },
+  "@weakPassword": {
+    "description": "Error message for weak password"
+  },
+  "@signUpSuccess": {
+    "description": "Toast message for successful sign-up"
+  },
+  "@permissionDenied": {
+    "description": "Error message for Firestore permission denied"
+  },
+  "@firestoreUnavailable": {
+    "description": "Error message for Firestore unavailable"
+  },
+  "@notFound": {
+    "description": "Error message for Firestore document not found"
+  },
+  "@operationCancelled": {
+    "description": "Error message for cancelled Firestore operation"
+  },
+  "@deadlineExceeded": {
+    "description": "Error message for Firestore operation timeout"
+  },
+  "@firestoreGenericError": {
+    "description": "Generic error message for Firestore errors"
+  },
+  "@noUserLoggedIn": {
+    "description": "Error message when no user is logged in"
+  },
+  "@tellUsAboutYourself": {
+    "description": "Title for personal information input screen"
+  },
+  "@personalizationMessage": {
+    "description": "Description for importance of personal information"
+  },
+  "@genderLabel": {
+    "description": "Label for gender selection field"
+  },
+  "@maleOption": {
+    "description": "Option for male gender"
+  },
+  "@femaleOption": {
+    "description": "Option for female gender"
+  },
+  "@weightLabel": {
+    "description": "Label for weight input field"
+  },
+  "@pleaseEnterWeight": {
+    "description": "Validation message for empty weight field"
+  },
+  "@weightInKg": {
+    "description": "Hint text for weight in kilograms"
+  },
+  "@weightInLbs": {
+    "description": "Hint text for weight in pounds"
+  },
+  "@kgUnit": {
+    "description": "Unit label for kilograms"
+  },
+  "@lbsUnit": {
+    "description": "Unit label for pounds"
+  },
+  "@ageLabel": {
+    "description": "Label and validation message for age input field"
+  },
+  "@heightLabel": {
+    "description": "Label and validation message for height input field"
+  },
+  "@ethnicityLabel": {
+    "description": "Label and validation message for ethnicity input field"
+  },
+  "@diabetesLabel": {
+    "description": "Label and validation message for diabetes input field"
+  },
+  "@waistLabel": {
+    "description": "Label and validation message for waist measurement input field"
+  },
+  "@hypertensionLabel": {
+    "description": "Label and validation message for hypertension history input field"
+  },
+  "@submit": {
+    "description": "Label for submit button"
+  },
+  "@personalInfoSaved": {
+    "description": "Toast message for successful personal information save"
+  },
+  "@welcomeToGDMCareHub": {
+    "description": "Title for onboarding welcome slide"
+  },
+  "@welcomeToGDMCareHubDescription": {
+    "description": "Description for onboarding welcome slide"
+  },
+  "@understandingDiabetes": {
+    "description": "Title for onboarding diabetes explanation slide"
+  },
+  "@understandingDiabetesDescription": {
+    "description": "Description for onboarding diabetes explanation slide"
+  },
+  "@type2Diabetes": {
+    "description": "Title for onboarding Type 2 diabetes slide"
+  },
+  "@type2DiabetesDescription": {
+    "description": "Description for onboarding Type 2 diabetes slide"
+  },
+  "@risksOfGestationalDiabetes": {
+    "description": "Title for onboarding gestational diabetes risks slide"
+  },
+  "@risksOfGestationalDiabetesDescription": {
+    "description": "Description for onboarding gestational diabetes risks slide"
+  },
+  "@selectOption": {
+    "description": "Hint text for dropdown or selection field"
+  },
+  "@diabetesTestDate": {
+    "description": "Label for diabetes test date input"
+  },
+  "@phoneLabel": {
+    "description": "Label for phone number input field"
+  },
+  "@timeLabel": {
+    "description": "Label for time input field"
+  },
+  "@amLabel": {
+    "description": "Label for AM time period"
+  },
+  "@pmLabel": {
+    "description": "Label for PM time period"
+  },
+  "@confirm": {
+    "description": "Label for confirm button"
+  },
+  "@userSelection": {
+    "description": "Title for user selection screen"
+  },
+  "@chooseOption": {
+    "description": "Instruction to choose an option"
+  },
+  "@iAm": {
+    "description": "Label for user type selection"
+  },
+  "@pregnant": {
+    "description": "Option for pregnant user"
+  },
+  "@notPregnant": {
+    "description": "Option for not pregnant user"
+  },
+  "@doctor": {
+    "description": "Option for doctor user"
+  },
+  "@pleaseSelectOption": {
+    "description": "Validation message for no option selected"
+  },
+  "@next": {
+    "description": "Label for next button"
+  },
+  "@pregnancyRegistration": {
+    "description": "Title for pregnancy registration screen"
+  },
+  "@lmpLabel": {
+    "description": "Label for last menstrual period input"
+  },
+  "@dueDateLabel": {
+    "description": "Label for expected due date input"
+  },
+  "@pleaseEnterLMP": {
+    "description": "Validation message for empty LMP field"
+  },
+  "@pleaseEnterLMPToCalculate": {
+    "description": "Validation message for due date calculation"
+  },
+  "@diabetesTestLabel": {
+    "description": "Label for diabetes test question"
+  },
+  "@yes": {
+    "description": "Dropdown option for yes"
+  },
+  "@no": {
+    "description": "Dropdown option for no"
+  },
+  "@notSure": {
+    "description": "Dropdown option for not sure"
+  },
+  "@weightInKgCm": {
+    "description": "Hint text for weight in kilograms (specific to pregnancy screen)"
+  },
+  "@heightInCm": {
+    "description": "Hint text for height in centimeters"
+  },
+  "@familyHistoryDiabetes": {
+    "description": "Label for family history of type 2 diabetes"
+  },
+  "@numberOfPregnancies": {
+    "description": "Label for number of pregnancies"
+  },
+  "@numberOfDeliveries": {
+    "description": "Label for number of previous deliveries"
+  },
+  "@numberOfMiscarriages": {
+    "description": "Label for number of miscarriages"
+  },
+  "@numberOfStillbirths": {
+    "description": "Label for number of stillbirths"
+  },
+  "@numberOfChildrenAlive": {
+    "description": "Label for number of children alive"
+  },
+  "@back": {
+    "description": "Label for back button"
+  },
+  "@pregnancyDiagnosis": {
+    "description": "Title for pregnancy diagnosis screen"
+  },
+  "@q1GdmThisPregnancy": {
+    "description": "Question about GDM diagnosis in current pregnancy"
+  },
+  "@q2HypertensionThisPregnancy": {
+    "description": "Question about hypertension diagnosis in current pregnancy"
+  },
+  "@q3GdmPreviousPregnancies": {
+    "description": "Question about GDM diagnosis in previous pregnancies"
+  },
+  "@q4HypertensionPreviousPregnancies": {
+    "description": "Question about hypertension diagnosis in previous pregnancies"
+  },
+  "@q5Baby4kgOrMore": {
+    "description": "Question about baby weighing 4kg or more"
+  },
+  "@q6CaesareanSection": {
+    "description": "Question about previous Caesarean section"
+  },
+  "@pregnancyInfoSaved": {
+    "description": "Toast message for successful pregnancy information save"
+  },
+  "@measurementUnitsQuestion": {
+      "description": "Question about preferred measurement units"
+    },
+    "@mgDlUnit": {
+      "description": "Unit option for mg/dl"
+    },
+    "@mmolLUnit": {
+      "description": "Unit option for mmol/l"
+    },
+    "@pleaseSelectUnit": {
+      "description": "Validation message for no unit selected"
+    },
+    "@logoutConfirmation": {
+      "description": "Confirmation message for logout"
+    },
+    "@cancel": {
+      "description": "Label for cancel button"
+    },
+    "@logout": {
+      "description": "Label for logout button"
+    },
+    "@home": {
+      "description": "Label for home navigation item"
+    },
+    "@notification": {
+      "description": "Label for notification navigation item"
+    },
+    "@reminder": {
+      "description": "Label for reminder navigation item"
+    },
+    "@meals": {
+      "description": "Label for meals navigation item"
+    },
+    "@profile": {
+      "description": "Label for profile navigation item"
+    },
+    "@doctorCheckUp": {
+      "description": "Title for doctor check-up section"
+    },
+    "@lastVisit": {
+      "description": "Label for last doctor visit"
+    },
+    "@notAvailable": {
+      "description": "Message when last visit is not available"
+    },
+    "@nextVisit": {
+      "description": "Label for next doctor visit"
+    },
+    "@notScheduled": {
+      "description": "Message when next visit is not scheduled"
+    },
+    "@nextVisitUpdated": {
+      "description": "Toast message for successful next visit update"
+    },
+    "@failedToUpdateNextVisit": {
+      "description": "Toast message for failed next visit update"
+    },
+    "@sunday": {
+      "description": "Abbreviation for Sunday"
+    },
+    "@monday": {
+      "description": "Abbreviation for Monday"
+    },
+    "@tuesday": {
+      "description": "Abbreviation for Tuesday"
+    },
+    "@wednesday": {
+      "description": "Abbreviation for Wednesday"
+    },
+    "@thursday": {
+      "description": "Abbreviation for Thursday"
+    },
+    "@friday": {
+      "description": "Abbreviation for Friday"
+    },
+    "@saturday": {
+      "description": "Abbreviation for Saturday"
+    },
+    "@hiLoading": {
+      "description": "Greeting while user data is loading"
+    },
+    "@glucose": {
+      "description": "Title for glucose data"
+    },
+    "@glucoseWeeklyAvg": {
+      "description": "Title for weekly average glucose data"
+    },
+    "@gdm": {
+      "description": "Title for Gestational Diabetes Mellitus"
+    },
+    "@whatYouNeedToKnow": {
+      "description": "Title for GDM information section"
+    },
+    "@dueDateUpdated": {
+      "description": "Toast message for successful due date update"
+    },
+    "@failedToUpdateDueDate": {
+      "description": "Toast message for failed due date update"
+    },
+    "@setDueDate": {
+      "description": "Label for setting due date"
+    },
+    "@noDueDateSet": {
+      "description": "Message when no due date is set"
+    },
+    "@dueDatePassed": {
+      "description": "Message when due date has passed"
+    },
+    "@gdmTestDone": {
+      "description": "Toast message for marking GDM test as done"
+    },
+    "@failedToMarkGdmTest": {
+      "description": "Toast message for failed GDM test marking"
+    },
+    "@markGdmTestDone": {
+      "description": "Label for marking GDM test as done"
+    },
+    "@errorLoadingNotifications": {
+      "description": "Error message prefix for loading notifications"
+    },
+    "@noNotificationsAvailable": {
+      "description": "Message when no notifications are available"
+    },
+    "@deleteAll": {
+      "description": "Label for deleting all notifications"
+    },
+    "@allNotificationsDeleted": {
+      "description": "SnackBar message for all notifications deleted"
+    },
+    "@errorDeletingNotifications": {
+      "description": "Error message prefix for deleting notifications"
+    },
+    "@newNotification": {
+      "description": "Label for new notification"
+    },
+    "@steps": {
+      "description": "Label for step count"
+    },
+    "@notWalking": {
+      "description": "Debug message for no walking detected"
+    },
+    "@stepDetected": {
+      "description": "Debug message for step detected"
+    },
+    "@initializing": {
+      "description": "Debug message for initialization"
+    },
+    "@changePassword": {
+      "description": "Title for change password screen"
+    },
+    "@newPassword": {
+      "description": "Label for new password input"
+    },
+    "@confirmNewPassword": {
+      "description": "Label for confirm new password input"
+    },
+    "@pleaseEnterPassword": {
+      "description": "Validation message for empty password field"
+    },
+    "@passwordMinLength": {
+      "description": "Validation message for password length"
+    },
+    "@pleaseConfirmPassword": {
+      "description": "Validation message for empty confirm password field"
+    },
+    "@passwordUpdated": {
+      "description": "SnackBar message for successful password update"
+    },
+    "@failedToUpdatePassword": {
+      "description": "SnackBar message prefix for failed password update"
+    },
+     "@editProfile": {
+        "description": "Title for edit profile screen"
+      },
+      "@updateProfile": {
+        "description": "Button label for updating profile"
+      },
+      "@profileUpdated": {
+        "description": "SnackBar message for successful profile update"
+      },
+      "@failedToUpdateProfile": {
+        "description": "SnackBar message prefix for failed profile update"
+      },
+      "@feedbackSurvey": {
+        "description": "Title for feedback survey screen"
+      },
+      "@impact": {
+        "description": "Heading for impact section in feedback survey"
+      },
+      "@perceivedUsefulness": {
+        "description": "Heading for perceived usefulness section in feedback survey"
+      },
+      "@perceivedEaseOfUse": {
+        "description": "Heading for perceived ease of use section in feedback survey"
+      },
+      "@userControl": {
+        "description": "Heading for user control section in feedback survey"
+      },
+      "@feedbackQ1": {
+        "description": "Feedback question about app's positive addition"
+      },
+      "@feedbackQ2": {
+        "description": "Feedback question about improving quality of life"
+      },
+      "@feedbackQ3": {
+        "description": "Feedback question about meeting GDM information needs"
+      },
+      "@feedbackQ4": {
+        "description": "Feedback question about ease of getting GDM info"
+      },
+      "@feedbackQ5": {
+        "description": "Feedback question about self-assessing GDM risk"
+      },
+      "@feedbackQ6": {
+        "description": "Feedback question about timely GDM screening"
+      },
+      "@feedbackQ7": {
+        "description": "Feedback question about satisfaction with GDM knowledge"
+      },
+      "@feedbackQ8": {
+        "description": "Feedback question about satisfaction with GDM self-management"
+      },
+      "@feedbackQ9": {
+        "description": "Feedback question about monitoring dietary intake"
+      },
+      "@feedbackQ10": {
+        "description": "Feedback question about maintaining physical activity"
+      },
+      "@feedbackQ11": {
+        "description": "Feedback question about self-monitoring blood sugar"
+      },
+      "@feedbackQ12": {
+        "description": "Feedback question about GDM screening info for physicians"
+      },
+      "@feedbackQ13": {
+        "description": "Feedback question about comfort with app usage"
+      },
+      "@feedbackQ14": {
+        "description": "Feedback question about ease of learning app"
+      },
+      "@feedbackQ15": {
+        "description": "Feedback question about becoming skillful with app"
+      },
+      "@feedbackQ16": {
+        "description": "Feedback question about app ease of use"
+      },
+      "@feedbackQ17": {
+        "description": "Feedback question about remembering app usage"
+      },
+      "@feedbackQ18": {
+        "description": "Feedback question about app stability"
+      },
+      "@feedbackQ19": {
+        "description": "Feedback question about error recovery"
+      },
+      "@feedbackQ20": {
+        "description": "Feedback question about clarity of app information"
+      },
+      "@submitFeedback": {
+        "description": "Button label for submitting feedback"
+      },
+      "@logoutSuccess": {
+        "description": "Toast message for successful logout"
+      },
+      "@failedToLogout": {
+        "description": "Toast message prefix for failed logout"
+      },
+      "@reminders": {
+        "description": "Label for reminders menu item"
+      },
+      "@weightManagement": {
+        "description": "Label for weight management menu item"
+      },
+      "@mealPlan": {
+        "description": "Label for meal plan sub-menu item"
+      },
+      "@myMeals": {
+        "description": "Label for my meals sub-menu item"
+      },
+      "@loading": {
+        "description": "Message indicating loading state"
+      },
+      "@you": {
+        "description": "Label for user in chat"
+      },
+      "@gdmAI": {
+        "description": "Label for GDM AI in chat"
+      },
+      "@typing": {
+        "description": "Message indicating typing state"
+      },
+      "@typeMessage": {
+        "description": "Hint text for chat input"
+      },
+      "@pleaseEnterQuestion": {
+        "description": "Validation message for empty chat input"
+      },
+      "@failedToGetResponse": {
+        "description": "SnackBar message prefix for failed chat response"
+      },
+      "@updateDoctorVisits": {
+        "description": "Title for updating doctor visits"
+      },
+      "@nextVisitDate": {
+        "description": "Hint text for next visit date input"
+      },
+      "@pleaseEnterDate": {
+        "description": "Validation message for empty date field"
+      },
+      "@setDueDate": {
+        "description": "Title for setting due date"
+      },
+      "@update": {
+        "description": "Button label for update action"
+      },
+      "@giveFeedback": {
+        "description": "Prompt to give feedback"
+      },
+      "@question": {
+        "description": "Prefix for feedback question number"
+      },
+      "@agree": {
+        "description": "Option for agreeing with feedback question"
+      },
+      "@disagree": {
+        "description": "Option for disagreeing with feedback question"
+      },
+      "@success": {
+        "description": "Title for success dialog"
+      },
+      "@feedbackAdded": {
+        "description": "Message for successful feedback submission"
+      },
+     "@continueButton": {
+        "description": "Button label for continue action"
+      },
+      "@weightHistory": {
+        "description": "Label for Weight History menu item"
+      },
+      "@score": {
+        "description": "Label for Score menu item"
+      },
+      "@questionAboutGDM": {
+        "description": "Label for Question about GDM"
+      },
+      "@glucoseTitle": {
+          "description": "Title for glucose input screen"
+        },
+        "@selectTimeHint": {
+          "description": "Hint text for time selection"
+        },
+        "@selectDateHint": {
+          "description": "Hint text for date selection"
+        },
+        "@valueHint": {
+          "description": "Hint text for glucose value input"
+        },
+        "@pleaseSelectTime": {
+          "description": "Validation message for empty time field"
+        },
+        "@pleaseSelectDate": {
+          "description": "Validation message for empty date field"
+        },
+        "@glucoseLevel": {
+          "description": "Label for glucose level input section"
+        },
+        "@beforeBreakfast": {
+          "description": "Label for before breakfast meal option"
+        },
+        "@afterBreakfast": {
+          "description": "Label for after breakfast meal option"
+        },
+        "@beforeLunch": {
+          "description": "Label for before lunch meal option"
+        },
+        "@afterLunch": {
+          "description": "Label for after lunch meal option"
+        },
+        "@beforeDinner": {
+          "description": "Label for before dinner meal option"
+        },
+        "@afterDinner": {
+          "description": "Label for after dinner meal option"
+        },
+        "@save": {
+          "description": "Button label for saving glucose data"
+        },
+        "@invalidGlucoseValue": {
+          "description": "Toast message for invalid glucose value"
+        },
+        "@glucoseDataAdded": {
+          "description": "Toast message for successful glucose data addition"
+        },
+        "@userNotFound": {
+          "description": "Toast message for user not found"
+        },
+        "@mmolLUnit": {
+          "description": "Unit option for mmol/L"
+        },
+        "@glucoseSummaryReport": {
+          "description": "Title for glucose summary PDF report"
+        },
+        "@generatedOn": {
+          "description": "Prefix for PDF generation date"
+        },
+        "@date": {
+          "description": "Table header for date in PDF and UI"
+        },
+        "@time": {
+          "description": "Table header for time in PDF and UI"
+        },
+        "@reading": {
+          "description": "Table header for glucose reading in PDF and UI"
+        },
+        "@mealContext": {
+          "description": "Table header for meal context in PDF and UI"
+        },
+        "@pdfGenerated": {
+          "description": "Toast message for successful PDF generation"
+        },
+        "@errorGeneratingPdf": {
+          "description": "Toast message prefix for PDF generation error"
+        },
+        "@glucoseSummary": {
+          "description": "Title for glucose summary screen"
+        },
+        "@errorFetchingGlucose": {
+          "description": "Toast message prefix for glucose data fetch error"
+        },
+        "@downloadPdf": {
+          "description": "Button label for downloading PDF"
+        },
+        "@daily": {
+          "description": "Tab label for daily glucose view"
+        },
+        "@weekly": {
+          "description": "Tab label for weekly glucose view"
+        },
+        "@monthly": {
+          "description": "Tab label for monthly glucose view"
+        },
+        "@monthlyAvgBloodGlucose": {
+          "description": "Title for monthly average blood glucose"
+        },
+        "@monthGlucoseLevels": {
+          "description": "Title for month glucose levels"
+        },
+        "@yourGlucose": {
+          "description": "Title for user’s glucose data"
+        },
+        "@retrying": {
+            "description": "Message indicating retry attempt in progress"
+          },
+          "@retry": {
+            "description": "Button label for retry action"
+          },
+          "@todayAvgBloodGlucose": {
+            "description": "Title for today's average blood glucose card"
+          },
+          "@todayGlucoseLevels": {
+            "description": "Title for today's glucose levels chart"
+          },
+          "@glucoseButton": {
+            "description": "Label for glucose floating action button"
+          },
+          "@summaryButton": {
+            "description": "Label for summary floating action button"
+          },
+          "@addGlucoseTooltip": {
+            "description": "Tooltip for add glucose button"
+          },
+          "@viewGlucoseSummaryTooltip": {
+            "description": "Tooltip for view glucose summary button"
+          },
+          "@dataLoadedSuccess": {
+            "description": "Toast message for successful data loading"
+          },
+          "@failedToLoadData": {
+            "description": "Toast message prefix for failed data loading"
+          },
+          "@glucoseDataAdded": {
+            "description": "Toast message for successful glucose data addition"
+          },
+          "@weeklyAvgBloodGlucose": {
+            "description": "Title for weekly average blood glucose card"
+          },
+          "@glucoseWeekAvg": {
+            "description": "Title for weekly glucose average chart"
+          },
+          "@helpCenter": {
+              "description": "Title for help center screen"
+            },
+            "@searchByTopics": {
+              "description": "Hint text for search field"
+            },
+            "@gdmAssistanceHub": {
+              "description": "Title for GDM assistance hub container"
+            },
+            "@whatIsGDM": {
+              "description": "Title for GDM information card"
+            },
+            "@whatIsGDMDescription": {
+              "description": "Description for what is GDM card"
+            },
+            "@whoIsAtRisk": {
+              "description": "Title for who is at risk card"
+            },
+            "@whoIsAtRiskDescription": {
+              "description": "Description for who is at risk card"
+            },
+            "@signsAndSymptoms": {
+              "description": "Title for signs and symptoms card"
+            },
+            "@signsAndSymptomsDescription": {
+              "description": "Description for signs and symptoms card"
+            },
+            "@screeningAndDiagnosis": {
+              "description": "Title for screening and diagnosis card"
+            },
+            "@screeningAndDiagnosisDescription": {
+              "description": "Description for screening and diagnosis card"
+            },
+            "@complicationsOfGDM": {
+              "description": "Title for complications of GDM card"
+            },
+            "@complicationsOfGDMDescription": {
+              "description": "Description for complications of GDM card"
+            },
+            "@managingGDM": {
+              "description": "Title for managing GDM card"
+            },
+            "@managingGDMDescription": {
+              "description": "Description for managing GDM card"
+            },
+            "@postpartumCare": {
+              "description": "Title for postpartum care card"
+            },
+            "@postpartumCareDescription": {
+              "description": "Description for postpartum care card"
+            },
+            "@preventionOfGDM": {
+              "description": "Title for prevention of GDM card"
+            },
+            "@preventionOfGDMDescription": {
+              "description": "Description for prevention of GDM card"
+            },
+            "@understandingGDM": {
+              "description": "Title for understanding GDM container"
+            },
+            "@understandingGDMDescription": {
+              "description": "Description for understanding GDM container"
+            },
+            "@gdmAndPregnancy": {
+              "description": "Title for GDM and pregnancy container"
+            },
+            "@gdmAndPregnancyDescription": {
+              "description": "Description for GDM and pregnancy container"
+            },
+            "@addReminder": {
+                "description": "Title for add reminder screen and button"
+              },
+              "@selectLabel": {
+                "description": "Hint text for reminder label dropdown"
+              },
+              "@selectReminderLabel": {
+                "description": "Label for reminder label dropdown"
+              },
+              "@glucoseReading": {
+                "description": "Dropdown option for glucose reading reminder"
+              },
+              "@logCalories": {
+                "description": "Dropdown option for log calories reminder"
+              },
+              "@weightCheck": {
+                "description": "Dropdown option for weight check reminder"
+              },
+              "@stepCount": {
+                "description": "Dropdown option for step count reminder"
+              },
+              "@gdmFacts": {
+                "description": "Dropdown option for GDM facts reminder"
+              },
+              "@pleaseFillAllFields": {
+                "description": "Validation message for incomplete reminder form"
+              },
+              "@ringOnce": {
+                "description": "Frequency option for one-time reminder"
+              },
+              "@customFrequency": {
+                "description": "Frequency option for custom reminder schedule"
+              },
+              "@everyday": {
+                "description": "Frequency option for daily reminders"
+              },
+              "@weekdays": {
+                "description": "Frequency option for weekday reminders"
+              },
+              "@monToFri": {
+                "description": "Frequency option for Monday to Friday reminders"
+              },
+              "@repeat": {
+                "description": "Section title for repeat frequency"
+              },
+              "@daySun": {
+                "description": "Abbreviation for Sunday"
+              },
+              "@dayMon": {
+                "description": "Abbreviation for Monday"
+              },
+              "@dayTue": {
+                "description": "Abbreviation for Tuesday"
+              },
+              "@dayWed": {
+                "description": "Abbreviation for Wednesday"
+              },
+              "@dayThu": {
+                "description": "Abbreviation for Thursday"
+              },
+              "@dayFri": {
+                "description": "Abbreviation for Friday"
+              },
+              "@daySat": {
+                "description": "Abbreviation for Saturday"
+              },
+              "@repeatPrefix": {
+                "description": "Prefix for displaying selected frequency"
+              },
+              "@reminderAddedSuccess": {
+                "description": "Toast message for successful reminder addition"
+              },
+              "@failedToAddReminder": {
+                "description": "Toast message prefix for failed reminder addition"
+              },
+              "@allReminders": {
+                "description": "Title for all reminders screen"
+              },
+              "@noRemindersYet": {
+                "description": "Message for empty reminders list"
+              },
+              "@addReminderToStart": {
+                "description": "Prompt to add a reminder"
+              },
+              "@reminderDeletedSuccess": {
+                "description": "Toast message for successful reminder deletion"
+              },
+              "@failedToDeleteReminder": {
+                "description": "Toast message prefix for failed reminder deletion"
+              },
+              "@reminderActivated": {
+                "description": "Toast message for reminder activation"
+              },
+              "@reminderDeactivated": {
+                "description": "Toast message for reminder deactivation"
+              },
+              "@failedToUpdateReminder": {
+                "description": "Toast message prefix for failed reminder update"
+              },
+              "@deleteReminder": {
+                "description": "Title for delete reminder dialog"
+              },
+              "@confirmDeleteReminder": {
+                "description": "Confirmation message for deleting a reminder"
+              },
+              "@delete": {
+                "description": "Button label for delete action"
+              },
+              "@gdmTestReminder": {
+                "description": "Title for GDM test reminder dialog"
+              },
+              "@gdmTestReminderMessage": {
+                "description": "Message for GDM test reminder"
+              },
+              "@thanksForReminder": {
+                "description": "Button label for acknowledging reminder"
+              },
+              "@iHaveDoneIt": {
+                "description": "Button label for confirming task completion"
+              },
+              "@snoozeReminder": {
+                "description": "Title for snooze reminder dialog"
+              },
+              "@snoozeFor3Days": {
+                "description": "Option to snooze reminder for 3 days"
+              },
+              "@snoozeFor1Week": {
+                "description": "Option to snooze reminder for 1 week"
+              },
+              "@addWeight": {
+                  "description": "Title for add weight dialog and button tooltip"
+                },
+                "@pleaseEnterDateAndWeight": {
+                  "description": "Validation message for missing date or weight"
+                },
+                "@weightDataAddedSuccess": {
+                  "description": "Toast message for successful weight data addition"
+                },
+                "@weightDataUpdatedSuccess": {
+                  "description": "Toast message for successful weight data update"
+                },
+                "@errorAddingWeight": {
+                  "description": "Toast message prefix for failed weight data addition"
+                },
+                "@weightManagement": {
+                  "description": "Title for weight management screen"
+                },
+                "@noUserLoggedIn": {
+                  "description": "Error message for no logged-in user"
+                },
+                "@pdfButton": {
+                  "description": "Label for PDF generation button"
+                },
+                "@weightButton": {
+                  "description": "Label for weight addition button"
+                },
+                "@downloadPdfTooltip": {
+                  "description": "Tooltip for PDF download button"
+                },
+                "@errorFetchingWeightData": {
+                  "description": "Toast message prefix for failed weight data fetch"
+                },
+                "@weightTrackingReport": {
+                  "description": "Title for weight tracking PDF report"
+                },
+                "@generatedOn": {
+                  "description": "Subtitle prefix for PDF generation date"
+                },
+                "@dateHeader": {
+                  "description": "Table header for date in PDF"
+                },
+                "@weightHeader": {
+                  "description": "Table header for weight in PDF"
+                },
+                "@unitHeader": {
+                  "description": "Table header for unit in PDF"
+                },
+                "@pdfGeneratedSuccess": {
+                  "description": "Toast message for successful PDF generation and sharing"
+                },
+                "@errorGeneratingPdf": {
+                  "description": "Toast message prefix for failed PDF generation"
+                },
+                "@noWeightData": {
+                  "description": "Message for empty weight data list"
+                },
+                "@currentWeight": {
+                  "description": "Label for current weight display"
+                },
+                "@noWeightDataPastWeek": {
+                  "description": "Message for no weight data in the past week"
+                },
+                "@notApplicable": {
+                  "description": "Fallback value for missing weight data"
+                }
+}
