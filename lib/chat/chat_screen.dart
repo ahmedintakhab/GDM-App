@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'chat_provider.dart';
 
 class ChatGPTScreen extends StatefulWidget {
@@ -16,6 +16,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
   bool _isLoading = false; // Flag to track loading state
 
   void onSendMessage() async {
+    final l10n = AppLocalizations.of(context)!;
     String userMessage = _textEditingController.text.trim();
     if (userMessage.isEmpty) {
       // Don't send empty messages
@@ -30,7 +31,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
       _isLoading = true; // Start loading
     });
     // Add a loading message that will be replaced with the actual response
-    Message loadingMessage = Message(text: "loading", isMe: false, isLoading: true);
+    Message loadingMessage = Message(text: l10n.loading, isMe: false, isLoading: true);
     setState(() {
       _messages.insert(0, loadingMessage);
     });
@@ -57,7 +58,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
 
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to get response: $e')),
+        SnackBar(content: Text('${l10n.failedToGetResponse}$e')),
       );
     }
   }
@@ -110,6 +111,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
   }
 
   Widget _buildMessage(Message message) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.0),
       child: Padding(
@@ -119,7 +121,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
           message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              message.isMe ? 'You' : 'GDM AI',
+              message.isMe ? l10n.you : l10n.gdmAI,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             message.isLoading
@@ -132,6 +134,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
   }
 
   Widget _buildLoadingIndicator() {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -144,18 +147,20 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
           ),
         ),
         SizedBox(width: 8),
-        Text("Typing...", style: TextStyle(fontStyle: FontStyle.italic)),
+        Text(l10n.typing, style: TextStyle(fontStyle: FontStyle.italic)),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF5AA189),
         title: Text(
-          'GDM Assistant Chat',
+          l10n.gdmAssistantChat,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -174,10 +179,10 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
             padding: const EdgeInsets.all(12.0),
             child: CustomTextFormField(
               controller: _textEditingController,
-              hintText: 'Type a message...',
+              hintText: l10n.typeMessage,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter a question';
+                  return l10n.pleaseEnterQuestion;
                 }
                 return null;
               },

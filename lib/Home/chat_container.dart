@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../chat/chat_screen.dart'; // Adjust import path as needed
+import '../chat/chat_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class ChatActionButton extends StatelessWidget {
   const ChatActionButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return FloatingActionButton(
       backgroundColor: const Color(0xFF5AA189), // Button color
       elevation: 4,

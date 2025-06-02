@@ -6,6 +6,8 @@ import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/Register/weight_input_field.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class AddWeightDialogBox extends StatefulWidget {
   const AddWeightDialogBox({super.key});
@@ -45,6 +47,7 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
   }
 
   Future<void> _addWeight() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isLoading = true;
     });
@@ -53,7 +56,7 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
       User? user = _auth.currentUser;
       if (user != null) {
         if (_dateController.text.isEmpty || _weightController.text.isEmpty) {
-          Utils().toastMessage('Please enter both date and weight');
+          Utils().toastMessage(l10n.pleaseEnterDateAndWeight);
           setState(() {
             _isLoading = false;
           });
@@ -81,7 +84,7 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
             'unit': _selectedUnit.value,
             'timestamp': FieldValue.serverTimestamp(),
           });
-          Utils().toastMessage('Weight data successfully updated!');
+          Utils().toastMessage(l10n.weightDataUpdatedSuccess);
         } else {
           // Create new entry
           await _firestore
@@ -95,7 +98,7 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
             'unit': _selectedUnit.value,
             'timestamp': FieldValue.serverTimestamp(),
           });
-          Utils().toastMessage('Weight data successfully added!');
+          Utils().toastMessage(l10n.weightDataAddedSuccess);
         }
 
         _dateController.clear();
@@ -103,7 +106,7 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
         Navigator.of(context).pop(); // Close the dialog after success
       }
     } catch (e) {
-      Utils().toastMessage('Error adding weight: $e');
+      Utils().toastMessage('${l10n.errorAddingWeight} $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -113,8 +116,9 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
-      title: const Text('Add Weight'),
+      title:  Text(l10n.addWeight),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -122,9 +126,9 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
           children: [
             CustomTextFormField(
               controller: _dateController,
-              hintText: 'Pick Date',
+              hintText: l10n.pickDate,
               validator: (value) =>
-              value?.isEmpty ?? true ? 'Please enter date' : null,
+              value?.isEmpty ?? true ? l10n.pleaseEnterDate : null,
               suffixIcon: IconButton(
                 icon: const Icon(Icons.calendar_today),
                 color: const Color(0XFF5AA189),
@@ -142,7 +146,7 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
               children: [
                 CustomButton(
                   onTap: _isLoading ? () {} : () => _addWeight(),
-                  buttonText: _isLoading ? '' : 'Add Weight',
+                  buttonText: _isLoading ? '' : l10n.addWeight,
                 ),
                 if (_isLoading)
                   const CircularProgressIndicator(
@@ -158,7 +162,7 @@ class _AddWeightDialogBoxState extends State<AddWeightDialogBox> {
           onPressed: () {
             Navigator.of(context).pop(); // Close the dialog
           },
-          child: const Text('Cancel'),
+          child:  Text(l10n.cancel),
         ),
       ],
     );

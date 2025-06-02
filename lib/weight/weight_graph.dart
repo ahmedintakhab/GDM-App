@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class WeightGraph extends StatelessWidget {
@@ -23,9 +24,10 @@ class WeightGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Calculate maxY and latest weight details
     double maxY = 150; // Default maxY
-    String? latestWeight = 'N/A';
+    String? latestWeight = l10n.notApplicable;
     String? latestUnit = '';
     Color? latestWeightColor = Colors.black87;
 
@@ -49,7 +51,7 @@ class WeightGraph extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.only(bottom: 8.h),
             child: Text(
-              'Current Weight: $latestWeight $latestUnit',
+              '${l10n.currentWeight} $latestWeight $latestUnit',
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
@@ -60,7 +62,7 @@ class WeightGraph extends StatelessWidget {
         ),
         // Graph or Empty State
         weightData.isEmpty
-            ? const Center(child: Text('No weight data available for the past week'))
+            ?  Center(child: Text(l10n.noWeightDataPastWeek))
             : Padding(
           padding: EdgeInsets.only(top: 28.h),
           child: SizedBox(

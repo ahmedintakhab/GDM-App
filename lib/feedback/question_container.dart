@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class QuestionContainer extends StatefulWidget {
   final int questionNumber;
@@ -21,6 +23,7 @@ class _QuestionContainerState extends State<QuestionContainer> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -47,7 +50,7 @@ class _QuestionContainerState extends State<QuestionContainer> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Question ${widget.questionNumber}',
+              '${l10n.question} ${widget.questionNumber}',
               style: TextStyle(
                 fontSize: screenWidth * 0.045,
                 fontWeight: FontWeight.bold,
@@ -68,14 +71,14 @@ class _QuestionContainerState extends State<QuestionContainer> {
               children: [
                 _buildOptionContainer(
                   context,
-                  'Agree',
+                  l10n.agree,
                   Colors.green,
                   Colors.green.withOpacity(0.1),
                 ),
                 SizedBox(width: screenWidth * 0.04),
                 _buildOptionContainer(
                   context,
-                  'Disagree',
+                  l10n.disagree,
                   Colors.red,
                   Colors.red.withOpacity(0.1),
                 ),

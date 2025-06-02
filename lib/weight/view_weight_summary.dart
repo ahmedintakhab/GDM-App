@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class WeightSummaryList extends StatelessWidget {
   final List<Map<String, dynamic>> weightData;
@@ -15,11 +17,13 @@ class WeightSummaryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         Expanded(
           child: weightData.isEmpty
-              ? const Center(child: Text('No weight data available'))
+              ?  Center(child: Text(l10n.noWeightData))
               : ListView.builder(
             padding: const EdgeInsets.all(16.0),
             itemCount: weightData.length,

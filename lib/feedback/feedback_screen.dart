@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/feedback/success_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widgets/custom_button.dart';
 import 'question_container.dart';
 
@@ -8,43 +9,43 @@ class FeedbackScreen extends StatelessWidget {
 
   final List<Map<String, dynamic>> questions = [
     {
-      'heading': 'Impact',
+      'heading': 'impact',
       'questions': [
-        'I think the App would be a positive addition for UAE population/ pregnant women/ Physicians.',
-        'I think this App would improve the Quality of Life of GDM patients.',
-        'This App is an important part of meeting my information needs related to GDM.',
+        'feedbackQ1',
+        'feedbackQ2',
+        'feedbackQ3',
       ],
     },
     {
-      'heading': 'Perceived Usefulness',
+      'heading': 'perceivedUsefulness',
       'questions': [
-        'Using this App makes it easier to get info on GDM.',
-        'Using this App enables me to self-assess my GDM risk.',
-        'Using this App makes it more likely that I get screened for GDM on time.',
-        'I am satisfied with this App for gaining GDM knowledge.',
-        'I am satisfied with this App for self-management of GDM or GDM risk factors.',
-        'Using this App increases my ability to monitor my dietary intake.',
-        'Using this App increases my ability to maintain physical activity.',
-        'I am able to do self-monitoring of blood sugar using this App.',
-        'As a physician I find the App’s info on GDM Screening and Diagnosis useful.',
+        'feedbackQ4',
+        'feedbackQ5',
+        'feedbackQ6',
+        'feedbackQ7',
+        'feedbackQ8',
+        'feedbackQ9',
+        'feedbackQ10',
+        'feedbackQ11',
+        'feedbackQ12',
       ],
     },
     {
-      'heading': 'Perceived Ease of Use',
+      'heading': 'perceivedEaseOfUse',
       'questions': [
-        'I am comfortable with my ability to use this App.',
-        'Learning to operate this App is easy for me.',
-        'It is easy for me to become skillful at using this App.',
-        'I find this App easy to use.',
-        'I can always remember how to log on to and use this App.',
+        'feedbackQ13',
+        'feedbackQ14',
+        'feedbackQ15',
+        'feedbackQ16',
+        'feedbackQ17',
       ],
     },
     {
-      'heading': 'User Control',
+      'heading': 'userControl',
       'questions': [
-        'The app rarely crashes or causes problems on my phone.',
-        'Whenever I make a mistake using this App, I recover easily and quickly.',
-        'The information (such as on-line help, on-screen messages and other documentation) provided with this App is clear.',
+        'feedbackQ18',
+        'feedbackQ19',
+        'feedbackQ20',
       ],
     },
   ];
@@ -62,16 +63,72 @@ class FeedbackScreen extends StatelessWidget {
       },
     );
   }
+  // Helper method to map ARB keys to AppLocalizations properties
+  String _getLocalizedString(AppLocalizations l10n, String key) {
+    switch (key) {
+      case 'impact':
+        return l10n.impact;
+      case 'perceivedUsefulness':
+        return l10n.perceivedUsefulness;
+      case 'perceivedEaseOfUse':
+        return l10n.perceivedEaseOfUse;
+      case 'userControl':
+        return l10n.userControl;
+      case 'feedbackQ1':
+        return l10n.feedbackQ1;
+      case 'feedbackQ2':
+        return l10n.feedbackQ2;
+      case 'feedbackQ3':
+        return l10n.feedbackQ3;
+      case 'feedbackQ4':
+        return l10n.feedbackQ4;
+      case 'feedbackQ5':
+        return l10n.feedbackQ5;
+      case 'feedbackQ6':
+        return l10n.feedbackQ6;
+      case 'feedbackQ7':
+        return l10n.feedbackQ7;
+      case 'feedbackQ8':
+        return l10n.feedbackQ8;
+      case 'feedbackQ9':
+        return l10n.feedbackQ9;
+      case 'feedbackQ10':
+        return l10n.feedbackQ10;
+      case 'feedbackQ11':
+        return l10n.feedbackQ11;
+      case 'feedbackQ12':
+        return l10n.feedbackQ12;
+      case 'feedbackQ13':
+        return l10n.feedbackQ13;
+      case 'feedbackQ14':
+        return l10n.feedbackQ14;
+      case 'feedbackQ15':
+        return l10n.feedbackQ15;
+      case 'feedbackQ16':
+        return l10n.feedbackQ16;
+      case 'feedbackQ17':
+        return l10n.feedbackQ17;
+      case 'feedbackQ18':
+        return l10n.feedbackQ18;
+      case 'feedbackQ19':
+        return l10n.feedbackQ19;
+      case 'feedbackQ20':
+        return l10n.feedbackQ20;
+      default:
+        return key; // Fallback to the key itself if not found
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Feedback Survey',
+        title:  Text(
+          l10n.feedbackSurvey,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -108,7 +165,7 @@ class FeedbackScreen extends StatelessWidget {
                 onTap: () {
                   _showSuccessDialog(context);
                 },
-                buttonText: 'Submit Feedback',
+                buttonText: l10n.submitFeedback,
                 buttonColor: const Color(0xFF5AA189),
                 textColor: Colors.white,
                 borderRadius: 8,
@@ -122,6 +179,7 @@ class FeedbackScreen extends StatelessWidget {
   }
 
   List<Widget> _buildQuestionWidgets(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     List<Widget> widgets = [];
     int questionNumber = 1;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -136,7 +194,7 @@ class FeedbackScreen extends StatelessWidget {
             vertical: screenHeight * 0.015,
           ),
           child: Text(
-            section['heading'],
+            _getLocalizedString(l10n, section['heading'] as String),
             style: TextStyle(
               fontSize: screenWidth * 0.05,
               fontWeight: FontWeight.bold,
@@ -147,11 +205,11 @@ class FeedbackScreen extends StatelessWidget {
       );
 
       // Add questions under the heading
-      for (var question in section['questions']) {
+      for (var questionKey in section['questions']) {
         widgets.add(
           QuestionContainer(
             questionNumber: questionNumber,
-            question: question,
+            question: _getLocalizedString(l10n, questionKey as String),
             onSelection: (value) {
               // Handle selection (e.g., store response)
               print('Question $questionNumber: $value');

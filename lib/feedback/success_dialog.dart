@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class SuccessDialog extends StatelessWidget {
   final VoidCallback onContinue;
@@ -7,6 +9,7 @@ class SuccessDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -31,7 +34,7 @@ class SuccessDialog extends StatelessWidget {
             ),
             // Success title
             Text(
-              'Success!!',
+              l10n.success,
               style: TextStyle(
                 fontSize: screenWidth * 0.06,
                 fontWeight: FontWeight.bold,
@@ -41,7 +44,7 @@ class SuccessDialog extends StatelessWidget {
             SizedBox(height: screenHeight * 0.01),
             // Success message
             Text(
-              'Your feedback added Successfully!',
+              l10n.feedbackAdded,
               style: TextStyle(
                 fontSize: screenWidth * 0.04,
                 color: Colors.black54,
@@ -79,7 +82,7 @@ class SuccessDialog extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Continue',
+              l10n.continueButton,
                 style: TextStyle(
                   fontSize: screenWidth * 0.04,
                   color: Colors.white,

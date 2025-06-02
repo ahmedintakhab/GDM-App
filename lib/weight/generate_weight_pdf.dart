@@ -1,12 +1,18 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:gdm_app/utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:io';
 
-Future<void> generateAndSavePdf(List<Map<String, dynamic>> weightData) async {
+Future<void> generateAndSavePdf(BuildContext context, List<Map<String, dynamic>> weightData) async {
+  final localizations = AppLocalizations.of(context)!;
+
   try {
     // Create a new PDF document
     final pdf = pw.Document();
@@ -18,7 +24,7 @@ Future<void> generateAndSavePdf(List<Map<String, dynamic>> weightData) async {
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.Text(
-              'Weight Tracking Report',
+              localizations.weightTrackingReport,
               style: pw.TextStyle(
                 fontSize: 24,
                 fontWeight: pw.FontWeight.bold,
@@ -26,7 +32,7 @@ Future<void> generateAndSavePdf(List<Map<String, dynamic>> weightData) async {
             ),
             pw.SizedBox(height: 20),
             pw.Text(
-              'Generated on: ${DateFormat('dd MMM yyyy HH:mm').format(DateTime.now())}',
+                '${localizations.generatedOn} ${DateFormat('dd MMM yyyy HH:mm').format(DateTime.now())}',
               style: const pw.TextStyle(fontSize: 14),
             ),
             pw.SizedBox(height: 20),
@@ -45,21 +51,21 @@ Future<void> generateAndSavePdf(List<Map<String, dynamic>> weightData) async {
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(8),
                       child: pw.Text(
-                        'Date',
+                        localizations.dateHeader,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(8),
                       child: pw.Text(
-                        'Weight',
+                     localizations.weightHeader,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(8),
                       child: pw.Text(
-                        'Unit',
+                       localizations.unitHeader,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
@@ -95,14 +101,14 @@ Future<void> generateAndSavePdf(List<Map<String, dynamic>> weightData) async {
     await file.writeAsBytes(await pdf.save());
 
     // Share the PDF file
-    await Share.shareXFiles([XFile(file.path)], text: 'Weight Tracking Report');
+    await Share.shareXFiles([XFile(file.path)], text: localizations.weightTrackingReport);
 
-    Utils().toastMessage('PDF generated and shared successfully!');
+    Utils().toastMessage(localizations.pdfGeneratedSuccess);
   } catch (e) {
     if (kDebugMode) {
       print('Error generating PDF: $e');
     }
-    Utils().toastMessage('Error generating PDF: $e');
+    Utils().toastMessage('${localizations.errorGeneratingPdf} $e');
     rethrow; // Rethrow to allow caller to handle the error
   }
 }

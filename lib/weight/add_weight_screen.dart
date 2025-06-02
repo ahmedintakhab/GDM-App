@@ -6,6 +6,7 @@ import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/weight/add_weight_dialogbox.dart';
 import 'package:gdm_app/weight/view_weight_summary.dart';
 import 'package:gdm_app/weight/weight_graph.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import 'generate_weight_pdf.dart';
@@ -24,14 +25,23 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
   bool _isGeneratingPdf = false;
   String? _errorMessage;
   List<Map<String, dynamic>> _weightData = [];
+  bool _hasFetchedData = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchWeightData();
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasFetchedData) {
+      _hasFetchedData = true; // Prevent multiple fetches
+      _fetchWeightData();
+    }
   }
 
   Future<void> _fetchWeightData() async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -41,7 +51,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
       User? user = _auth.currentUser;
       if (user == null) {
         setState(() {
-          _errorMessage = 'No user logged in';
+          _errorMessage = l10n.noUserLoggedIn;
           _isLoading = false;
         });
         return;
@@ -78,10 +88,10 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error fetching weight data: $e';
+        _errorMessage = '${l10n.errorFetchingWeightData} $e';
         _isLoading = false;
       });
-      Utils().toastMessage('Error fetching weight data: $e');
+      Utils().toastMessage('${l10n.errorFetchingWeightData} $e');
     }
   }
 
@@ -97,7 +107,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
     });
 
     try {
-      await generateAndSavePdf(_weightData);
+      await generateAndSavePdf(context,_weightData);
     } catch (e) {
       // Error is already handled in generateAndSavePdf with toast
     } finally {
@@ -109,10 +119,11 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Weight Management',
+        title:  Text(
+          l10n.weightManagement,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -193,7 +204,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         },
         child: const Icon(Icons.add, color: Colors.white),
         backgroundColor: const Color(0xFF5AA189),
-        tooltip: 'Add Weight',
+        tooltip: l10n.addWeight,
       )
           : Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -204,8 +215,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               onPressed: _isGeneratingPdf ? null : _generateAndSavePdf,
               label: _isGeneratingPdf
                   ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text(
-                'PDF',
+                  :  Text(
+                l10n.pdfButton,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -213,7 +224,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               ),
               icon: const Icon(Icons.download, color: Colors.white),
               backgroundColor: const Color(0xFF5AA189),
-              tooltip: 'Download PDF',
+              tooltip: l10n.downloadPdf,
             ),
           ),
           Padding(
@@ -225,8 +236,8 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
                   builder: (context) => const AddWeightDialogBox(),
                 ).then((_) => _fetchWeightData()); // Refresh data after dialog
               },
-              label: const Text(
-                'Weight',
+              label: Text(
+                l10n.weightButton,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -234,7 +245,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
               ),
               icon: const Icon(Icons.add_circle, color: Colors.white),
               backgroundColor: const Color(0xFF5AA189),
-              tooltip: 'Add Weight',
+              tooltip: l10n.addWeight,
             ),
           ),
         ],

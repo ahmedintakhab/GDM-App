@@ -2,82 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/help%20center/information_dialogbox.dart';
 import 'information_card.dart'; // Import the second file
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-// Static data for card titles and their details
+
+// Static data for card titles and their details using ARB keys
 final Map<String, String> cardDetails = {
-  "What is GDM?":
-  "Gestational Diabetes Mellitus (GDM) is a condition where a pregnant woman "
-      "develops high blood sugar levels. "
-      "It usually occurs during the second or third "
-      "trimester and resolves after delivery. "
-      "It requires careful monitoring to ensure the health of both mother and baby.",
-  "Who is at Risk?":
-  "You are at higher risk if you:\n1. Have a family history of diabetes\n2. "
-      "Are overweight/obese or have a sedentary lifestyle\n3."
-      " Are older than 35 years\n4. Have had GDM in a previous pregnancy\n5."
-      " Have polycystic ovary syndrome (PCOS)\n6. "
-      "Belong to an ethnic group with a high diabetes risk"
-      " (including Middle Eastern populations)",
-  "Signs & Symptoms":
-"Most women do not have symptoms, so screening is essential. Some may experience:\n●"
-    " Increased thirst and frequent urination\n● Fatigue\n● Blurred vision",
-  "Screening & Diagnosis":
-"In the UAE:\n1. Screening for GDM is recommended between 24-28 weeks of pregnancy."
-    "\n2. A glucose tolerance test (OGTT) is used for diagnosis.",
-  "Complications of GDM":
-  "⚠️ If left uncontrolled, GDM can lead to:\n1. "
-      "High birth weight in babies (macrosomia)\n2."
-      " Preterm birth or C-section delivery\n3. "
-      "Preeclampsia (high blood pressure during pregnancy)\n4."
-      " Increased risk of Type 2 Diabetes for both mother & child later in life",
-  "Managing GDM":
-  "1 Healthy eating\n. Follow a balanced meal plan with whole grains, lean protein, and fiber\n"
-      "2 Regular physical activity\n. Aim for 30 minutes of moderate exercise (e.g., walking)\n"
-      "3 Blood sugar monitoring\n. Check your glucose levels as advised by your doctor\n"
-      "4 Medications\n. If needed, insulin or other treatments may be prescribed",
-  "Postpartum Care":
-"1. GDM usually resolves after birth, but women with GDM have a 50% risk of developing Type 2 Diabetes in the future\n"
-"2. Breastfeeding helps regulate blood sugar and lowers future diabetes risk\n"
-"3. A follow-up diabetes test is recommended 6-12 weeks postpartum and every 1-3 years thereafter",
-  "Prevention of GDM – UAE-Specific Tips":
-"1. Healthy Eating for GDM Prevention\n"
-"● Choose Nutrient-Rich UAE-Friendly Foods\n"
-". Opt for whole-wheat Arabic bread, brown rice, quinoa, and oats instead of white bread or refined grains\n"
-". Include grilled fish (like hammour or salmon), chicken, lean lamb, and plant-based proteins like lentils, chickpeas, and fava beans (foul)\n"
-". Use olive oil and nuts (almonds, walnuts, pistachios) instead of excessive butter or ghee\n"
-". Enjoy local fiber-rich options like dates (in moderation), cucumbers, tomatoes, okra, and zucchini\n"
-". Choose low-fat Laban, Greek yogurt, or Ayran instead of full-fat dairy\n"
-"● Foods to Limit\n"
-". Limit high-carb Emirati dishes (e.g., excess white rice in biryani or Harees – opt for whole-grain versions)\n"
-". Avoid sugary beverages (e.g., Karak tea with sugar, soft drinks, fruit juices – replace with unsweetened tea or infused water)\n"
-". Reduce desserts and sweets (e.g., Luqaimat, Baklava – enjoy in moderation and opt for healthier alternatives like dates with nuts)\n"
-"2. Staying Active in the UAE Climate\n"
-"● Exercise Tips Despite the Heat\n"
-". Walk indoors in malls (e.g., Mall of the Emirates, Yas Mall) or indoor gyms\n"
-". Try swimming, a great low-impact option for pregnancy-friendly fitness\n"
-". Take evening outdoor walks at parks like Al Barsha Pond Park, Safa Park, or Corniche when it’s cooler\n"
-". Join prenatal yoga or Pilates classes, offered at many gyms and maternity centers with women-only options\n"
-"3. Managing Cultural & Social Eating Habits\n"
-"● Smart Choices at Gatherings\n"
-". Practice portion control: enjoy small portions of rice and bread, filling up on grilled meats and vegetables\n"
-". Make healthy swaps: replace fried samosas with baked versions or grilled meats\n"
-". Choose balanced Iftar meals: avoid excessive sweets after Iftar; opt for fruit, Laban, or nuts instead\n"
-". Stay hydrated: drink plenty of water instead of sweetened juices",
-
+  'whatIsGDM': 'whatIsGDMDescription',
+  'whoIsAtRisk': 'whoIsAtRiskDescription',
+  'signsAndSymptoms': 'signsAndSymptomsDescription',
+  'screeningAndDiagnosis': 'screeningAndDiagnosisDescription',
+  'complicationsOfGDM': 'complicationsOfGDMDescription',
+  'managingGDM': 'managingGDMDescription',
+  'postpartumCare': 'postpartumCareDescription',
+  'preventionOfGDM': 'preventionOfGDMDescription',
 };
-// Static data for GDM containers
+// Static data for GDM containers using ARB keys
 final List<Map<String, String>> gdmContainers = [
   {
-    'title': 'Understanding Gestational Diabetes (GDM)',
-    'description':
-    'A comprehensive overview of GDM, its causes, risk factors, and how it affects pregnancy.',
+    'title': 'understandingGDM',
+    'description': 'understandingGDMDescription',
   },
   {
-    'title': 'GDM and Pregnancy',
-    'description':
-    'Key facts about GDM, screening processes, and long-term health implications.',
+    'title': 'gdmAndPregnancy',
+    'description': 'gdmAndPregnancyDescription',
   },
 ];
+
 
 
 class InformationScreen extends StatefulWidget {
@@ -115,8 +65,58 @@ class _InformationScreenState extends State<InformationScreen> {
       }
     });
   }
+
+  // Helper method to map ARB keys to AppLocalizations properties
+  String _getLocalizedString(BuildContext context, String key) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (key) {
+      case 'whatIsGDM':
+        return l10n.whatIsGDM;
+      case 'whatIsGDMDescription':
+        return l10n.whatIsGDMDescription;
+      case 'whoIsAtRisk':
+        return l10n.whoIsAtRisk;
+      case 'whoIsAtRiskDescription':
+        return l10n.whoIsAtRiskDescription;
+      case 'signsAndSymptoms':
+        return l10n.signsAndSymptoms;
+      case 'signsAndSymptomsDescription':
+        return l10n.signsAndSymptomsDescription;
+      case 'screeningAndDiagnosis':
+        return l10n.screeningAndDiagnosis;
+      case 'screeningAndDiagnosisDescription':
+        return l10n.screeningAndDiagnosisDescription;
+      case 'complicationsOfGDM':
+        return l10n.complicationsOfGDM;
+      case 'complicationsOfGDMDescription':
+        return l10n.complicationsOfGDMDescription;
+      case 'managingGDM':
+        return l10n.managingGDM;
+      case 'managingGDMDescription':
+        return l10n.managingGDMDescription;
+      case 'postpartumCare':
+        return l10n.postpartumCare;
+      case 'postpartumCareDescription':
+        return l10n.postpartumCareDescription;
+      case 'preventionOfGDM':
+        return l10n.preventionOfGDM;
+      case 'preventionOfGDMDescription':
+        return l10n.preventionOfGDMDescription;
+      case 'understandingGDM':
+        return l10n.understandingGDM;
+      case 'understandingGDMDescription':
+        return l10n.understandingGDMDescription;
+      case 'gdmAndPregnancy':
+        return l10n.gdmAndPregnancy;
+      case 'gdmAndPregnancyDescription':
+        return l10n.gdmAndPregnancyDescription;
+      default:
+        return key; // Fallback to the key itself if not found
+    }
+  }
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     ScreenUtil.init(context, designSize: const Size(375, 812));
 
     return Scaffold(
@@ -128,7 +128,7 @@ class _InformationScreenState extends State<InformationScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Help Center",
+                l10n.helpCenter,
                 style: TextStyle(
                   fontSize: 26.sp,
                   fontWeight: FontWeight.bold,
@@ -139,7 +139,7 @@ class _InformationScreenState extends State<InformationScreen> {
               TextField(
                 onChanged: _onSearchChanged,
                 decoration: InputDecoration(
-                  hintText: "Search by topics",
+                  hintText: l10n.searchByTopics,
                   hintStyle: TextStyle(
                     color: Colors.grey[500],
                     fontSize: 16.sp,
@@ -164,30 +164,39 @@ class _InformationScreenState extends State<InformationScreen> {
                     child: _buildGDMContainer(
                       title: gdmContainers[0]['title']!,
                       description: gdmContainers[0]['description']!,
-                      onTap: (){
-                        showDialog(context: context, builder:
-                            (context)=>InformationDialogbox(title: gdmContainers[0]['title']!,
-                                description: gdmContainers[0]['description']!));
-                      }
-                    )
-
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => InformationDialogbox(
+                            title: _getLocalizedString(
+                                context, gdmContainers[0]['title']!),
+                            description: _getLocalizedString(
+                                context, gdmContainers[0]['description']!),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                   SizedBox(width: 16.w),
                   Expanded(
-                      child: _buildGDMContainer(
-                          title: gdmContainers[1]['title']!,
-                          description: gdmContainers[1]['description']!,
-                          onTap: (){
-                            showDialog(context: context, builder:
-                                (context)=>InformationDialogbox(title: gdmContainers[1]['title']!,
-                                description: gdmContainers[1]['description']!));
-                          }
-                      )
-
+                    child: _buildGDMContainer(
+                      title: gdmContainers[1]['title']!,
+                      description: gdmContainers[1]['description']!,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => InformationDialogbox(
+                            title: _getLocalizedString(
+                                context, gdmContainers[1]['title']!),
+                            description: _getLocalizedString(
+                                context, gdmContainers[1]['description']!),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
-              ),
-              SizedBox(height: 24.h),
+              ),              SizedBox(height: 24.h),
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
@@ -198,7 +207,7 @@ class _InformationScreenState extends State<InformationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "GDM Assistance + HUB",
+                      l10n.gdmAssistanceHub,
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -210,14 +219,15 @@ class _InformationScreenState extends State<InformationScreen> {
                     ..._filteredTitles.map((title) => Column(
                       children: [
                         InformationCard(
-                          title: title,
+                          title: _getLocalizedString(context, title),
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => InformationDetailsScreen(
-                                  title: title,
-                                  details: cardDetails[title]!,
+                                  title: _getLocalizedString(context, title),
+                                  details: _getLocalizedString(
+                                      context, cardDetails[title]!),
                                 ),
                               ),
                             );
@@ -260,7 +270,7 @@ class _InformationScreenState extends State<InformationScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
             Text(
-              title,
+              _getLocalizedString(context, title),
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
@@ -273,7 +283,7 @@ class _InformationScreenState extends State<InformationScreen> {
             if (description.isNotEmpty) ...[
               SizedBox(height: 8.h),
               Text(
-                description,
+                _getLocalizedString(context, description),
                 style: TextStyle(
                   fontSize: 14.sp,
                   color: Colors.grey[600],
