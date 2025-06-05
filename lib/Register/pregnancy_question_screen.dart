@@ -3,12 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gdm_app/Home/home_main_screen.dart';
-import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/progress_bar.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/utils/utils.dart';
-
 import '../reminder/reminder_service_implementation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PregnancyQuestionScreen1 extends StatefulWidget {
   final Map<String, dynamic> pregnancyData;
@@ -33,6 +32,8 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> _submitData() async {
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       setState(() {
         _isSubmitting = true;
@@ -53,7 +54,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
       // Get current user
       User? user = _auth.currentUser;
       if (user == null) {
-        Utils().toastMessage('No user is currently logged in');
+        Utils().toastMessage(l10n.noUserLoggedIn);
         return;
       }
 
@@ -78,8 +79,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
       collection('Personal Information').doc().set(pregnancyInfo );
 
       // Show success message
-      Utils().toastMessage('Pregnancy information saved successfully!');
-
+      Utils().toastMessage(l10n.pregnancyInfoSaved);
       // Navigate to the LoginScreen
       Navigator.pushReplacement(
         context,
@@ -87,7 +87,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
       );
     } catch (e) {
       // Handle other errors
-      Utils().toastMessage('Error: $e');
+      Utils().toastMessage('${l10n.genericError}: $e');
     } finally {
       setState(() {
         _isSubmitting = false;
@@ -96,6 +96,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
   }
 
   Widget _buildDropdown(String question, String? value, Function(String?) onChanged) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -109,15 +110,16 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
         SizedBox(height: 8),
         DropdownButtonHideUnderline(
           child: DropdownButton2<String>(
+
             isExpanded: true,
             hint: Text(
-              'Select Option',
+              l10n.selectOption,
               style: TextStyle(
                 fontSize: 14,
                 color: Theme.of(context).hintColor,
               ),
             ),
-            items: ['Yes', 'No']
+            items: [l10n.yes, l10n.no]
                 .map((String item) => DropdownMenuItem<String>(
               value: item,
               child: Text(
@@ -162,6 +164,8 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -172,8 +176,8 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.only(left: 20.0),
-              child: const Text(
-                'Pregnancy Diagnosis',
+              child:  Text(
+                l10n.pregnancyDiagnosis,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -189,7 +193,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildDropdown(
-                      '1. Have you been diagnosed with GDM during this pregnancy?',
+                      l10n.q1GdmThisPregnancy,
                       _q1Value,
                           (value) {
                         setState(() {
@@ -198,7 +202,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                       },
                     ),
                     _buildDropdown(
-                      '2. Have you been diagnosed with hypertension during this pregnancy?',
+                      l10n.q2HypertensionThisPregnancy,
                       _q2Value,
                           (value) {
                         setState(() {
@@ -207,7 +211,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                       },
                     ),
                     _buildDropdown(
-                      '3. Have you been diagnosed with GDM during previous pregnancies?',
+                      l10n.q3GdmPreviousPregnancies,
                       _q3Value,
                           (value) {
                         setState(() {
@@ -216,7 +220,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                       },
                     ),
                     _buildDropdown(
-                      '4. Have you been diagnosed with hypertension during previous pregnancies?',
+                      l10n.q4HypertensionPreviousPregnancies,
                       _q4Value,
                           (value) {
                         setState(() {
@@ -225,7 +229,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                       },
                     ),
                     _buildDropdown(
-                      '5. Have you had a baby that weighed 4kg or more?',
+                      l10n.q5Baby4kgOrMore,
                       _q5Value,
                           (value) {
                         setState(() {
@@ -234,7 +238,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                       },
                     ),
                     _buildDropdown(
-                      '6. Have you had Caesarean Section (CS) before?',
+                      l10n.q6CaesareanSection,
                       _q6Value,
                           (value) {
                         setState(() {
@@ -258,7 +262,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      buttonText: 'Back',
+                      buttonText: l10n.back,
                     ),
                   ),
                   // const SizedBox(width: 10),
@@ -268,7 +272,7 @@ class _PregnancyQuestionScreen1State extends State<PregnancyQuestionScreen1> {
                       children: [
                         CustomButton(
                           onTap: _submitData,
-                          buttonText: 'Submit',
+                          buttonText: l10n.submit,
                         ),
                         if (_isSubmitting)
                              SizedBox(

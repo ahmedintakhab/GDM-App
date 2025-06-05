@@ -271,6 +271,9 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                                 ..onTap = () {
                                   Get.to( LoginScreen(reminderService: widget.reminderService));
                                 },
+                          // ..onTap = () {
+                          //         Get.to( SelectionScreen(reminderService: widget.reminderService));
+                          //       },
                               text: _l10n!.login,
                               style: TextStyle(
                                 color: Color(0XFF000000),

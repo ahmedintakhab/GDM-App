@@ -1,3 +1,6 @@
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class Sliders {
   final String? image;
   final String? name;
@@ -26,28 +29,29 @@ class Utils {
     ];
   }
 
-  static List<Sliders> getSliderPages() {
+  static List<Sliders> getSliderPages(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return [
       Sliders(
         image: 'assets/images/gdm_Logos.png',
-        name: 'Welcome to GDMCare+ Hub',
-        title: 'Welcome to GDMCare+ Hub – your go-to platform for managing diabetes in pregnancy and empowering everyone with diabetes awareness!',
+        name: l10n.welcomeToGDMCareHub,
+        title: l10n.welcomeToGDMCareHubDescription,
       ),
       Sliders(
         image: 'assets/images/gdm_Logos.png',
-        name: 'Understanding Diabetes',
-        title: 'Diabetes is a chronic condition where the body struggles to control blood sugar levels.',
+        name: l10n.understandingDiabetes,
+        title: l10n.understandingDiabetesDescription,
       ),
       Sliders(
         image: 'assets/images/gdm_Logos.png',
-        name: 'Type 2 Diabetes',
-        title: 'Type 2 diabetes is the most common form, often linked to poor diet and lack of exercise.',
+        name: l10n.type2Diabetes,
+        title: l10n.type2DiabetesDescription,
       ),
       Sliders(
         image: 'assets/images/gdm_Logos.png',
-        name: 'Risks of Gestational Diabetes',
-        title: 'It increases the risk of complications for both mother and baby, and future Type 2 diabetes.',
-
+        name: l10n.risksOfGestationalDiabetes,
+        title: l10n.risksOfGestationalDiabetesDescription,
       ),
     ];
   }

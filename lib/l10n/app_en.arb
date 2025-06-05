@@ -38,6 +38,7 @@
   "genderLabel": "Gender",
   "maleOption": "Male",
   "femaleOption": "Female",
+  "maleOrFemale": "Male or Female",
   "weightLabel": "Weight",
   "pleaseEnterWeight": "Please enter your weight",
   "weightInKg": "Enter your weight in kg",
@@ -107,6 +108,7 @@
     "pleaseSelectUnit": "Please select a unit",
     "logoutConfirmation": "Are you sure you want to logout?",
     "cancel": "Cancel",
+    "attempt": "Attempt",
     "logout": "Logout",
     "home": "Home",
     "notification": "Notification",
@@ -147,6 +149,7 @@
     "errorDeletingNotifications": "Error deleting notifications:",
     "newNotification": "New",
     "steps": "steps",
+     "to": "to",
     "notWalking": "Not walking. Variance:",
     "stepDetected": "Step detected! Variance:",
     "initializing": "Initializing...",
@@ -202,6 +205,12 @@
       "loading": "loading",
       "gdmAssistantChat": "GDM Assistant Chat",
       "you": "You",
+       "pregnancies": "Pregnancies",
+          "previousDeliveries": "Previous Deliveries",
+          "familyHistory": "Family History",
+          "miscarriages": "Miscarriages",
+          "stillBirths": "Still Births",
+          "childrenAlive": "Children Alive",
       "gdmAI": "GDM AI",
       "typing": "Typing...",
       "typeMessage": "Type a message...",
@@ -235,6 +244,11 @@
         "afterLunch": "After Lunch",
         "beforeDinner": "Before Dinner",
         "afterDinner": "After Dinner",
+        "before": "Before",
+          "after": "After",
+          "breakfast": "Breakfast",
+          "lunch": "Lunch",
+          "dinner": "Dinner",
         "save": "Save",
         "invalidGlucoseValue": "Please enter a valid glucose value!",
         "glucoseDataAdded": "Successfully added glucose data!",
@@ -245,6 +259,9 @@
         "date": "Date",
         "time": "Time",
         "reading": "Reading",
+         "getStarted": "Get Started",
+         "dontHaveAccount": "Don't have an account?",
+          "skip": "Skip",
         "mealContext": "Meal Context",
         "pdfGenerated": "PDF generated and shared successfully!",
         "errorGeneratingPdf": "Error generating PDF:",
@@ -264,6 +281,7 @@
           "glucoseButton": "Glucose",
           "summaryButton": "Summary",
           "addGlucoseTooltip": "Add Glucose",
+           "noGlucoseData": "No glucose data available",
           "viewGlucoseSummaryTooltip": "View Glucose Summary",
           "dataLoadedSuccess": "Data loaded successfully",
           "failedToLoadData": "Failed to load data after",
@@ -1415,5 +1433,57 @@
                 },
                 "@notApplicable": {
                   "description": "Fallback value for missing weight data"
-                }
+                },
+                "outsidePregnancyDiagnosis": "Outside pregnancy, I have been diagnosed with",
+                  "@outsidePregnancyDiagnosis": {
+                    "description": "Title for the DiabetesTypeScreen asking about diagnoses outside pregnancy"
+                  },
+                  "diagnosisType2Diabetes": "Diabetes (Type 2)",
+                  "@diagnosisType2Diabetes": {
+                    "description": "Diagnosis option for Type 2 Diabetes"
+                  },
+                  "diagnosisType1Diabetes": "Diabetes (Type 1)",
+                  "@diagnosisType1Diabetes": {
+                    "description": "Diagnosis option for Type 1 Diabetes"
+                  },
+                  "diagnosisPrediabetes": "Prediabetes",
+                  "@diagnosisPrediabetes": {
+                    "description": "Diagnosis option for Prediabetes"
+                  },
+                  "diagnosisHypertension": "Hypertension",
+                  "@diagnosisHypertension": {
+                    "description": "Diagnosis option for Hypertension"
+                  },
+                  "diagnosisHeartDisease": "Heart disease",
+                  "@diagnosisHeartDisease": {
+                    "description": "Diagnosis option for Heart disease"
+                  },
+                  "diagnosisObesity": "Obesity",
+                  "@diagnosisObesity": {
+                    "description": "Diagnosis option for Obesity"
+                  },
+                  "diagnosisLipidDisorders": "Lipid/Cholesterol disorders",
+                  "@diagnosisLipidDisorders": {
+                    "description": "Diagnosis option for Lipid/Cholesterol disorders"
+                  },
+                  "diagnosisOther": "Other",
+                  "@diagnosisOther": {
+                    "description": "Diagnosis option for Other unspecified conditions"
+                  },
+                  "pleaseSpecify": "Please specify",
+                  "@pleaseSpecify": {
+                    "description": "Hint text for the 'Other' diagnosis text field"
+                  },
+                  "pleaseEnterDiagnosis": "Please enter diagnosis",
+                  "@pleaseEnterDiagnosis": {
+                    "description": "Validation message for empty 'Other' diagnosis text field"
+                  },
+                  "pleaseSelectAtLeastOneOption": "Please select at least one option",
+                  "@pleaseSelectAtLeastOneOption": {
+                    "description": "Validation message when no diagnosis options are selected"
+                  },
+                  "pleaseSpecifyOtherDiagnosis": "Please specify the 'Other' diagnosis",
+                  "@pleaseSpecifyOtherDiagnosis": {
+                    "description": "Validation message when 'Other' is selected but not specified"
+                  }
 }

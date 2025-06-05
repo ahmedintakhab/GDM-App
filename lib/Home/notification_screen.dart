@@ -1,8 +1,10 @@
+import '../utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import '../reminder/reminder_service_implementation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'notification_widget.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -19,11 +21,12 @@ class NotificationScreen extends StatelessWidget {
 
   // Method to delete all notifications
   Future<void> _deleteAllNotifications(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No user signed in')),
+           SnackBar(content: Text(l10n.noUserLoggedIn)),
         );
         return;
       }
@@ -40,19 +43,18 @@ class NotificationScreen extends StatelessWidget {
         batch.delete(doc.reference);
       }
       await batch.commit();
+      Utils().toastMessage(l10n.allNotificationsDeleted);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All notifications deleted')),
-      );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting notifications: $e')),
-      );
+      Utils().toastMessage('${l10n.errorDeletingNotifications}$e');
+
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     final reminderService = ReminderService();
 
     return Scaffold(
@@ -65,8 +67,8 @@ class NotificationScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Notifications',
+                   Text(
+                   l10n.notification ,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -75,7 +77,7 @@ class NotificationScreen extends StatelessWidget {
                   TextButton.icon(
                     onPressed: () => _deleteAllNotifications(context),
                     icon: const Icon(Icons.delete_outline),
-                    label: const Text('Delete all'),
+                    label:  Text(l10n.deleteAll),
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.blue,
@@ -97,11 +99,11 @@ class NotificationScreen extends StatelessWidget {
                       return const Center(child: CircularProgressIndicator(color: Color(0XFF5AA189),));
                     }
                     if (snapshot.hasError) {
-                      return Center(child: Text('Error loading notifications: ${snapshot.error}'));
+                      return Center(child: Text('${l10n.errorLoadingNotifications} ${snapshot.error}'));
                     }
                     final notifications = snapshot.data ?? [];
                     if (notifications.isEmpty) {
-                      return const Center(child: Text('No notifications available'));
+                      return  Center(child: Text(l10n.noNotificationsAvailable));
                     }
 
                     // Find the latest notification based on sentAt

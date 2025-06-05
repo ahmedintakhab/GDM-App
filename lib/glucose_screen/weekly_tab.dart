@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:gdm_app/Home/gulcose_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class WeeklyTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final userProvider = Provider.of<UserProvider>(context);
 
     return SingleChildScrollView(
@@ -17,7 +20,7 @@ class WeeklyTab extends StatelessWidget {
           _buildAverageGlucoseCard(
             userProvider.getWeeklyAverage(),
             userProvider.getWeeklyMood(),
-            userProvider,
+            userProvider,context,
           ),
           SizedBox(height: 24),
           Container(
@@ -36,7 +39,7 @@ class WeeklyTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Glucose, week avg',
+                  l10n.glucoseWeekAvg,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -57,7 +60,8 @@ class WeeklyTab extends StatelessWidget {
     );
   }
 
-  Widget _buildAverageGlucoseCard(double value, String mood, UserProvider userProvider) {
+  Widget _buildAverageGlucoseCard(double value, String mood, UserProvider userProvider,context) {
+    final l10n = AppLocalizations.of(context)!;
     final displayValue = value == value.truncateToDouble()
         ? value.toInt().toString()
         : value.toStringAsFixed(2);
@@ -103,7 +107,7 @@ class WeeklyTab extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Weekly Avg Blood Glucose',
+            l10n.weeklyAvgBloodGlucose,
             style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,

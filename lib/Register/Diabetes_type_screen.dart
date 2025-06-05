@@ -6,6 +6,7 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import 'diagnosis_option.dart';
 import 'package:gdm_app/utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class DiabetesTypeScreen extends StatefulWidget {
@@ -20,15 +21,15 @@ class DiabetesTypeScreen extends StatefulWidget {
 
 class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
   // Diagnosis options
-  final List<String> _diagnosisOptions = [
-    'Diabetes (Type 2)',
-    'Diabetes (Type 1)',
-    'Prediabetes',
-    'Hypertension',
-    'Heart disease',
-    'Obesity',
-    'Lipid/ Cholesterol disorders',
-    'Other', // Added "Other"
+  List<String> _getDiagnosisOptions(AppLocalizations l10n) => [
+     l10n.diagnosisType2Diabetes,
+     l10n.diagnosisType1Diabetes,
+     l10n.diagnosisPrediabetes,
+     l10n.diagnosisHypertension,
+     l10n.diagnosisHeartDisease,
+     l10n.diagnosisObesity,
+     l10n.diagnosisLipidDisorders,
+     l10n.diagnosisOther,
   ];
 
   final Set<String> _selectedDiagnoses = {};
@@ -43,6 +44,8 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final diagnosisOptions = _getDiagnosisOptions(l10n);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -58,16 +61,16 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Outside pregnancy, I have been diagnosed with',
-                        style: TextStyle(
+                       Text(
+                        l10n.outsidePregnancyDiagnosis,
+                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 32),
                       // Diagnosis Options
-                      ..._diagnosisOptions.map((option) {
+                      ...diagnosisOptions.map((option) {
                         return Column(
                           children: [
                             DiagnosisOption(
@@ -77,13 +80,13 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
                                 setState(() {
                                   if (_selectedDiagnoses.contains(option)) {
                                     _selectedDiagnoses.remove(option);
-                                    if (option == 'Other') {
+                                    if (option == l10n.diagnosisOther) {
                                       isOtherSelected = false;
                                       _otherController.clear(); // Clear text if deselected
                                     }
                                   } else {
                                     _selectedDiagnoses.add(option);
-                                    if (option == 'Other') {
+                                    if (option == l10n.diagnosisOther) {
                                       isOtherSelected = true;
                                     }
                                   }
@@ -92,13 +95,13 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
                             ),
                             const SizedBox(height: 16),
                             // Show CustomTextFormField if "Other" selected
-                            if (option == 'Other' && isOtherSelected)
+                            if (option == l10n.diagnosisOther && isOtherSelected)
                               CustomTextFormField(
                                 controller: _otherController,
-                                hintText: 'Please specify',
+                                hintText: l10n.pleaseSpecify,
                                 validator: (value) {
                                   if (isOtherSelected && (value == null || value.isEmpty)) {
-                                    return 'Please enter diagnosis';
+                                    return l10n.pleaseEnterDiagnosis;
                                   }
                                   return null;
                                 },
@@ -122,7 +125,7 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
                       onTap: () {
                         Navigator.pop(context);
                       },
-                      buttonText: 'Back',
+                      buttonText: l10n.back,
                     ),
                   ),
                   // Next Button
@@ -130,13 +133,11 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
                     child: CustomButton(
                       onTap: () {
                         if (_selectedDiagnoses.isEmpty) {
-                          Utils().toastMessage('Please select at least one option');
-
+                          Utils().toastMessage(l10n.pleaseSelectAtLeastOneOption);
                         } else if (isOtherSelected && _otherController.text.isEmpty) {
 
                           // Validation for Other field
-                          Utils().toastMessage('Please specify the "Other" diagnosis');
-
+                          Utils().toastMessage(l10n.pleaseSpecifyOtherDiagnosis);
                         } else {
                           // Add custom input to selectedDiagnoses if provided
                           final Set<String> finalDiagnoses = {..._selectedDiagnoses};
@@ -154,7 +155,7 @@ class _DiabetesTypeScreenState extends State<DiabetesTypeScreen> {
                           );
                         }
                       },
-                      buttonText: 'Next',
+                      buttonText: l10n.next,
                     ),
                   ),
                 ],

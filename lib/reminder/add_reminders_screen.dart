@@ -5,6 +5,7 @@ import '../widgets/custom_text_form_field.dart';
 import '../widgets/dropdown_widget.dart';
 import 'all_reminders_screen.dart';
 import 'dart:math';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:gdm_app/utils/utils.dart';
 
 
@@ -65,24 +66,51 @@ class _AddRemindersState extends State<AddReminders> {
   }
 
   void _updateFrequency() {
+    final l10n = AppLocalizations.of(context)!;
     final selectedDayCount = _selectedDays.where((day) => day).length;
-    final List<String> days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    final List<String> days = [
+      l10n.daySun,
+      l10n.dayMon,
+      l10n.dayTue,
+      l10n.dayWed,
+      l10n.dayThu,
+      l10n.dayFri,
+      l10n.daySat,
+    ];
+    final List<String> fullDays = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     final selectedDaysList = days.asMap().entries
+        .where((entry) => _selectedDays[entry.key])
+        .map((entry) => entry.value)
+        .toList();
+    final selectedFullDaysList = fullDays.asMap().entries
         .where((entry) => _selectedDays[entry.key])
         .map((entry) => entry.value)
         .toList();
 
     if (selectedDayCount == 0) {
-      _selectedFrequency = 'Custom';
+      _selectedFrequency = l10n.customFrequency;
     } else if (selectedDayCount == 7) {
-      _selectedFrequency = 'Everyday';
+      _selectedFrequency = l10n.everyday;
     } else {
       // Check for consecutive days from Monday to Friday (weekdays)
-      bool isWeekdays = _selectedDays[1] && _selectedDays[2] && _selectedDays[3] &&
-          _selectedDays[4] && !_selectedDays[0] && !_selectedDays[5] && !_selectedDays[6];
+      bool isWeekdays = _selectedDays[1] &&
+          _selectedDays[2] &&
+          _selectedDays[3] &&
+          _selectedDays[4] &&
+          !_selectedDays[0] &&
+          !_selectedDays[5] &&
+          !_selectedDays[6];
 
       if (isWeekdays) {
-        _selectedFrequency = 'Mon to Fri';
+        _selectedFrequency = l10n.weekdays;
       } else {
         // Check for other consecutive patterns
         List<int> selectedIndices = [];
@@ -101,36 +129,34 @@ class _AddRemindersState extends State<AddReminders> {
         }
 
         if (isConsecutive && selectedIndices.length > 1) {
-          String startDay = days[selectedIndices.first];
-          String endDay = days[selectedIndices.last];
-          _selectedFrequency = '$startDay to $endDay';
+          String startDay = selectedDaysList.first;
+          String endDay = selectedDaysList.last;
+          _selectedFrequency = '$startDay ${l10n.to} $endDay';
         } else {
           _selectedFrequency = selectedDaysList.join(', ');
         }
       }
     }
   }
-
   void _selectFrequency(String frequency) {
     setState(() {
       _selectedFrequency = frequency;
-      _showDatePicker = frequency == 'Ring Once';
+      _showDatePicker = frequency == AppLocalizations.of(context)!.ringOnce;
 
-      if (frequency == 'Custom') {
+      if (frequency == AppLocalizations.of(context)!.customFrequency) {
         _showCustomFrequencySection = true;
         _updateFrequency();
-      } else if (frequency == 'Ring Once') {
+      } else if (frequency == AppLocalizations.of(context)!.ringOnce) {
         _showCustomFrequencySection = false;
         _selectedDays = List<bool>.filled(7, false);
         _dateController.clear();
-      } else if (frequency == 'Everyday') {
+      } else if (frequency == AppLocalizations.of(context)!.everyday) {
         _showCustomFrequencySection = true;
         _selectedDays = List<bool>.filled(7, true);
         _updateFrequency();
       }
     });
   }
-
   void _resetState() {
     setState(() {
       _selectedFrequency = '';
@@ -145,12 +171,13 @@ class _AddRemindersState extends State<AddReminders> {
   }
 
   Future<void> _addReminder() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_timeController.text.isEmpty ||
         _selectedDropdownValue == null ||
         (_showDatePicker && _dateController.text.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please fill all fields'),
+          content: Text(l10n.pleaseFillAllFields),
         ),
       );
       return;
@@ -165,13 +192,13 @@ class _AddRemindersState extends State<AddReminders> {
         id: DateTime.now().millisecondsSinceEpoch.toString() +
             Random().nextInt(10000).toString(),
         time: _timeController.text,
-        frequency: _selectedFrequency.isEmpty ? 'Ring Once' : _selectedFrequency,
+        frequency: _selectedFrequency.isEmpty ? l10n.ringOnce : _selectedFrequency,
         date: _showDatePicker ? _dateController.text : DateTime.now().toString().split(' ')[0],
         type: _selectedDropdownValue!,
       );
 
       await widget.reminderService.addReminder(newReminder);
-      Utils().toastMessage('Reminder added successfully!');
+      Utils().toastMessage(l10n.reminderAddedSuccess);
 
 
       // ScaffoldMessenger.of(context).showSnackBar(
@@ -198,7 +225,7 @@ class _AddRemindersState extends State<AddReminders> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to add reminder: ${e.toString()}'),
+          content: Text('${l10n.failedToAddReminder} ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
@@ -211,12 +238,14 @@ class _AddRemindersState extends State<AddReminders> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color(0xFF5AA189),
         title: Text(
-          'Add Reminder',
+          l10n.addReminder,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -233,23 +262,23 @@ class _AddRemindersState extends State<AddReminders> {
               },
               showDiabetesTestDate: false,
               diabetesTestDateController: TextEditingController(),
-              hintText: 'Select label',
+              hintText: l10n.selectLabel,
               items: [
-                'Glucose Reading',
-                'Log Calories',
-                'Weight Check',
-                'Step Count',
-                'GDM Facts'
+                l10n.glucoseReading,
+                l10n.logCalories,
+                l10n.weightCheck,
+                l10n.stepCount,
+                l10n.gdmFacts,
               ],
-              label: 'Select Reminder label',
+              label: l10n.selectReminderLabel,
             ),
             SizedBox(height: 16),
             CustomTextFormField(
               controller: _timeController,
-              hintText: 'Select time (HH:mm)',
+              hintText: l10n.selectTimeHint,
               readOnly: true,
               validator: (value) =>
-              value?.isEmpty ?? true ? 'Please select time' : null,
+              value?.isEmpty ?? true ? l10n.pleaseSelectTime : null,
               suffixIcon: IconButton(
                 icon: Icon(Icons.access_time),
                 color: Color(0xFF5AA189),
@@ -261,33 +290,33 @@ class _AddRemindersState extends State<AddReminders> {
               CustomTextFormField(
                 controller: _dateController,
                 readOnly: true,
-                hintText: 'Select date (yyyy-MM-dd)',
+                hintText: l10n.selectDateHint,
                 suffixIcon: IconButton(
                   icon: Icon(Icons.calendar_today),
                   color: Color(0xFF5AA189),
                   onPressed: () => _selectDate(context),
                 ),
                 validator: (value) =>
-                value?.isEmpty ?? true ? 'Please select date' : null,
+                value?.isEmpty ?? true ? l10n.pleaseSelectDate : null,
               ),
             SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 GestureDetector(
-                  onTap: () => _selectFrequency('Ring Once'),
+                  onTap: () => _selectFrequency(l10n.ringOnce),
                   child: Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: _selectedFrequency == 'Ring Once'
+                      color: _selectedFrequency == l10n.ringOnce
                           ? Color(0xFF5AA189)
                           : Colors.grey[300],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'Ring Once',
+                      l10n.ringOnce,
                       style: TextStyle(
-                        color: _selectedFrequency == 'Ring Once'
+                        color: _selectedFrequency == l10n.ringOnce
                             ? Colors.white
                             : Colors.black87,
                       ),
@@ -295,19 +324,19 @@ class _AddRemindersState extends State<AddReminders> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => _selectFrequency('Custom'),
+                  onTap: () => _selectFrequency(l10n.customFrequency),
                   child: Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: _selectedFrequency == 'Custom'
+                      color: _selectedFrequency == l10n.customFrequency
                           ? Color(0xFF5AA189)
                           : Colors.grey[300],
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'Custom',
+                      l10n.customFrequency,
                       style: TextStyle(
-                        color: _selectedFrequency == 'Custom'
+                        color: _selectedFrequency == l10n.customFrequency
                             ? Colors.white
                             : Colors.black87,
                       ),
@@ -325,7 +354,7 @@ class _AddRemindersState extends State<AddReminders> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Repeat',
+                        l10n.repeat,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -333,8 +362,10 @@ class _AddRemindersState extends State<AddReminders> {
                         ),
                       ),
                       Text(
-                        _selectedFrequency == 'Everyday' ? 'Everyday' : 'Weekdays',
-                        style: TextStyle(
+                        _selectedFrequency == l10n.everyday
+                            ? l10n.everyday
+                            : l10n.weekdays,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -361,11 +392,21 @@ class _AddRemindersState extends State<AddReminders> {
                             ),
                             child: Center(
                               child: Text(
-                                ['S', 'M', 'T', 'W', 'T', 'F', 'S'][i],
+                                [
+                                  l10n.daySun,
+                                  l10n.dayMon,
+                                  l10n.dayTue,
+                                  l10n.dayWed,
+                                  l10n.dayThu,
+                                  l10n.dayFri,
+                                  l10n.daySat,
+                                ][i],
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: _selectedDays[i] ? Colors.white : Colors.black87,
+                                  color: _selectedDays[i]
+                                      ? Colors.white
+                                      : Colors.black87,
                                 ),
                               ),
                             ),
@@ -375,7 +416,7 @@ class _AddRemindersState extends State<AddReminders> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Repeat: $_selectedFrequency',
+                    l10n.repeatPrefix.replaceFirst('{frequency}', _selectedFrequency),
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -385,7 +426,7 @@ class _AddRemindersState extends State<AddReminders> {
                 ? Center(child: CircularProgressIndicator(color: Color(0xFF5AA189)))
                 : CustomButton(
               onTap: _addReminder,
-              buttonText: 'Add Reminder',
+              buttonText: l10n.addReminder,
             ),
           ],
         ),

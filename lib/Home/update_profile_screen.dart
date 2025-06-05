@@ -7,7 +7,7 @@ import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
 import '../reminder/reminder_service_implementation.dart';
-import '../utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UpdateProfile extends StatefulWidget {
   final ReminderService reminderService;
@@ -71,6 +71,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   }
 
   Future<void> _updateProfile(BuildContext context, UserProvider userProvider) async {
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isUpdating = true;
     });
@@ -111,7 +112,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully')),
+           SnackBar(content: Text(l10n.profileUpdated)),
         );
         Navigator.pushReplacement(
           context,
@@ -119,7 +120,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update profile: ${userProvider.errorMessage}')),
+          SnackBar(content: Text('${l10n.failedToUpdateProfile} ${userProvider.errorMessage}')),
         );
       }
     } catch (e) {
@@ -129,18 +130,19 @@ class _UpdateProfileState extends State<UpdateProfile> {
         _isUpdating = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
+        SnackBar(content: Text('${l10n.genericError} $e')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Edit Profile',
+          l10n.editProfile,
           style: TextStyle(
             fontSize: 22.sp,
             fontWeight: FontWeight.bold,
@@ -224,11 +226,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     SizedBox(height: 30.h),
                     CustomTextFormField(
                       controller: _nameController,
-                      hintText: 'Name',
-                      labelText: 'Name',
+                      hintText: l10n.nameLabel,
+                      labelText: l10n.nameLabel,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
+                          return l10n.pleaseEnterName;
                         }
                         return null;
                       },
@@ -236,14 +238,14 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     SizedBox(height: 16.h),
                     CustomTextFormField(
                       controller: _emailController,
-                      hintText: 'Email',
-                      labelText: 'Email',
+                      hintText: l10n.emailLabel,
+                      labelText:l10n.emailLabel,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
+                          return l10n.pleaseEnterEmail;
                         }
                         if (!value.contains('@')) {
-                          return 'Please enter a valid email';
+                          return l10n.invalidEmail;
                         }
                         return null;
                       },
@@ -256,8 +258,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             child: CustomTextFormField(
                               controller: _ageController,
                               keyboardType: TextInputType.phone,
-                              hintText: 'Age',
-                              labelText: 'Age',
+                              hintText: l10n.ageLabel,
+                              labelText: l10n.ageLabel,
                               validator: (value) => null,
                             ),
                           ),
@@ -265,8 +267,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                           Expanded(
                             child: CustomTextFormField(
                               controller: _heightController,
-                              hintText: 'Height (cm)',
-                              labelText: 'Height',
+                              hintText: l10n.heightInCm,
+                              labelText: l10n.heightLabel,
                               keyboardType: TextInputType.phone,
                               validator: (value) => null,
                             ),
@@ -280,8 +282,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _genderController,
-                                hintText: 'Male or Female',
-                                labelText: 'Gender',
+                                hintText: l10n.maleOrFemale,
+                                labelText: l10n.genderLabel,
                                 validator: (value) => null,
                               ),
                             ),
@@ -289,8 +291,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _waistController,
-                                hintText: 'Waist',
-                                labelText: 'Waist',
+                                hintText: l10n.waistLabel,
+                                labelText: l10n.waistLabel,
                                 keyboardType: TextInputType.phone,
                                 validator: (value) => null,
                               ),
@@ -303,8 +305,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _hypertensionController,
-                                hintText: 'Hypertension',
-                                labelText: 'Hypertension',
+                                hintText: l10n.hypertensionLabel,
+                                labelText: l10n.hypertensionLabel,
                                 validator: (value) => null,
                               ),
                             ),
@@ -312,8 +314,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _diabetesController,
-                                hintText: 'Diabetes',
-                                labelText: 'Diabetes',
+                                hintText: l10n.diabetesLabel,
+                                labelText: l10n.diabetesLabel,
                                 validator: (value) => null,
                               ),
                             ),
@@ -323,8 +325,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       SizedBox(height: 16.h),
                       CustomTextFormField(
                         controller: _ethnicityController,
-                        hintText: 'Ethnicity',
-                        labelText: 'Ethnicity',
+                        hintText: l10n.ethnicityLabel,
+                        labelText: l10n.ethnicityLabel,
                         validator: (value) => null,
                       ),
                       if (userProvider.userType == 'Pregnant') ...[
@@ -334,8 +336,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _weightController,
-                                hintText: 'Weight (kg)',
-                                labelText: 'Weight',
+                                hintText: l10n.weightInKg,
+                                labelText: l10n.weightLabel,
                                 keyboardType: TextInputType.phone,
                                 validator: (value) => null,
                               ),
@@ -344,8 +346,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _pregnanciesController,
-                                hintText: 'Pregnancies',
-                                labelText: 'Pregnancies',
+                                hintText: l10n.pregnancies,
+                                labelText: l10n.pregnancies,
                                 keyboardType: TextInputType.phone,
                                 validator: (value) => null,
                               ),
@@ -355,8 +357,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         SizedBox(height: 16.h),
                         CustomTextFormField(
                           controller: _deliveriesController,
-                          hintText: 'Previous Deliveries',
-                          labelText: 'Previous Deliveries',
+                          hintText: l10n.previousDeliveries,
+                          labelText: l10n.previousDeliveries,
                           keyboardType: TextInputType.phone,
                           validator: (value) => null,
                         ),
@@ -366,8 +368,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _familyHistoryController,
-                                hintText: 'Family History',
-                                labelText: 'Family History',
+                                hintText: l10n.familyHistory,
+                                labelText: l10n.familyHistory,
                                 validator: (value) => null,
                               ),
                             ),
@@ -375,8 +377,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _miscarriagesController,
-                                hintText: 'Miscarriages',
-                                labelText: 'Miscarriages',
+                                hintText: l10n.miscarriages,
+                                labelText: l10n.miscarriages,
                                 keyboardType: TextInputType.phone,
                                 validator: (value) => null,
                               ),
@@ -389,8 +391,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _stillbirthsController,
-                                hintText: 'Still Births',
-                                labelText: 'Still Births',
+                                hintText: l10n.stillBirths,
+                                labelText: l10n.stillBirths,
                                 keyboardType: TextInputType.phone,
                                 validator: (value) => null,
                               ),
@@ -399,8 +401,8 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             Expanded(
                               child: CustomTextFormField(
                                 controller: _childrenAliveController,
-                                hintText: 'Children Alive',
-                                labelText: 'Children Alive',
+                                hintText: l10n.childrenAlive,
+                                labelText: l10n.childrenAlive,
                                 keyboardType: TextInputType.phone,
                                 validator: (value) => null,
                               ),
@@ -412,7 +414,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     SizedBox(height: 30.h),
                     CustomButton(
                       onTap: () => _updateProfile(context, userProvider),
-                      buttonText: 'Update Profile',
+                      buttonText: l10n.updateProfile,
                     ),
                     SizedBox(height: 30.h),
                   ],

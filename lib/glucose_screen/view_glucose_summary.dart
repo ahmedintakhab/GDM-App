@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'glucose_pdf_generator.dart';
 
@@ -16,6 +17,7 @@ class ViewGlucoseSummary extends StatefulWidget {
 }
 
 class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   bool _isLoading = true;
@@ -30,6 +32,8 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
   }
 
   Future<void> _fetchGlucoseData() async {
+    final l10n = AppLocalizations.of(context)!;
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -39,7 +43,7 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
       User? user = _auth.currentUser;
       if (user == null) {
         setState(() {
-          _errorMessage = 'No user logged in';
+          _errorMessage = l10n.noUserLoggedIn;
           _isLoading = false;
         });
         return;
@@ -75,10 +79,10 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error fetching glucose data: $e';
+        _errorMessage = '${l10n.errorFetchingGlucose} $e';
         _isLoading = false;
       });
-      Utils().toastMessage('Error fetching glucose data: $e');
+      Utils().toastMessage('${l10n.errorFetchingGlucose} $e');
     }
   }
 
@@ -88,7 +92,7 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
     });
 
     try {
-      await generateAndSaveGlucosePdf(_glucoseData);
+      await generateAndSaveGlucosePdf(_glucoseData,context);
     } catch (e) {
       // Error is already handled in generateAndSaveGlucosePdf with toast
     } finally {
@@ -100,10 +104,11 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Glucose Summary',
+        title:  Text(
+          l10n.glucoseSummary,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -129,7 +134,7 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
               ),
             )
                 : _glucoseData.isEmpty
-                ? const Center(child: Text('No glucose data available'))
+                ?  Center(child: Text(l10n.noGlucoseData))
                 : ListView.builder(
               padding: const EdgeInsets.all(16.0),
               itemCount: _glucoseData.length,
@@ -156,7 +161,7 @@ class _ViewGlucoseSummaryState extends State<ViewGlucoseSummary> {
                   children: [
                     CustomButton(
                       onTap: _isGeneratingPdf ? () {} : _generateAndSavePdf,
-                      buttonText: _isGeneratingPdf ? '' : 'Download PDF',
+                      buttonText: _isGeneratingPdf ? '' : l10n.downloadPdf,
                       leadingIcon: Icon(Icons.download, color: Colors.white,),
                     ),
                     if (_isGeneratingPdf)
@@ -192,6 +197,7 @@ class GlucoseEntryContainer extends StatefulWidget {
 class _GlucoseEntryContainerState extends State<GlucoseEntryContainer> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.only(bottom: 8.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -238,7 +244,7 @@ class _GlucoseEntryContainerState extends State<GlucoseEntryContainer> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Reading', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                        Text(l10n.reading, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
                         Text(widget.data['reading'], style: TextStyle(fontSize: 14.sp)),
                       ],
                     ),
@@ -246,7 +252,7 @@ class _GlucoseEntryContainerState extends State<GlucoseEntryContainer> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Meal Context', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                        Text(l10n.mealContext, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
                         Text(widget.data['mealContext'], style: TextStyle(fontSize: 14.sp)),
                       ],
                     ),
@@ -254,7 +260,7 @@ class _GlucoseEntryContainerState extends State<GlucoseEntryContainer> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Time', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                        Text(l10n.time, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
                         Text(widget.data['time'], style: TextStyle(fontSize: 14.sp)),
                       ],
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'add_reminders_screen.dart';
 import 'reminder_item_widget.dart';
 
@@ -14,13 +15,15 @@ class AllReminders extends StatefulWidget {
 
 class _AllRemindersState extends State<AllReminders> {
   void _deleteReminder(String id) async {
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       await widget.reminderService.deleteReminder(id);
 
       // Show confirmation snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Reminder deleted successfully'),
+          content: Text(l10n.reminderDeletedSuccess),
           backgroundColor: Color(0XFF5AA189),
           duration: Duration(seconds: 2),
         ),
@@ -29,7 +32,7 @@ class _AllRemindersState extends State<AllReminders> {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to delete reminder: ${e.toString()}'),
+          content: Text('${l10n.failedToDeleteReminder} ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
@@ -37,13 +40,15 @@ class _AllRemindersState extends State<AllReminders> {
   }
 
   void _toggleReminder(String id, bool value) async {
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       await widget.reminderService.updateReminderStatus(id, value);
 
       // Show confirmation snackbar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(value ? 'Reminder activated' : 'Reminder deactivated'),
+          content: Text(value ? l10n.reminderActivated : l10n.reminderDeactivated),
           backgroundColor: Color(0XFF5AA189),
           duration: Duration(seconds: 2),
         ),
@@ -52,7 +57,7 @@ class _AllRemindersState extends State<AllReminders> {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to update reminder: ${e.toString()}'),
+          content: Text('${l10n.failedToUpdateReminder} ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );
@@ -61,12 +66,13 @@ class _AllRemindersState extends State<AllReminders> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Color(0XFF5AA189),
         title: Text(
-          'All Reminders',
+          l10n.allReminders,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -103,7 +109,7 @@ class _AllRemindersState extends State<AllReminders> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'No reminders yet',
+                      l10n.noRemindersYet,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.grey[700],
@@ -111,7 +117,7 @@ class _AllRemindersState extends State<AllReminders> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Add a reminder to get started',
+                      l10n.addReminderToStart,
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],

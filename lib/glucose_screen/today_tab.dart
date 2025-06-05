@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/glucose_screen/add_glucose.dart';
 import 'package:gdm_app/glucose_screen/view_glucose_summary.dart';
-import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:gdm_app/utils/utils.dart';
 import '../Home/user_data_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TodayTab extends StatefulWidget {
   @override
@@ -26,11 +25,12 @@ class _TodayTabState extends State<TodayTab> {
 
   Future<void> _fetchDataWithRetry() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
 
     // Check connectivity first
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
-      Utils().toastMessage('No internet connection');
+      Utils().toastMessage(l10n.genericError);
       return;
     }
 
@@ -42,7 +42,7 @@ class _TodayTabState extends State<TodayTab> {
     try {
       await userProvider.fetchUserData();
       await userProvider.fetchGlucoseData();
-      Utils().toastMessage('Data loaded successfully');
+      Utils().toastMessage(l10n.dataLoadedSuccess);
     } catch (e) {
       if (_retryCount < 3) {
         // Exponential backoff
@@ -50,7 +50,7 @@ class _TodayTabState extends State<TodayTab> {
         await _fetchDataWithRetry();
         return;
       }
-      Utils().toastMessage('Failed to load data after $_retryCount attempts');
+      Utils().toastMessage('${l10n.failedToLoadData} $_retryCount ${l10n.to}');
     } finally {
       if (mounted) {
         setState(() {
@@ -62,6 +62,7 @@ class _TodayTabState extends State<TodayTab> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<UserProvider>(
       builder: (context, userProvider, child) {
         if (_isRetrying) {
@@ -71,7 +72,7 @@ class _TodayTabState extends State<TodayTab> {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(height: 16),
-                Text('Retrying... (Attempt $_retryCount/3)'),
+                Text('${l10n.retrying} (${l10n.attempt} $_retryCount/3)'),
               ],
             ),
           );
@@ -84,7 +85,7 @@ class _TodayTabState extends State<TodayTab> {
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: _fetchDataWithRetry,
-                  child: Text('Retry'),
+                  child: Text(l10n.retry),
                 ),
               ],
             ),
@@ -114,20 +115,20 @@ class _TodayTabState extends State<TodayTab> {
                       context,
                       MaterialPageRoute(builder: (context) => AddGlucoseScreen()),
                     ).then((_) {
-                      Utils().toastMessage('Glucose data added');
+                      Utils().toastMessage(l10n.glucoseDataAdded);
                       _fetchDataWithRetry();
                     });
                   },
                   icon: const Icon(Icons.add, color: Colors.white),
-                  label: const Text(
-                    'Glucose',
+                  label: Text(
+                    l10n.glucose,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   backgroundColor: const Color(0xFF5AA189),
-                  tooltip: 'Add Glucose',
+                  tooltip: l10n.addGlucoseTooltip,
                 ),
                 SizedBox(height: 10),
                 FloatingActionButton.extended(
@@ -138,15 +139,15 @@ class _TodayTabState extends State<TodayTab> {
                     );
                   },
                   icon: const Icon(Icons.summarize, color: Colors.white),
-                  label: const Text(
-                    'Summary',
+                  label:  Text(
+                    l10n.summaryButton,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   backgroundColor: const Color(0xFF5AA189),
-                  tooltip: 'View Glucose Summary',
+                  tooltip: l10n.viewGlucoseSummaryTooltip,
                 ),
               ],
             ),
@@ -164,6 +165,7 @@ class _TodayTabState extends State<TodayTab> {
   }
 
   Widget _buildAverageGlucoseCard(UserProvider userProvider) {
+    final l10n = AppLocalizations.of(context)!;
     final glucoseValues = userProvider.glucoseData
         .where((data) => data['value'] != null)
         .map((data) => (data['value'] as num).toDouble()).toList();
@@ -177,7 +179,7 @@ class _TodayTabState extends State<TodayTab> {
         ? glucoseValues.reduce((a, b) => a + b) / glucoseValues.length
         : 0.0;
     // Use the most recent unit if available, otherwise default to 'mg/dl'
-    final unit = units.isNotEmpty ? units.first : 'mg/dl';
+    final unit = units.isNotEmpty ? units.first : l10n.mgDlUnit;
 
     // Format average to show integer if no decimal part, else two decimal places (Line ~110)
     final displayAverage = averageGlucose == averageGlucose.truncateToDouble()
@@ -225,7 +227,7 @@ class _TodayTabState extends State<TodayTab> {
       child: Column(
         children: [
           Text(
-            'Today\'s Avg Blood Glucose',
+            l10n.todayAvgBloodGlucose,
             style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -265,6 +267,7 @@ class _TodayTabState extends State<TodayTab> {
   }
 
   Widget _buildGlucoseLevelsCard(UserProvider userProvider) {
+    final l10n = AppLocalizations.of(context)!;
     final validGlucoseData = userProvider.glucoseData
         .where((data) => data['value'] != null && data['timestamp'] != null && data['mealOption'] != null)        .toList();
 
@@ -285,14 +288,14 @@ class _TodayTabState extends State<TodayTab> {
           child: Column(
             children: [
               Text(
-                'TODAY\'S GLUCOSE LEVELS',
+                l10n.todayGlucoseLevels,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               SizedBox(height: 20),
-              Text('No glucose data available'),
+              Text(l10n.noGlucoseData),
             ],
           ),
         ),
@@ -315,7 +318,7 @@ class _TodayTabState extends State<TodayTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'TODAY\'S GLUCOSE LEVELS',
+            l10n.todayGlucoseLevels,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,

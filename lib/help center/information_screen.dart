@@ -196,7 +196,8 @@ class _InformationScreenState extends State<InformationScreen> {
                     ),
                   ),
                 ],
-              ),              SizedBox(height: 24.h),
+              ),
+              SizedBox(height: 24.h),
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(

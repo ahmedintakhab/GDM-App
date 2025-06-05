@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:provider/provider.dart';
 import '../Home/user_data_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class GdmResponseDialog extends StatelessWidget {
   final String reminderId;
@@ -17,13 +19,14 @@ class GdmResponseDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
       title: Text(
-        'GDM Test Reminder',
+        l10n.gdmTestReminder,
         style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
       ),
       content: Text(
-        'Reminder to go and test for diabetes at the hospital (between 24 to 28 weeks)?',
+        l10n.gdmTestReminderMessage,
         style: TextStyle(fontSize: 16.sp),
       ),
       actions: [
@@ -33,15 +36,15 @@ class GdmResponseDialog extends StatelessWidget {
             final snoozeDuration = await showDialog<String>(
               context: context,
               builder: (context) => SimpleDialog(
-                title: Text('Snooze Reminder', style: TextStyle(fontSize: 16.sp)),
+                title: Text(l10n.snoozeReminder, style: TextStyle(fontSize: 16.sp)),
                 children: [
                   SimpleDialogOption(
                     onPressed: () => Navigator.pop(context, '3days'),
-                    child: Text('Snooze for 3 days', style: TextStyle(fontSize: 14.sp)),
+                    child: Text(l10n.snoozeFor3Days, style: TextStyle(fontSize: 14.sp)),
                   ),
                   SimpleDialogOption(
                     onPressed: () => Navigator.pop(context, '1week'),
-                    child: Text('Snooze for 1 week', style: TextStyle(fontSize: 14.sp)),
+                    child: Text(l10n.snoozeFor1Week, style: TextStyle(fontSize: 14.sp)),
                   ),
                 ],
               ),
@@ -52,7 +55,7 @@ class GdmResponseDialog extends StatelessWidget {
               Navigator.pop(context);
             }
           },
-          child: Text('Thanks for the reminder', style: TextStyle(fontSize: 14.sp)),
+          child: Text(l10n.thanksForReminder, style: TextStyle(fontSize: 14.sp)),
         ),
         TextButton(
           onPressed: () async {
@@ -60,7 +63,7 @@ class GdmResponseDialog extends StatelessWidget {
             await Provider.of<UserProvider>(context, listen: false).updateGdmTestStatus(true);
             Navigator.pop(context);
           },
-          child: Text('I have done it', style: TextStyle(fontSize: 14.sp, color: Colors.green)),
+          child: Text(l10n.iHaveDoneIt, style: TextStyle(fontSize: 14.sp, color: Colors.green)),
         ),
       ],
     );

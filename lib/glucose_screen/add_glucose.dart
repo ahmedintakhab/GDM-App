@@ -6,6 +6,7 @@ import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../Home/user_data_provider.dart';
 import '../widgets/time_picker.dart';
@@ -25,10 +26,21 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
 
   String _selectedMealOption = 'Before Breakfast';
   bool _isLoading = false; // Track loading state
-  String _selectedUnit = 'mg/dl';
+  String? _selectedUnit;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  @override
+  void initState() {
+    super.initState();
+    // Initialize _selectedUnit after context is available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        _selectedUnit = AppLocalizations.of(context)!.mgDlUnit;
+        _selectedMealOption = AppLocalizations.of(context)!.beforeBreakfast;
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -40,6 +52,8 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
 
   // Function to save glucose data to Firestore
   Future<void> _saveGlucoseData() async {
+    final l10n = AppLocalizations.of(context)!;
+
     setState(() {
       _isLoading = true; // Show loading indicator
     });
@@ -48,7 +62,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
       // Get the current user's UID
       final uid = _auth.currentUser?.uid;
       if (uid == null) {
-        Utils().toastMessage('User not logged in!');
+        Utils().toastMessage(l10n.noUserLoggedIn);
         return;
       }
 
@@ -63,7 +77,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
         // Parse and validate glucose value
         final glucoseValue = double.tryParse(_glucoseController.text);
         if (glucoseValue == null) {
-          Utils().toastMessage('Please enter a valid glucose value!');
+          Utils().toastMessage(l10n.invalidGlucoseValue);
           setState(() {
             _isLoading = false;
           });
@@ -92,7 +106,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
             .add(glucoseData);
 
         // Show success toast message
-        Utils().toastMessage('Successfully added glucose data!');
+        Utils().toastMessage(l10n.glucoseDataAdded);
 
         // Fetch updated glucose data in the UserProvider after the current frame
         WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -104,7 +118,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
         // Navigate back to the previous screen
         Navigator.pop(context);
       } else {
-        Utils().toastMessage('User not found in any collection!');
+        Utils().toastMessage(l10n.userNotFound);
       }
     } catch (e) {
       // Handle errors
@@ -144,10 +158,11 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'GLUCOSE',
+        title:  Text(
+          l10n.glucose,
           style: TextStyle(
             color: Colors.white,
             fontSize: 22,
@@ -171,8 +186,8 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
               SizedBox(height: 16),
               CustomTextFormField(
                 controller: _timeController,
-                hintText: 'Select time (HH:mm)',
-                validator: (value) => value?.isEmpty ?? true ? 'Please select time' : null,
+                hintText: l10n.selectTimeHint,
+                validator: (value) => value?.isEmpty ?? true ? l10n.pleaseSelectTime : null,
                 suffixIcon: IconButton(
                   icon: Icon(Icons.access_time,),
                   color: Color(0XFF5AA189),
@@ -183,13 +198,13 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
               SizedBox(height: 16),
               CustomTextFormField(
                 controller: _dateController,
-                hintText: 'Select date (yyyy-MM-dd)',
+                hintText: l10n.selectDateHint,
                 suffixIcon: IconButton(
                   icon: Icon(Icons.calendar_today),
                   color: Color(0XFF5AA189),
                   onPressed: () => _selectDate(context),
                 ),
-                validator: (value) => value?.isEmpty ?? true ? 'Please select date' : null,
+                validator: (value) => value?.isEmpty ?? true ? l10n.pleaseSelectDate : null,
               ),
 
               const SizedBox(height: 16),
@@ -204,8 +219,8 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Glucose level',
+                     Text(
+                      l10n.glucoseLevel,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -225,8 +240,8 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                             child: TextField(
                               controller: _glucoseController,
                               keyboardType: TextInputType.numberWithOptions(decimal: true),
-                              decoration: const InputDecoration(
-                                hintText: 'Value',
+                              decoration:  InputDecoration(
+                                hintText: l10n.valueHint,
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.symmetric(horizontal: 16),
                               ),
@@ -236,7 +251,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: DropdownButton<String>(
                               value: _selectedUnit,
-                              items: ['mg/dl', 'mmol/L'].map((String unit) {
+                              items: [l10n.mgDlUnit, l10n.mmolLUnit].map((String unit) {
                                 return DropdownMenuItem<String>(
                                   value: unit,
                                   child: Text(
@@ -285,22 +300,22 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                         MealSelection(
                           onTap: () {
                             setState(() {
-                              _selectedMealOption = 'Before Breakfast';
+                              _selectedMealOption = l10n.beforeBreakfast;
                             });
                           },
                           icon: Icons.free_breakfast,
-                          label: 'Before Breakfast',
+                          label: l10n.beforeBreakfast,
                           selectedMealOption: _selectedMealOption,
                         ),
                         const SizedBox(width: 10),
                         MealSelection(
                           onTap: () {
                             setState(() {
-                              _selectedMealOption = 'After Breakfast';
+                              _selectedMealOption = l10n.afterBreakfast;
                             });
                           },
                           icon: Icons.restaurant,
-                          label: 'After Breakfast',
+                          label: l10n.afterBreakfast,
                           selectedMealOption: _selectedMealOption,
                         ),
                       ],
@@ -311,22 +326,22 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                           MealSelection(
                             onTap: () {
                               setState(() {
-                                _selectedMealOption = 'Before Lunch';
+                                _selectedMealOption = l10n.beforeLunch;
                               });
                             },
                             icon: Icons.lunch_dining,
-                            label: 'Before Lunch',
+                            label: l10n.beforeLunch,
                             selectedMealOption: _selectedMealOption,
                           ),
                           const SizedBox(width: 10),
                           MealSelection(
                             onTap: () {
                               setState(() {
-                                _selectedMealOption = 'After Lunch';
+                                _selectedMealOption = l10n.afterLunch;
                               });
                             },
                             icon: Icons.restaurant,
-                            label: 'After Lunch',
+                            label: l10n.afterLunch,
                             selectedMealOption: _selectedMealOption,
                           ),
                         ],
@@ -337,22 +352,22 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                           MealSelection(
                             onTap: () {
                               setState(() {
-                                _selectedMealOption = 'Before Dinner';
+                                _selectedMealOption = l10n.beforeDinner;
                               });
                             },
                             icon: Icons.dinner_dining,
-                            label: 'Before Dinner',
+                            label: l10n.beforeDinner,
                             selectedMealOption: _selectedMealOption,
                           ),
                           const SizedBox(width: 10),
                           MealSelection(
                             onTap: () {
                               setState(() {
-                                _selectedMealOption = 'After Dinner';
+                                _selectedMealOption = l10n.afterDinner;
                               });
                             },
                             icon: Icons.restaurant,
-                            label: 'After Dinner',
+                            label: l10n.afterDinner,
                             selectedMealOption: _selectedMealOption,
                           ),
                         ],
@@ -367,7 +382,7 @@ class _AddGlucoseScreenState extends State<AddGlucoseScreen> {
                 children: [
                   CustomButton(
                     onTap: _saveGlucoseData, // Call _savePillsData on button tap
-                    buttonText: _isLoading ? '' : 'Save', // Hide text when loading
+                    buttonText: _isLoading ? '' : l10n.save, // Hide text when loading
                   ),
                   if (_isLoading)
                     Positioned(

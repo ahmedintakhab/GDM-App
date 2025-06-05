@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class DeleteReminderDialog extends StatelessWidget {
   final VoidCallback onDelete;
@@ -10,16 +12,17 @@ class DeleteReminderDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
       title: Text(
-        'Delete Reminder',
+        l10n.deleteReminder,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
       ),
       content: Text(
-        'Are you sure you want to delete?',
+        l10n.confirmDeleteReminder,
         style: TextStyle(
           fontSize: 16,
           color: Colors.black87,
@@ -32,7 +35,7 @@ class DeleteReminderDialog extends StatelessWidget {
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
-            'Cancel',
+            l10n.cancel,
             style: TextStyle(
               color: Colors.grey[700],
               fontWeight: FontWeight.w500,
@@ -42,7 +45,7 @@ class DeleteReminderDialog extends StatelessWidget {
         TextButton(
           onPressed: onDelete,
           child: Text(
-            'Delete',
+            l10n.delete,
             style: TextStyle(
               color: Colors.red[700],
               fontWeight: FontWeight.w500,

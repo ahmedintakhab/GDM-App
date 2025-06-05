@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class LogoutDialog extends StatelessWidget {
   final VoidCallback onLogout;
@@ -22,6 +24,8 @@ class LogoutDialog extends StatelessWidget {
   }
 
   Widget contentBox(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: EdgeInsets.all(40.r),
       decoration: BoxDecoration(
@@ -33,7 +37,7 @@ class LogoutDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Are you sure you want to logout?',
+            l10n.logoutConfirmation,
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.w600,
@@ -60,9 +64,9 @@ class LogoutDialog extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Logout',
+                    l10n.logout,
                     style: TextStyle(
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -84,9 +88,9 @@ class LogoutDialog extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Cancel',
+                    l10n.cancel,
                     style: TextStyle(
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

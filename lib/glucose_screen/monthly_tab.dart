@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 import '../Home/user_data_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MonthlyTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final userProvider = Provider.of<UserProvider>(context);
     final monthlyData = _processMonthlyData(userProvider.glucoseData);
     final monthlyAverage = _calculateMonthlyAverage(monthlyData);
@@ -17,9 +20,9 @@ class MonthlyTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAverageGlucoseCard(monthlyAverage, mood, userProvider),
+          _buildAverageGlucoseCard(monthlyAverage, mood, userProvider,localizations),
           SizedBox(height: 24),
-          _buildGlucoseLevelsCard(monthlyData),
+          _buildGlucoseLevelsCard(monthlyData,localizations),
         ],
       ),
     );
@@ -70,11 +73,13 @@ class MonthlyTab extends StatelessWidget {
     return 'sad';
   }
 
-  Widget _buildAverageGlucoseCard(double value, String mood, UserProvider userProvider) {
+  Widget _buildAverageGlucoseCard(double value, String mood,
+      UserProvider userProvider,AppLocalizations localizations) {
     final displayValue = value == value.truncateToDouble()
         ? value.toInt().toString()
         : value.toStringAsFixed(2);
-    final unit = userProvider.glucoseData.isNotEmpty ? userProvider.glucoseData.first['unit'] : 'mg/dl';
+    final unit = userProvider.glucoseData.isNotEmpty ?
+    userProvider.glucoseData.first['unit'] : localizations.mgDlUnit;
     IconData moodIcon;
     Color moodColor;
 
@@ -115,7 +120,7 @@ class MonthlyTab extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Monthly Avg Blood Glucose',
+            localizations.monthlyAvgBloodGlucose,
             style: TextStyle(
                 fontSize: 18,
                 color: Colors.black,
@@ -154,7 +159,7 @@ class MonthlyTab extends StatelessWidget {
     );
   }
 
-  Widget _buildGlucoseLevelsCard(Map<int, double> monthlyData) {
+  Widget _buildGlucoseLevelsCard(Map<int, double> monthlyData,AppLocalizations localizations) {
     final now = DateTime.now();
     final daysInMonth = DateUtils.getDaysInMonth(now.year, now.month);
     final hasData = monthlyData.values.any((value) => value > 0);
@@ -178,8 +183,7 @@ class MonthlyTab extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'MONTH GLUCOSE LEVELS',
-                style: TextStyle(
+                localizations.monthGlucoseLevels,                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -278,8 +282,7 @@ class MonthlyTab extends StatelessWidget {
                 ),
               ],
             )
-                : Center(child: Text('No glucose data available')),
-          ),
+                : Center(child: Text(localizations.noWeightData)),          ),
         ],
       ),
     );

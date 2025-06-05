@@ -1,5 +1,7 @@
 // question_radio_widget.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class QuestionRadioWidget extends StatelessWidget {
   final String question;
@@ -15,6 +17,8 @@ class QuestionRadioWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,10 +34,10 @@ class QuestionRadioWidget extends StatelessWidget {
         Row(
           children: [
             // Yes Radio Button
-            _buildRadioButton('Yes', selectedValue == 'Yes'),
+            _buildRadioButton(l10n.yes, selectedValue == l10n.yes),
             const SizedBox(width: 20),
             // No Radio Button
-            _buildRadioButton('No', selectedValue == 'No'),
+            _buildRadioButton(l10n.no, selectedValue == l10n.no),
           ],
         ),
         const SizedBox(height: 20), // Spacing between questions

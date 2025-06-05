@@ -5,6 +5,8 @@ import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/dropdown_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class PregnancyRegistrationScreen extends StatefulWidget {
   final String selectedOption;
@@ -63,10 +65,11 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Pregnancy Registration',
+          l10n.pregnancyRegistration,
           style: TextStyle(
             color: const Color(0xFF5AA189),
             fontSize: 20.sp,
@@ -89,9 +92,9 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 // LMP Field
                 CustomTextFormField(
                   controller: _lmpController,
-                  hintText: 'Last Menstrual Period (LMP)',
+                  hintText: l10n.lmpLabel,
                   readOnly: true,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter LMP' : null,
+                  validator: (value) => value?.isEmpty ?? true ? l10n.pleaseEnterLMP : null,
                   suffixIcon: IconButton(
                     icon: Icon(Icons.calendar_today),
                     color: Color(0XFF5AA189),
@@ -103,9 +106,9 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 // Expected Due Date Field (read-only)
                 CustomTextFormField(
                   controller: _dueDateController,
-                  hintText: 'Expected Due Date (Read only)',
+                  hintText: l10n.expectedDueDate,
                   readOnly: true,
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter LMP to calculate' : null,
+                  validator: (value) => value?.isEmpty ?? true ? l10n.pleaseEnterLMPToCalculate : null,
                   suffixIcon: Icon(
                     Icons.calendar_today,
                     color: Color(0XFF5AA189),
@@ -124,8 +127,8 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                   },
                   showDiabetesTestDate: _showDiabetesTestDate,
                   diabetesTestDateController: _diabetesTestDateController,
-                  items: ['Yes', 'No', 'Not Sure'], // Pass the items
-                  label: 'Did you have a test for diabetes during this pregnancy?', // Pass the label
+                  items: [l10n.yes, l10n.no, l10n.notSure], // Pass the items
+                  label: l10n.diabetesTestDate, // Pass the label
                 ),
 
                 SizedBox(height: 16.h),
@@ -133,14 +136,14 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
                 CustomTextFormField(
                   controller: _ageController,
                   keyboardType: TextInputType.phone,
-                  hintText: 'Enter your age',
+                  hintText: l10n.ageLabel,
                   validator: (value) =>  null,
                 ),
                 SizedBox(height: 16.h),
 
                 CustomTextFormField(
                   controller: _weightController,
-                  hintText: ' Enter your weight (kg)',
+                  hintText: l10n.weightLabel,
                   keyboardType: TextInputType.phone,
                   validator: (value) =>  null,
                 ),
@@ -148,7 +151,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
                 CustomTextFormField(
                   controller: _heightController,
-                  hintText: 'Enter your height (cm)',
+                  hintText: l10n.heightLabel,
                   keyboardType: TextInputType.phone,
                   validator: (value) => null,
                 ),
@@ -156,21 +159,21 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
                 CustomTextFormField(
                   controller: _ethnicityController,
-                  hintText: 'Enter your ethnicity',
+                  hintText: l10n.ethnicityLabel,
                   validator: (value) =>  null,
                 ),
                 SizedBox(height: 16.h),
 
                 CustomTextFormField(
                   controller: _familyHistoryController,
-                  hintText: 'Family History of Type 2 Diabetes',
+                  hintText: l10n.familyHistoryDiabetes,
                   validator: (value) => null,
                 ),
                 SizedBox(height: 16.h),
 
                 CustomTextFormField(
                   controller: _pregnanciesController,
-                  hintText: 'Number of Pregnancies',
+                  hintText: l10n.numberOfPregnancies,
                   keyboardType: TextInputType.phone,
                   validator: (value) => null,
                 ),
@@ -178,7 +181,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
                 CustomTextFormField(
                   controller: _deliveriesController,
-                  hintText: 'Number of Previous Deliveries',
+                  hintText: l10n.numberOfDeliveries,
                   keyboardType: TextInputType.phone,
                   validator: (value) => null,
                 ),
@@ -186,7 +189,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
                 CustomTextFormField(
                   controller: _miscarriagesController,
-                  hintText: 'Number of Miscarriages',
+                  hintText: l10n.numberOfMiscarriages,
                   keyboardType: TextInputType.phone,
                   validator: (value) => null,
                 ),
@@ -194,7 +197,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
                 CustomTextFormField(
                   controller: _stillbirthsController,
-                  hintText: 'Number of Stillbirths',
+                  hintText: l10n.numberOfStillbirths,
                   keyboardType: TextInputType.phone,
                   validator: (value) => null,
                 ),
@@ -202,7 +205,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
 
                 CustomTextFormField(
                   controller: _childrenAliveController,
-                  hintText: 'Number of Children Alive',
+                  hintText: l10n.numberOfChildrenAlive,
                   keyboardType: TextInputType.phone,
                   validator: (value) => null,
                 ),
@@ -223,7 +226,7 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
     // Navigate back
     Navigator.pop(context);
     },
-    buttonText: 'Back',
+    buttonText: l10n.back,
     ),
     ),
     // Next Button
@@ -251,11 +254,13 @@ class _PregnancyRegistrationScreenState extends State<PregnancyRegistrationScree
         // Navigate to the next screen
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DiabetesTypeScreen(pregnancyData : pregnancyData, reminderService: widget.reminderService)),
+          MaterialPageRoute(builder: (context) =>
+              DiabetesTypeScreen(pregnancyData : pregnancyData,
+                  reminderService: widget.reminderService)),
         );
       }
     },
-    buttonText: 'Next',
+    buttonText: l10n.next,
     ),
     ),
     ],

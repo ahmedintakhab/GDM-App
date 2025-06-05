@@ -5,11 +5,16 @@ import 'package:share_plus/share_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'dart:io';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
 
-Future<void> generateAndSaveGlucosePdf(List<Map<String, dynamic>> glucoseData) async {
+
+
+Future<void> generateAndSaveGlucosePdf(List<Map<String, dynamic>> glucoseData,BuildContext context) async {
   try {
     // Create a new PDF document
     final pdf = pw.Document();
+    final l10n = AppLocalizations.of(context)!;
 
     // Add a page with a table of glucose data
     pdf.addPage(
@@ -18,7 +23,7 @@ Future<void> generateAndSaveGlucosePdf(List<Map<String, dynamic>> glucoseData) a
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             pw.Text(
-              'Glucose Summary Report',
+              l10n.glucoseSummaryReport,
               style: pw.TextStyle(
                 fontSize: 24,
                 fontWeight: pw.FontWeight.bold,
@@ -26,7 +31,7 @@ Future<void> generateAndSaveGlucosePdf(List<Map<String, dynamic>> glucoseData) a
             ),
             pw.SizedBox(height: 20),
             pw.Text(
-              'Generated on: ${DateFormat('dd MMM yyyy HH:mm').format(DateTime.now())}',
+              '${l10n.generatedOn} ${DateFormat('dd MMM yyyy HH:mm').format(DateTime.now())}',
               style: const pw.TextStyle(fontSize: 14),
             ),
             pw.SizedBox(height: 20),
@@ -46,28 +51,28 @@ Future<void> generateAndSaveGlucosePdf(List<Map<String, dynamic>> glucoseData) a
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(10),
                       child: pw.Text(
-                        'Date',
+                        l10n.date,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(10),
                       child: pw.Text(
-                        'Time',
+                        l10n.time,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(10),
                       child: pw.Text(
-                        'Reading',
+                        l10n.reading,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(10),
                       child: pw.Text(
-                        'Meal Context',
+                        l10n.mealContext,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
@@ -107,15 +112,16 @@ Future<void> generateAndSaveGlucosePdf(List<Map<String, dynamic>> glucoseData) a
     await file.writeAsBytes(await pdf.save());
 
     // Share the PDF file
-    await Share.shareXFiles([XFile(file.path)], text: 'Glucose Summary Report');
+    await Share.shareXFiles([XFile(file.path)], text: l10n.glucoseSummaryReport);
 
-    Utils().toastMessage('PDF generated and shared successfully!');
+    Utils().toastMessage(l10n.pdfGeneratedSuccess);
     print("PDF generated and Shared successfully!");
   } catch (e) {
     if (kDebugMode) {
       print('Error generating PDF: $e');
     }
-    Utils().toastMessage('Error generating PDF: $e');
+    final l10n = AppLocalizations.of(context)!;
+    Utils().toastMessage('${l10n.errorGeneratingPdf} $e');
     rethrow; // Rethrow to allow caller to handle the error
   }
 }

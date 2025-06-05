@@ -3,18 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:gdm_app/glucose_screen/monthly_tab.dart';
 import 'package:gdm_app/glucose_screen/today_tab.dart';
 import 'package:gdm_app/glucose_screen/weekly_tab.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class GlucoseDetailsScreen extends StatelessWidget {
   const GlucoseDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Your glucose',
+            l10n.yourGlucose,
             style: TextStyle(
               color: Colors.black,
               fontSize: 26,
@@ -40,9 +43,9 @@ class GlucoseDetailsScreen extends StatelessWidget {
             labelStyle: TextStyle(fontSize: 16,
             fontWeight: FontWeight.bold),
             tabs: [
-              Tab(text: 'Daily'),
-              Tab(text: 'Weekly'),
-              Tab(text: 'Monthly'),
+              Tab(text: l10n.daily),
+              Tab(text: l10n.weekly),
+              Tab(text: l10n.monthly),
             ],
           ),
         ),

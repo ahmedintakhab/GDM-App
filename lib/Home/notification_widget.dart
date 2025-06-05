@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationItem extends StatelessWidget {
   final Color avatarColor;
@@ -18,6 +19,7 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 12),
@@ -71,8 +73,8 @@ class NotificationItem extends StatelessWidget {
                             color: Colors.blue,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text(
-                            'New',
+                          child:  Text(
+                            l10n.newNotification,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,

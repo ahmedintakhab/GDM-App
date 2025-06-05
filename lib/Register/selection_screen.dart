@@ -9,12 +9,11 @@ import 'package:gdm_app/Register/pregnancy_register_screen.dart';
 import 'package:gdm_app/Register/users_signup_screen.dart';
 import 'package:gdm_app/Register/without_pregnancy_signup.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../Home/user_data_provider.dart';
 import '../reminder/reminder_service_implementation.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +34,8 @@ void main() async {
         Provider<ReminderService>.value(value: reminderService),
       ],
       child: MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: SelectionScreen(reminderService: reminderService),
       ),
     ),
@@ -51,9 +52,16 @@ class SelectionScreen extends StatefulWidget {
 }
 
 class _SelectionScreenState extends State<SelectionScreen> {
-  String? _selectedOption; // To store the selected option
+  String? _selectedOptionKey; // To store the selected option key (non-localized)
 
-  Future<void> saveSelectedOption(String selectedOption) async {
+  // Map of option keys to their localized display values
+  Map<String, String> getOptionLabels(AppLocalizations l10n) => {
+    'pregnant': l10n.pregnant,
+    'notPregnant': l10n.notPregnant,
+    'doctor': l10n.doctor,
+  };
+
+  Future<void> saveSelectedOption(String optionKey) async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -61,7 +69,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
             .collection('Users')
             .doc(user.uid)
             .set({
-          'userType': selectedOption,
+          'userType': optionKey, // Save the non-localized key
           'createdAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
         print('User type saved successfully');
@@ -73,37 +81,49 @@ class _SelectionScreenState extends State<SelectionScreen> {
     }
   }
 
-
-  // Function to handle navigation based on the selected option
+  // Function to handle navigation based on the selected option key
   void _navigateToNextScreen() async {
-    if (_selectedOption == null) {
+    final l10n = AppLocalizations.of(context)!;
+    if (_selectedOptionKey == null) {
       // Show an error if no option is selected
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select an option')),
+        SnackBar(content: Text(l10n.pleaseSelectOption)),
       );
       return;
     }
-    await saveSelectedOption(_selectedOption!);
 
-    // Navigate to the respective screen based on the selected option
-    switch (_selectedOption) {
-      case 'Pregnant':
+    await saveSelectedOption(_selectedOptionKey!);
+
+    // Navigate to the respective screen based on the selected option key
+    switch (_selectedOptionKey) {
+      case 'pregnant':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PregnancyRegistrationScreen(selectedOption: _selectedOption!,
-              reminderService: widget.reminderService)),
+          MaterialPageRoute(
+            builder: (context) => PregnancyRegistrationScreen(
+              selectedOption: l10n.pregnant, // Pass localized value for display
+              reminderService: widget.reminderService,
+            ),
+          ),
         );
         break;
-      case 'Not Pregnant':
+      case 'notPregnant':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => WithoutPregnancySignup(selectedOption: _selectedOption!,reminderService: widget.reminderService)),
+          MaterialPageRoute(
+            builder: (context) => WithoutPregnancySignup(
+              selectedOption: l10n.notPregnant, // Pass localized value for display
+              reminderService: widget.reminderService,
+            ),
+          ),
         );
         break;
-      case 'Doctor':
+      case 'doctor':
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen(reminderService: widget.reminderService)),
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(reminderService: widget.reminderService),
+          ),
         );
         break;
     }
@@ -111,60 +131,76 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final optionLabels = getOptionLabels(l10n);
+
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.teal,
-        title: const Text('User Selection',style:
-        TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+      appBar: AppBar(
+        backgroundColor: Colors.teal,
+        title: Text(
+          l10n.userSelection,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Choose an option to navigate smoothly!',
+            Text(
+              l10n.chooseOption,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'I am',
+            Text(
+              l10n.iAm,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 20),
-            // Custom Radio Button Box for "I am pregnant"
-            _buildRadioButtonBox('Pregnant'),
-            const SizedBox(height: 16),
-            // Custom Radio Button Box for "I am not pregnant"
-            _buildRadioButtonBox('Not Pregnant'),
-            const SizedBox(height: 16),
-            // Custom Radio Button Box for "I am a doctor"
-            _buildRadioButtonBox('Doctor'),
+            // Custom Radio Button Box for each option
+            ...optionLabels.entries.map((entry) {
+              return Column(
+                children: [
+                  _buildRadioButtonBox(
+                    optionKey: entry.key,
+                    optionLabel: entry.value,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              );
+            }).toList(),
             const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.only(left: 100.0 , right: 15),
+              padding: const EdgeInsets.only(left: 100.0, right: 15),
               child: Center(
                 child: RichText(
                   text: TextSpan(
-                    text: 'Dont have an account?  ',
+                    text: l10n.dontHaveAccount,
                     style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.sp,
-                        fontFamily: 'Gilroy'),
+                      color: Colors.black,
+                      fontSize: 15.sp,
+                      fontFamily: 'Gilroy',
+                    ),
                     children: [
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Get.to( UsersSignupScreen(reminderService: widget.reminderService));
+                            Get.to(
+                              UsersSignupScreen(reminderService: widget.reminderService),
+                            );
                           },
-                        text: 'SignUp',
+                        text: l10n.signUp,
                         style: TextStyle(
-                          color: Color(0XFF000000),
+                          color: const Color(0xFF000000),
                           fontSize: 17.sp,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Gilroy',
@@ -176,23 +212,27 @@ class _SelectionScreenState extends State<SelectionScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
             // Show Next Button only if a radio button is selected
-            if (_selectedOption != null)
+            if (_selectedOptionKey != null)
               Center(
                 child: ElevatedButton(
                   onPressed: _navigateToNextScreen,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0XFF5AA189),
+                    backgroundColor: const Color(0xFF5AA189),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 120, vertical: 20),
+                      horizontal: 120,
+                      vertical: 20,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  child: Text(
+                    l10n.next,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -203,34 +243,47 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 
   // Helper method to build a custom radio button box
-  Widget _buildRadioButtonBox(String option) {
+  Widget _buildRadioButtonBox({
+    required String optionKey,
+    required String optionLabel,
+  }) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedOption = option; // Update the selected option
+          _selectedOptionKey = optionKey; // Store the non-localized key
         });
       },
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: _selectedOption == option ? const Color(0xFFE8F5E9) : Colors.transparent,
+          color: _selectedOptionKey == optionKey
+              ? const Color(0xFFE8F5E9)
+              : Colors.transparent,
           border: Border.all(
-            color: _selectedOption == option ? const Color(0xFF4CAF50) : Colors.grey.shade300,
+            color: _selectedOptionKey == optionKey
+                ? const Color(0xFF4CAF50)
+                : Colors.grey.shade300,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [
             Icon(
-              _selectedOption == option ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-              color: _selectedOption == option ? const Color(0xFF4CAF50) : Colors.grey,
+              _selectedOptionKey == optionKey
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: _selectedOptionKey == optionKey
+                  ? const Color(0xFF4CAF50)
+                  : Colors.grey,
             ),
             const SizedBox(width: 12),
             Text(
-              option,
+              optionLabel,
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: _selectedOption == option ? FontWeight.w600 : FontWeight.w400,
+                fontWeight: _selectedOptionKey == optionKey
+                    ? FontWeight.w600
+                    : FontWeight.w400,
               ),
             ),
           ],

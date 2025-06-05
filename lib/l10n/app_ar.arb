@@ -38,6 +38,7 @@
   "genderLabel": "الجنس",
   "maleOption": "ذكر",
   "femaleOption": "أنثى",
+  "maleOrFemale": "ذكر أو أنثى",
   "weightLabel": "الوزن",
   "pleaseEnterWeight": "أدخل وزنك",
   "weightInKg": "أدخل وزنك بالكيلوغرام",
@@ -107,6 +108,7 @@
     "pleaseSelectUnit": "يرجى اختيار وحدة",
     "logoutConfirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
     "cancel": "إلغاء",
+     "attempt": "محاولة",
     "logout": "تسجيل الخروج",
     "home": "الرئيسية",
     "notification": "إشعار",
@@ -147,6 +149,7 @@
     "errorDeletingNotifications": "خطأ في حذف الإشعارات:",
     "newNotification": "جديد",
     "steps": "خطوات",
+     "to": "إلى",
     "notWalking": "لا يمشي. التباين:",
     "stepDetected": "تم اكتشاف خطوة! التباين:",
     "initializing": "جارٍ التهيئة...",
@@ -203,6 +206,12 @@
       "gdmAssistantChat": "دردشة مساعد السكري الحملي",
       "you": "أنت",
       "gdmAI": "ذكاء السكري الحملي",
+      "pregnancies": "الحمل",
+          "previousDeliveries": "الولادات السابقة",
+          "familyHistory": "التاريخ العائلي",
+          "miscarriages": "الإجهاض",
+          "stillBirths": "الولادات الميتة",
+          "childrenAlive": "الأطفال الأحياء",
       "typing": "يكتب...",
       "typeMessage": "اكتب رسالة...",
       "pleaseEnterQuestion": "أدخل سؤالاً",
@@ -235,6 +244,11 @@
         "afterLunch": "بعد الغداء",
         "beforeDinner": "قبل العشاء",
         "afterDinner": "بعد العشاء",
+         "before": "قبل",
+          "after": "بعد",
+          "breakfast": "فطور",
+          "lunch": "غداء",
+          "dinner": "عشاء",
         "save": "حفظ",
         "invalidGlucoseValue": "أدخل قيمة جلوكوز صالحة!",
         "glucoseDataAdded": "تم إضافة بيانات الجلوكوز بنجاح!",
@@ -245,6 +259,9 @@
         "date": "التاريخ",
         "time": "الوقت",
         "reading": "القراءة",
+        "getStarted": "ابدأ الآن",
+        "dontHaveAccount": "ليس لديك حساب؟",
+         "skip": "تخطي",
         "mealContext": "سياق الوجبة",
         "pdfGenerated": "تم إنشاء ومشاركة ملف PDF بنجاح!",
         "errorGeneratingPdf": "خطأ في إنشاء ملف PDF:",
@@ -264,6 +281,7 @@
           "glucoseButton": "الجلوكوز",
           "summaryButton": "الملخص",
           "addGlucoseTooltip": "إضافة جلوكوز",
+            "noGlucoseData": "لا توجد بيانات جلوكوز متاحة",
           "viewGlucoseSummaryTooltip": "عرض ملخص الجلوكوز",
           "dataLoadedSuccess": "تم تحميل البيانات بنجاح",
           "failedToLoadData": "فشل في تحميل البيانات بعد",
@@ -1415,5 +1433,57 @@
                 },
                 "@notApplicable": {
                   "description": "قيمة احتياطية لبيانات الوزن المفقودة"
-                }
+                },
+                "outsidePregnancyDiagnosis": "خارج الحمل، تم تشخيصي بـ",
+                  "@outsidePregnancyDiagnosis": {
+                    "description": "عنوان شاشة DiabetesTypeScreen يسأل عن التشخيصات خارج الحمل"
+                  },
+                  "diagnosisType2Diabetes": "السكري (النوع الثاني)",
+                  "@diagnosisType2Diabetes": {
+                    "description": "خيار التشخيص للسكري من النوع الثاني"
+                  },
+                  "diagnosisType1Diabetes": "السكري (النوع الأول)",
+                  "@diagnosisType1Diabetes": {
+                    "description": "خيار التشخيص للسكري من النوع الأول"
+                  },
+                  "diagnosisPrediabetes": "ما قبل السكري",
+                  "@diagnosisPrediabetes": {
+                    "description": "خيار التشخيص لما قبل السكري"
+                  },
+                  "diagnosisHypertension": "ارتفاع ضغط الدم",
+                  "@diagnosisHypertension": {
+                    "description": "خيار التشخيص لارتفاع ضغط الدم"
+                  },
+                  "diagnosisHeartDisease": "أمراض القلب",
+                  "@diagnosisHeartDisease": {
+                    "description": "خيار التشخيص لأمراض القلب"
+                  },
+                  "diagnosisObesity": "السمنة",
+                  "@diagnosisObesity": {
+                    "description": "خيار التشخيص للسمنة"
+                  },
+                  "diagnosisLipidDisorders": "اضطرابات الدهون/الكوليسترول",
+                  "@diagnosisLipidDisorders": {
+                    "description": "خيار التشخيص لاضطرابات الدهون/الكوليسترول"
+                  },
+                  "diagnosisOther": "أخرى",
+                  "@diagnosisOther": {
+                    "description": "خيار التشخيص للحالات الأخرى غير المحددة"
+                  },
+                  "pleaseSpecify": "يرجى التوضيح",
+                  "@pleaseSpecify": {
+                    "description": "نص التلميح لحقل نص التشخيص 'أخرى'"
+                  },
+                  "pleaseEnterDiagnosis": "يرجى إدخال التشخيص",
+                  "@pleaseEnterDiagnosis": {
+                    "description": "رسالة التحقق عندما يكون حقل التشخيص 'أخرى' فارغًا"
+                  },
+                  "pleaseSelectAtLeastOneOption": "يرجى تحديد خيار واحد على الأقل",
+                  "@pleaseSelectAtLeastOneOption": {
+                    "description": "رسالة التحقق عند عدم تحديد أي خيارات تشخيص"
+                  },
+                  "pleaseSpecifyOtherDiagnosis": "يرجى توضيح التشخيص 'أخرى'",
+                  "@pleaseSpecifyOtherDiagnosis": {
+                    "description": "رسالة التحقق عند تحديد 'أخرى' دون توضيح"
+                  }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../meals/meals_plan_tab.dart';
 import '../meals/my_meal_tab.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MealsScreen extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class _MealsScreenState extends State<MealsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
 
       appBar: AppBar(
@@ -21,7 +24,7 @@ class _MealsScreenState extends State<MealsScreen> {
           borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),
               bottomLeft: Radius.circular(15))),
         title: Text(
-          'Meals',
+          l10n.meals,
           style: TextStyle(
             color: Colors.white,
             fontSize: 22,
@@ -61,7 +64,7 @@ class _MealsScreenState extends State<MealsScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            'Meal plan',
+                            l10n.mealPlan,
                             style: TextStyle(
                               color: selectedIndex == 0
                                   ? Colors.white
@@ -86,7 +89,7 @@ class _MealsScreenState extends State<MealsScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            'My meals',
+                            l10n.myMeals,
                             style: TextStyle(
                               color: selectedIndex == 1
                                   ? Colors.white

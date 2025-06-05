@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../utils/onboarding_data_model.dart';
 import '../utils/pref_data.dart';
 import '../utils/screen_size.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final ReminderService reminderService;
@@ -22,7 +23,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   void initState() {
-    pages = Utils.getSliderPages(); // Use Utils class here
+    // pages = Utils.getSliderPages(context); // Use Utils class here
     super.initState();
 
   }
@@ -30,6 +31,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     initializeScreenSize(context); // Move it here
+    pages = Utils.getSliderPages(context);
     preloadImages(); // Preload images
 
   }
@@ -50,6 +52,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -67,7 +71,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         indicator(),
-                        button(),
+                        button(l10n),
                       ],
                     ),
                   ),
@@ -78,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                skipbutton(),
+                skipbutton(l10n),
               ],
             ),
           ],
@@ -105,7 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         }));
   }
 
-  Widget button() {
+  Widget button(AppLocalizations l10n) {
     return InkWell(
       onTap: () {
         setState(() {
@@ -131,14 +135,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: (currentpage == pages.length - 1)
             ? Center(
           child: Text(
-            "Get Started",
+            l10n.getStarted,
             style: TextStyle(color: const Color(0XFFFFFFFF), fontSize: 18,
                 fontFamily: 'Gilroy', fontWeight: FontWeight.w700),
           ),
         )
             : Center(
           child: Text(
-            "Next",
+            l10n.next,
             style: TextStyle(color: const Color(0XFFFFFFFF), fontSize: 18, fontFamily: 'Gilroy', fontWeight: FontWeight.w700),
           ),
         ),
@@ -146,7 +150,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget skipbutton() {
+  Widget skipbutton(AppLocalizations l10n) {
     return currentpage == pages.length - 1
         ? const SizedBox()
         : Padding(
@@ -168,7 +172,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   color: const Color(0XFFFFFFFF)),
               child: Center(
                   child: Text(
-                    "Skip",
+                    l10n.skip,
                     style: TextStyle(
                         fontFamily: 'Gilroy',
                         fontWeight: FontWeight.bold,
