@@ -1,6 +1,7 @@
 // weekly_glucose_chart.dart
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WeeklyGlucoseChart extends StatelessWidget {
   final Map<String, double> weeklyData;
@@ -9,6 +10,7 @@ class WeeklyGlucoseChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     // Convert weekly data to spots

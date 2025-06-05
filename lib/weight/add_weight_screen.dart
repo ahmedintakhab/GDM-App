@@ -210,7 +210,7 @@ class _AddWeightScreenState extends State<AddWeightScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30.0, bottom: 20.0),
+            padding: const EdgeInsets.only(left: 30.0, bottom: 20.0,right: 30),
             child: FloatingActionButton.extended(
               onPressed: _isGeneratingPdf ? null : _generateAndSavePdf,
               label: _isGeneratingPdf

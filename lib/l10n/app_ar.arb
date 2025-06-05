@@ -377,6 +377,21 @@
                 "currentWeight": "الوزن الحالي:",
                 "noWeightDataPastWeek": "لا توجد بيانات وزن متاحة للأسبوع الماضي",
                 "notApplicable": "غير متاح",
+                "changePassword": "تغيير كلمة المرور",
+                  "oldPassword": "كلمة المرور القديمة",
+                  "newPassword": "كلمة المرور الجديدة",
+                  "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+                  "pleaseEnterOldPassword": "يرجى إدخال كلمة المرور القديمة",
+                  "pleaseEnterNewPassword": "يرجى إدخال كلمة المرور الجديدة",
+                  "passwordMinLength": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+                  "pleaseConfirmNewPassword": "يرجى تأكيد كلمة المرور الجديدة",
+                  "newPasswordsDoNotMatch": "كلمات المرور الجديدة غير متطابقة",
+                  "noUserLoggedIn": "لا يوجد مستخدم مسجل الدخول حاليًا",
+                  "passwordUpdated": "تم تحديث كلمة المرور بنجاح",
+                  "updateFailed": "فشل تحديث كلمة المرور",
+                  "oldPasswordIncorrect": "كلمة المرور القديمة غير صحيحة",
+                  "weakPassword": "كلمة المرور الجديدة ضعيفة جدًا",
+                  "loginRequired": "يرجى تسجيل الدخول مرة أخرى لتحديث كلمة المرور",
 
 "@appTitle": {
     "description": "عنوان التطبيق"

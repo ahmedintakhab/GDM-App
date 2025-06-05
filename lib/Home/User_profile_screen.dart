@@ -82,40 +82,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
 
-              Consumer<LanguageChangeController>(builder: (context , provider,child) {
-                print('Current locale: ${provider.appLocale}');
-                print('Available translations: ${AppLocalizations.supportedLocales}');
-                print('Current translations: ${AppLocalizations.of(context)?.logout}');
-                print('Current translations: ${AppLocalizations.of(context)!.logout}');
-                return Row(
-                  children: [
-                    PopupMenuButton(
-                        onSelected: (Language item) {
-                          if (Language.English.name == item.name) {
-                            provider.changeLanguage(Locale('en'));
-                          } else {
-                            provider.changeLanguage(Locale('ar'));
-                          }
-                        },
-                        itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<Language>>[
-                          PopupMenuItem(
-                              value: Language.English,
-                              child: Text('English'),
-                          ),
-                          PopupMenuItem(
-                              value: Language.Arabic,
-                              child: Text('Arabic')),
-                        ]),
-                    Spacer(),
-                    IconButton(
-                      icon: Icon(Icons.logout, color: Colors.black),
-                      onPressed: () => _handleLogout(context),
-                    ),
-                  ],
-                );
+                    Consumer<LanguageChangeController>(builder: (context, provider, child) {
+                      print('Current locale: ${provider.appLocale}');
+                      print('Available translations: ${AppLocalizations.supportedLocales}');
+                      print('Current translations: ${AppLocalizations.of(context)?.logout}');
+                      print('Current translations: ${AppLocalizations.of(context)!.logout}');
+                      bool isArabic = provider.appLocale == Locale('ar');
 
-              }),
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start, // Changed to start alignment
+                        children: [
+                          Text(
+                            'EN',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: isArabic ? Colors.grey : Color(0xFF5AA189),
+                              fontWeight: isArabic ? FontWeight.normal : FontWeight.bold,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (isArabic) {
+                                provider.changeLanguage(Locale('en'));
+                              } else {
+                                provider.changeLanguage(Locale('ar'));
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                              child: Container(
+                                width: 60.w, // Width of the toggle button
+                                height: 30.h, // Height of the toggle button
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15.r),
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                      isArabic ? 'assets/images/UAE_flag2.jpg' : 'assets/images/US_flag.webp',
+                                    ),
+                                    fit: BoxFit.cover, // Ensures the flag fills the container
+                                  ),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    AnimatedAlign(
+                                      duration: Duration(milliseconds: 200),
+                                      alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                                      child: Container(
+                                        width: 26.w, // Thumb size
+                                        height: 26.h,
+                                        margin: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black12,
+                                              blurRadius: 2,
+                                              offset: Offset(0, 1),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'AR',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: isArabic ? Color(0xFF5AA189) : Colors.grey,
+                              fontWeight: isArabic ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                          Spacer(), // Pushes the IconButton to the end
+                          IconButton(
+                            icon: Icon(Icons.logout, color: Colors.black),
+                            onPressed: () => _handleLogout(context),
+                          ),
+                        ],
+                      );
+                    }),
                     SizedBox(height: 20.h),
                     CircleAvatar(
                       radius: 60.r,

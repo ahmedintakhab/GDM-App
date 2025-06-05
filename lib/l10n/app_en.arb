@@ -377,6 +377,21 @@
                 "currentWeight": "Current Weight:",
                 "noWeightDataPastWeek": "No weight data available for the past week",
                 "notApplicable": "N/A",
+                "changePassword": "Change Password",
+                  "oldPassword": "Old Password",
+                  "newPassword": "New Password",
+                  "confirmNewPassword": "Confirm New Password",
+                  "pleaseEnterOldPassword": "Please enter your old password",
+                  "pleaseEnterNewPassword": "Please enter a new password",
+                  "passwordMinLength": "Password must be at least 6 characters",
+                  "pleaseConfirmNewPassword": "Please confirm your new password",
+                  "newPasswordsDoNotMatch": "New passwords do not match",
+                  "noUserLoggedIn": "No user is currently logged in",
+                  "passwordUpdated": "Password updated successfully",
+                  "updateFailed": "Failed to update password",
+                  "oldPasswordIncorrect": "Old password is incorrect",
+                  "weakPassword": "New password is too weak",
+                  "loginRequired": "Please log in again to update your password",
 
   "@appTitle": {
     "description": "The title of the application"
