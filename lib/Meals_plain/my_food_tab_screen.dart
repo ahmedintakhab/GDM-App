@@ -136,7 +136,8 @@ class _MyFoodTabScreenState extends State<MyFoodTabScreen> {
                                   backgroundColor: const Color(0xFF5AA189),
                                   child: Icon(Icons.add, color: Colors.white, size: 20.sp),
                                 ),
-                              ),                            ],
+                              ),
+                            ],
                           ),
                         ),
                       );
