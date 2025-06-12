@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gdm_app/utils/utils.dart';
+
 
 class MealContainer extends StatelessWidget {
   final String mainText;
@@ -16,10 +18,35 @@ class MealContainer extends StatelessWidget {
     required this.onRemoveItem,
   });
 
+  // Function to group items by foodName and count occurrences
+  List<Map<String, dynamic>> _groupItemsByFoodName(List<Map<String, dynamic>> items) {
+    final Map<String, Map<String, dynamic>> groupedItems = {};
+
+    for (var item in items) {
+      final foodName = item['foodName'] as String;
+      if (groupedItems.containsKey(foodName)) {
+        // Increment count and sum calories for duplicate items
+        groupedItems[foodName]!['count'] = (groupedItems[foodName]!['count'] as int) + 1;
+        groupedItems[foodName]!['calories'] = (groupedItems[foodName]!['calories'] as int) + (item['calories'] as int);
+      } else {
+        // Add new item with count 1
+        groupedItems[foodName] = {
+          ...item,
+          'count': 1,
+        };
+      }
+    }
+
+    return groupedItems.values.toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Group items to handle duplicates
+    final groupedItems = _groupItemsByFoodName(items);
+
     return GestureDetector(
-      onTap: () => onTap(mainText, subText), // Navigate to MealsTabBarScreen on tap
+      onTap: () => onTap(mainText, subText),
       child: Card(
         color: Colors.white,
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -40,12 +67,11 @@ class MealContainer extends StatelessWidget {
               trailing: IconButton(
                 icon: Icon(Icons.add_circle, color: Color(0xFF5AA189)),
                 onPressed: () {
-                  // Optional: Add additional logic for the add button if needed
-                  onTap(mainText, subText); // This will also trigger navigation
+                  onTap(mainText, subText);
                 },
               ),
             ),
-            if (items.isNotEmpty)
+            if (groupedItems.isNotEmpty)
               Column(
                 children: [
                   Divider(
@@ -57,11 +83,12 @@ class MealContainer extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: items.map((item) {
+                      children: groupedItems.map((item) {
+                        final count = item['count'] as int;
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
                           title: Text(
-                            item['foodName'] ?? '',
+                            count > 1 ? '${item['foodName']} (${count}x)' : item['foodName'],
                             style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                           ),
                           subtitle: Padding(
@@ -81,7 +108,14 @@ class MealContainer extends StatelessWidget {
                               SizedBox(width: 8.w),
                               IconButton(
                                 icon: Icon(Icons.close, color: Colors.grey),
-                                onPressed: () => onRemoveItem(mainText, item),
+                                onPressed: () async {
+                                  try {
+                                    // Call the onRemoveItem function to handle Firestore deletion and provider update
+                                    await onRemoveItem(mainText, item);
+                                  } catch (e) {
+                                    Utils().toastMessage('Error deleting food: $e');
+                                  }
+                                },
                               ),
                             ],
                           ),

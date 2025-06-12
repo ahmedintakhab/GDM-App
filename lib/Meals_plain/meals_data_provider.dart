@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:gdm_app/utils/utils.dart';
+
 
 class MealsProvider extends ChangeNotifier {
   List<Map<String, dynamic>> _mealsData = [];
@@ -71,7 +73,9 @@ class MealsProvider extends ChangeNotifier {
             .doc(uid)
             .collection('Meals Plain')
             .doc('data')
-            .collection('Foods')
+            .collection
+
+          ('Foods')
             .orderBy('timestamp', descending: true)
             .get();
 
@@ -140,6 +144,7 @@ class MealsProvider extends ChangeNotifier {
 
       if (uid == null) {
         _errorMessage = "No user logged in";
+        _safeNotifyListeners();
         return;
       }
 
@@ -162,10 +167,60 @@ class MealsProvider extends ChangeNotifier {
 
       // Refresh data
       await fetchMealsData();
+      // Show toast message on successful addition
+      Utils().toastMessage('Food added successfully');
     } catch (e) {
       _errorMessage = "Error adding meal item: $e";
+      Utils().toastMessage('Error adding food: $e');
       _safeNotifyListeners();
       print("Error adding meal item: $e");
+    }
+  }
+
+  Future<void> removeMealItem(String mealType, Map<String, dynamic> foodItem) async {
+    if (_isDisposed) return;
+
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final String? uid = auth.currentUser?.uid;
+
+      if (uid == null) {
+        _errorMessage = "No user logged in";
+        _safeNotifyListeners();
+        return;
+      }
+
+      String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      // Find one document matching the foodName and mealType
+      final QuerySnapshot snapshot = await firestore
+          .collection('Users')
+          .doc(uid)
+          .collection('Meals Plain')
+          .doc(today)
+          .collection('MealItems')
+          .where('foodName', isEqualTo: foodItem['foodName'])
+          .where('mealType', isEqualTo: mealType)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        // Delete the first matching document
+        await snapshot.docs.first.reference.delete();
+        // Refresh data to update the UI
+        await fetchMealsData();
+        // Show toast message on successful deletion
+        Utils().toastMessage('Food deleted successfully');
+      } else {
+        _errorMessage = "Item not found in Firestore";
+        Utils().toastMessage('Item not found');
+        _safeNotifyListeners();
+      }
+    } catch (e) {
+      _errorMessage = "Error removing meal item: $e";
+      Utils().toastMessage('Error deleting food: $e');
+      _safeNotifyListeners();
+      print("Error removing meal item: $e");
     }
   }
 

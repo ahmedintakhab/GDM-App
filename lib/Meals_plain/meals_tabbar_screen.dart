@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'food_list_screen.dart';
+import 'meals_data_provider.dart';
 import 'recent_tab_screen.dart';
 import 'my_food_tab_screen.dart';
+import 'package:gdm_app/utils/utils.dart';
+
 
 class MealsTabBarScreen extends StatefulWidget {
   final String mealType;
@@ -69,27 +73,25 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
   }
 
   void _addToRecent(Map<String, dynamic> food) {
-    setState(() {
-      _recentItems.add(food);
-      _recentCount++;
-      _currentCalories += (food['calories'] as num).toInt();
-      widget.onAddItem(food);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Food added successfully')),
-      );
-    });
+    // Call onAddItem to add to Firestore via MealsProvider
+    widget.onAddItem(food);
+    // Toast message will be shown in MealsProvider after successful addition
   }
 
-  void _removeFromRecent(Map<String, dynamic> food) {
-    setState(() {
-      _recentItems.remove(food);
-      _recentCount--;
-      _currentCalories -= (food['calories'] as num).toInt();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Food deleted successfully')),
-      );
-    });
+  void _removeFromRecent(Map<String, dynamic> food) async {
+    try {
+      await Provider.of<MealsProvider>(context, listen: false).removeMealItem(widget.mealType, food);
+      // Update local state after successful deletion
+      setState(() {
+        _recentItems.removeWhere((item) => item['foodName'] == food['foodName']);
+        _recentCount--;
+        _currentCalories -= (food['calories'] as num).toInt();
+      });
+    } catch (e) {
+      Utils().toastMessage('Error deleting food: $e');
+    }
   }
+
 
   @override
   void dispose() {

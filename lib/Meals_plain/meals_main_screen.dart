@@ -88,8 +88,13 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                               ),
                             );
                           },
-                          onRemoveItem: (mainText, item) {
-                            // Implement remove functionality if needed
+                          onRemoveItem: (mainText, item) async {
+                            await mealsProvider.removeMealItem(mainText, {
+                              'foodName': item['foodName'],
+                              'calories': item['calories'] ~/ (item['count'] as int), // Use original calories
+                              'quantity': item['quantity'],
+                              'timestamp': item['timestamp'],
+                            });
                           },
                         ),
                         MealContainer(
@@ -110,8 +115,13 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                               ),
                             );
                           },
-                          onRemoveItem: (mainText, item) {
-                            // Implement remove functionality if needed
+                          onRemoveItem: (mainText, item) async {
+                            await mealsProvider.removeMealItem(mainText, {
+                              'foodName': item['foodName'],
+                              'calories': item['calories'] ~/ (item['count'] as int), // Use original calories
+                              'quantity': item['quantity'],
+                              'timestamp': item['timestamp'],
+                            });
                           },
                         ),
                         MealContainer(
@@ -132,8 +142,13 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                               ),
                             );
                           },
-                          onRemoveItem: (mainText, item) {
-                            // Implement remove functionality if needed
+                          onRemoveItem: (mainText, item) async {
+                            await mealsProvider.removeMealItem(mainText, {
+                              'foodName': item['foodName'],
+                              'calories': item['calories'] ~/ (item['count'] as int), // Use original calories
+                              'quantity': item['quantity'],
+                              'timestamp': item['timestamp'],
+                            });
                           },
                         ),
                         MealContainer(
@@ -154,8 +169,13 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                               ),
                             );
                           },
-                          onRemoveItem: (mainText, item) {
-                            // Implement remove functionality if needed
+                          onRemoveItem: (mainText, item) async {
+                            await mealsProvider.removeMealItem(mainText, {
+                              'foodName': item['foodName'],
+                              'calories': item['calories'] ~/ (item['count'] as int), // Use original calories
+                              'quantity': item['quantity'],
+                              'timestamp': item['timestamp'],
+                            });
                           },
                         ),
                       ],
@@ -184,8 +204,9 @@ class MealHeaderContainer extends StatelessWidget {
           return sum + mealsProvider.mealItems[mealType]!.fold(0, (s, item) => s + (item['calories'] as num).toInt());
         });
         final remainingCalories = mealsProvider.dailyCalories - eatenCalories;
+        final containerColor = eatenCalories > mealsProvider.dailyCalories ? Colors.red : const Color(0xFF5AA189);
         return Container(
-          color: const Color(0xFF5AA189),
+          color: containerColor,
           padding: EdgeInsets.all(16.0),
           child: Column(
             children: [
