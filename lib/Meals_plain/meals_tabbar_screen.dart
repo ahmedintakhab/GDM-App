@@ -28,9 +28,9 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
   int _recentCount = 0;
 
   final List<Map<String, dynamic>> _foodItems = [
-    {'name': 'Tofu', 'quantity': '3 oz (85 g)', 'calories': 70},
-    {'name': 'Almonds', 'quantity': '1 oz (28 g)', 'calories': 164},
-    {'name': 'Banana', 'quantity': '1 medium (118 g)', 'calories': 105},
+    {'foodName': 'Tofu', 'quantity': '3 oz (85 g)', 'calories': 70},
+    {'foodName': 'Almonds', 'quantity': '1 oz (28 g)', 'calories': 164},
+    {'foodName': 'Banana', 'quantity': '1 medium (118 g)', 'calories': 105},
     // ... (other food items unchanged for brevity)
   ];
 
@@ -51,7 +51,7 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
       if (_searchController.text.isNotEmpty) {
         _isSearching = true;
         _filteredFoodItems = _foodItems
-            .where((food) => food['name'].toLowerCase().contains(_searchController.text.toLowerCase()))
+            .where((food) => food['foodName'].toLowerCase().contains(_searchController.text.toLowerCase()))
             .toList();
       } else {
         _isSearching = false;
@@ -191,6 +191,7 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
                 ? FoodListScreen(
               foodItems: _filteredFoodItems,
               onAdd: _addToRecent,
+              mealType: widget.mealType, // Pass mealType
             )
                 : Column(
               children: [
@@ -225,7 +226,7 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
                     controller: _tabController,
                     children: [
                       RecentTabScreen(
-                        recentItems: _recentItems,
+                        recentItems: [],
                         onRemove: _removeFromRecent,
                       ),
                       MyFoodTabScreen(

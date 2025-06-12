@@ -16,21 +16,10 @@ class MealsMainScreen extends StatefulWidget {
 
 class _MealsMainScreenState extends State<MealsMainScreen> {
   final GlobalKey<_MealsMainScreenState> _mealsMainScreenKey = GlobalKey<_MealsMainScreenState>();
-  Map<String, List<Map<String, dynamic>>> mealItems = {
-    'Breakfast': [],
-    'Lunch': [],
-    'Dinner': [],
-    'Snacks': [],
-  };
 
   int _calculateCalories(String mealType) {
-    return mealItems[mealType]!.fold<int>(0, (sum, item) => sum + (item['calories'] as num).toInt());
-  }
-
-  void addFoodItem(String mealType, Map<String, dynamic> foodItem) {
-    setState(() {
-      mealItems[mealType]!.add(foodItem);
-    });
+    final mealsProvider = Provider.of<MealsProvider>(context, listen: false);
+    return mealsProvider.mealItems[mealType]!.fold<int>(0, (sum, item) => sum + (item['calories'] as num).toInt());
   }
 
   @override
@@ -53,146 +42,130 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
     return Scaffold(
       key: _mealsMainScreenKey,
       backgroundColor: const Color(0xFFF5F5F5),
-      body: Column(
-        children: [
-          Container(
-            color: const Color(0xFF5AA189),
-            child: SafeArea(
-              child: AppBar(
-                centerTitle: true,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                title: Text(
-                  'Meals Plan',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.sp),
-                ),
-                flexibleSpace: Container(
-                  color: const Color(0xFF5AA189),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: SafeArea(
-              top: false,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    MealHeaderContainer(mealsMainScreenKey: _mealsMainScreenKey),
-                    MealContainer(
-                      mainText: 'Breakfast',
-                      subText: '${_calculateCalories('Breakfast')} Cal',
-                      items: mealItems['Breakfast']!,
-                      onTap: (mainText, subText) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MealsTabBarScreen(
-                              mealType: mainText,
-                              recommendedCalories: _calculateCalories(mainText),
-                              onAddItem: (item) {
-                                setState(() {
-                                  mealItems[mainText]!.add(item);
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                        print('Breakfast tapped');
-                      },
-                      onRemoveItem: (mainText, item) {
-                        setState(() {
-                          mealItems[mainText]!.remove(item);
-                        });
-                      },
+      body: Consumer<MealsProvider>(
+        builder: (context, mealsProvider, child) {
+          return Column(
+            children: [
+              Container(
+                color: const Color(0xFF5AA189),
+                child: SafeArea(
+                  child: AppBar(
+                    centerTitle: true,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    title: Text(
+                      'Meals Plan',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.sp),
                     ),
-                    MealContainer(
-                      mainText: 'Lunch',
-                      subText: '${_calculateCalories('Lunch')} Cal',
-                      items: mealItems['Lunch']!,
-                      onTap: (mainText, subText) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MealsTabBarScreen(
-                              mealType: mainText,
-                              recommendedCalories: _calculateCalories(mainText),
-                              onAddItem: (item) {
-                                setState(() {
-                                  mealItems[mainText]!.add(item);
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                        print('Lunch tapped');
-                      },
-                      onRemoveItem: (mainText, item) {
-                        setState(() {
-                          mealItems[mainText]!.remove(item);
-                        });
-                      },
+                    flexibleSpace: Container(
+                      color: const Color(0xFF5AA189),
                     ),
-                    MealContainer(
-                      mainText: 'Dinner',
-                      subText: '${_calculateCalories('Dinner')} Cal',
-                      items: mealItems['Dinner']!,
-                      onTap: (mainText, subText) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MealsTabBarScreen(
-                              mealType: mainText,
-                              recommendedCalories: _calculateCalories(mainText),
-                              onAddItem: (item) {
-                                setState(() {
-                                  mealItems[mainText]!.add(item);
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                        print('Dinner tapped');
-                      },
-                      onRemoveItem: (mainText, item) {
-                        setState(() {
-                          mealItems[mainText]!.remove(item);
-                        });
-                      },
-                    ),
-                    MealContainer(
-                      mainText: 'Snacks',
-                      subText: '${_calculateCalories('Snacks')} Cal',
-                      items: mealItems['Snacks']!,
-                      onTap: (mainText, subText) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MealsTabBarScreen(
-                              mealType: mainText,
-                              recommendedCalories: _calculateCalories(mainText),
-                              onAddItem: (item) {
-                                setState(() {
-                                  mealItems[mainText]!.add(item);
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                        print('Snacks tapped');
-                      },
-                      onRemoveItem: (mainText, item) {
-                        setState(() {
-                          mealItems[mainText]!.remove(item);
-                        });
-                      },
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
+              Expanded(
+                child: SafeArea(
+                  top: false,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        MealHeaderContainer(mealsMainScreenKey: _mealsMainScreenKey),
+                        MealContainer(
+                          mainText: 'Breakfast',
+                          subText: '${_calculateCalories('Breakfast')} Cal',
+                          items: mealsProvider.mealItems['Breakfast']!,
+                          onTap: (mainText, subText) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MealsTabBarScreen(
+                                  mealType: mainText,
+                                  recommendedCalories: _calculateCalories(mainText),
+                                  onAddItem: (item) {
+                                    mealsProvider.addMealItem(mainText, item);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          onRemoveItem: (mainText, item) {
+                            // Implement remove functionality if needed
+                          },
+                        ),
+                        MealContainer(
+                          mainText: 'Lunch',
+                          subText: '${_calculateCalories('Lunch')} Cal',
+                          items: mealsProvider.mealItems['Lunch']!,
+                          onTap: (mainText, subText) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MealsTabBarScreen(
+                                  mealType: mainText,
+                                  recommendedCalories: _calculateCalories(mainText),
+                                  onAddItem: (item) {
+                                    mealsProvider.addMealItem(mainText, item);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          onRemoveItem: (mainText, item) {
+                            // Implement remove functionality if needed
+                          },
+                        ),
+                        MealContainer(
+                          mainText: 'Dinner',
+                          subText: '${_calculateCalories('Dinner')} Cal',
+                          items: mealsProvider.mealItems['Dinner']!,
+                          onTap: (mainText, subText) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MealsTabBarScreen(
+                                  mealType: mainText,
+                                  recommendedCalories: _calculateCalories(mainText),
+                                  onAddItem: (item) {
+                                    mealsProvider.addMealItem(mainText, item);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          onRemoveItem: (mainText, item) {
+                            // Implement remove functionality if needed
+                          },
+                        ),
+                        MealContainer(
+                          mainText: 'Snacks',
+                          subText: '${_calculateCalories('Snacks')} Cal',
+                          items: mealsProvider.mealItems['Snacks']!,
+                          onTap: (mainText, subText) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MealsTabBarScreen(
+                                  mealType: mainText,
+                                  recommendedCalories: _calculateCalories(mainText),
+                                  onAddItem: (item) {
+                                    mealsProvider.addMealItem(mainText, item);
+                                  },
+                                ),
+                              ),
+                            );
+                          },
+                          onRemoveItem: (mainText, item) {
+                            // Implement remove functionality if needed
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -207,12 +180,9 @@ class MealHeaderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<MealsProvider>(
       builder: (context, mealsProvider, child) {
-        final mealsState = mealsMainScreenKey.currentState;
-        final eatenCalories = mealsState != null
-            ? ['Breakfast', 'Lunch', 'Dinner', 'Snacks'].fold(0, (sum, mealType) {
-          return sum + mealsState.mealItems[mealType]!.fold(0, (s, item) => s + (item['calories'] as num).toInt());
-        })
-            : 0;
+        final eatenCalories = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'].fold(0, (sum, mealType) {
+          return sum + mealsProvider.mealItems[mealType]!.fold(0, (s, item) => s + (item['calories'] as num).toInt());
+        });
         final remainingCalories = mealsProvider.dailyCalories - eatenCalories;
         return Container(
           color: const Color(0xFF5AA189),
@@ -231,8 +201,7 @@ class MealHeaderContainer extends StatelessWidget {
                       ),
                       Text(
                         '$eatenCalories Cal',
-                        style: TextStyle(color: Colors.white,
-                            fontSize: 22.sp, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         'Remaining',
@@ -254,7 +223,6 @@ class MealHeaderContainer extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: 16.h),
                 child: Row(
-                  // mainAxisAlignment: mainAxisAlignment.start,
                   children: [
                     Text(
                       'Total Cal: ${mealsProvider.dailyCalories}',
@@ -262,12 +230,12 @@ class MealHeaderContainer extends StatelessWidget {
                     ),
                     SizedBox(width: 8.w),
                     GestureDetector(
-                      onTap: () => {
-                      showDialog(
-                      context: context,
-                      builder: (context) => const AddCaloriesDialogBox(),
-                      )
-                    },
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const AddCaloriesDialogBox(),
+                        );
+                      },
                       child: Icon(
                         Icons.edit_outlined,
                         color: Colors.white,

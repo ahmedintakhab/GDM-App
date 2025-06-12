@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
+import 'meals_data_provider.dart';
 
 class FoodListScreen extends StatelessWidget {
   final List<Map<String, dynamic>> foodItems;
   final Function(Map<String, dynamic>) onAdd;
+  final String mealType;
 
-  FoodListScreen({required this.foodItems, required this.onAdd});
+  FoodListScreen({required this.foodItems, required this.onAdd,required this.mealType,});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +23,7 @@ class FoodListScreen extends StatelessWidget {
           child: ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(
-              food['name'],
+              food['foodName'],
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
             ),
             subtitle: Padding(
@@ -38,7 +42,9 @@ class FoodListScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 8.w),
                 GestureDetector(
-                  onTap: () => onAdd(food),
+                  onTap: () {
+                    onAdd(food); // Only call onAdd to avoid duplicate Firestore writes
+                  },
                   child: CircleAvatar(
                     radius: 12.r,
                     backgroundColor: Color(0xFF5AA189),

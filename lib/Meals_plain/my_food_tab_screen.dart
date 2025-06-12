@@ -118,25 +118,25 @@ class _MyFoodTabScreenState extends State<MyFoodTabScreen> {
                               ),
                               SizedBox(width: 8.w),
                               GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   final foodItem = {
                                     'foodName': food['foodName'],
                                     'calories': food['foodCalories'],
                                     'quantity': food['quantity'],
                                   };
-                                  widget.onAddItem(foodItem);
+                                  await Provider.of<MealsProvider>(context, listen: false)
+                                      .addMealItem(widget.mealType, foodItem);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text('${food['foodName']} added to ${widget.mealType}')),
                                   );
-                                  Navigator.pop(context); // Return to MealsTabBarScreen
+                                  Navigator.pop(context);
                                 },
                                 child: CircleAvatar(
                                   radius: 16.r,
                                   backgroundColor: const Color(0xFF5AA189),
                                   child: Icon(Icons.add, color: Colors.white, size: 20.sp),
                                 ),
-                              ),
-                            ],
+                              ),                            ],
                           ),
                         ),
                       );

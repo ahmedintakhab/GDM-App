@@ -16,6 +16,15 @@ class GlucoseDetailsScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context); // Navigate back when pressed
+            },
+          ),
           title: Text(
             l10n.yourGlucose,
             style: TextStyle(
@@ -26,14 +35,6 @@ class GlucoseDetailsScreen extends StatelessWidget {
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
-          // actions: [
-          //   IconButton(
-          //     icon: Icon(Icons.share, color: Colors.black),
-          //     onPressed: () {
-          //       // Handle share action
-          //     },
-          //   ),
-          // ],
           bottom: TabBar(
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,

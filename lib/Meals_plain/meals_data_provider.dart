@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class MealsProvider extends ChangeNotifier {
   List<Map<String, dynamic>> _mealsData = [];
   List<Map<String, dynamic>> _foodsData = [];
+  Map<String, List<Map<String, dynamic>>> _mealItems = {
+    'Breakfast': [],
+    'Lunch': [],
+    'Dinner': [],
+    'Snacks': [],
+  };
   int _dailyCalories = 0;
   bool _isLoading = false;
   String? _errorMessage;
@@ -12,6 +19,7 @@ class MealsProvider extends ChangeNotifier {
 
   List<Map<String, dynamic>> get mealsData => _mealsData;
   List<Map<String, dynamic>> get foodsData => _foodsData;
+  Map<String, List<Map<String, dynamic>>> get mealItems => _mealItems;
   int get dailyCalories => _dailyCalories;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -21,13 +29,12 @@ class MealsProvider extends ChangeNotifier {
 
     _isLoading = true;
     _errorMessage = null;
-    print('Fetching meals data...');
+    notifyListeners();
 
     try {
-      final FirebaseAuth _auth = FirebaseAuth.instance;
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-      final String? uid = _auth.currentUser?.uid;
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final String? uid = auth.currentUser?.uid;
 
       if (uid == null) {
         _errorMessage = "No user logged in";
@@ -36,11 +43,11 @@ class MealsProvider extends ChangeNotifier {
         return;
       }
 
-      DocumentSnapshot userDoc = await _firestore.collection('Users').doc(uid).get();
+      DocumentSnapshot userDoc = await firestore.collection('Users').doc(uid).get();
 
       if (userDoc.exists) {
-        // Fetch Daily Calories from Meals Plain
-        final QuerySnapshot mealsSnapshot = await _firestore
+        // Fetch Daily Calories
+        final QuerySnapshot mealsSnapshot = await firestore
             .collection('Users')
             .doc(uid)
             .collection('Meals Plain')
@@ -58,8 +65,8 @@ class MealsProvider extends ChangeNotifier {
 
         _dailyCalories = _mealsData.isNotEmpty ? _mealsData.first['dailyCalories'] as int : 0;
 
-        // Fetch Foods from Meals Plain/data/Foods
-        final QuerySnapshot foodsSnapshot = await _firestore
+        // Fetch Foods
+        final QuerySnapshot foodsSnapshot = await firestore
             .collection('Users')
             .doc(uid)
             .collection('Meals Plain')
@@ -78,7 +85,37 @@ class MealsProvider extends ChangeNotifier {
           };
         }).toList();
 
-        print('Fetched ${_foodsData.length} food items');
+        // Fetch Meal Items for today
+        String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        final QuerySnapshot mealItemsSnapshot = await firestore
+            .collection('Users')
+            .doc(uid)
+            .collection('Meals Plain')
+            .doc(today)
+            .collection('MealItems')
+            .orderBy('timestamp', descending: true)
+            .get();
+
+        // Reset meal items
+        _mealItems = {
+          'Breakfast': [],
+          'Lunch': [],
+          'Dinner': [],
+          'Snacks': [],
+        };
+
+        for (var doc in mealItemsSnapshot.docs) {
+          final data = doc.data() as Map<String, dynamic>;
+          String mealType = data['mealType'];
+          if (_mealItems.containsKey(mealType)) {
+            _mealItems[mealType]!.add({
+              'foodName': data['foodName'],
+              'calories': data['calories'],
+              'quantity': data['quantity'],
+              'timestamp': data['timestamp'],
+            });
+          }
+        }
       } else {
         _errorMessage = "User not found in Users collection";
       }
@@ -90,6 +127,45 @@ class MealsProvider extends ChangeNotifier {
       _isLoading = false;
       _safeNotifyListeners();
       print("Error fetching meals data: $e");
+    }
+  }
+
+  Future<void> addMealItem(String mealType, Map<String, dynamic> foodItem) async {
+    if (_isDisposed) return;
+
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      final String? uid = auth.currentUser?.uid;
+
+      if (uid == null) {
+        _errorMessage = "No user logged in";
+        return;
+      }
+
+      String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      final mealData = {
+        'foodName': foodItem['foodName'],
+        'calories': foodItem['calories'],
+        'quantity': foodItem['quantity'],
+        'mealType': mealType,
+        'timestamp': FieldValue.serverTimestamp(),
+      };
+
+      await firestore
+          .collection('Users')
+          .doc(uid)
+          .collection('Meals Plain')
+          .doc(today)
+          .collection('MealItems')
+          .add(mealData);
+
+      // Refresh data
+      await fetchMealsData();
+    } catch (e) {
+      _errorMessage = "Error adding meal item: $e";
+      _safeNotifyListeners();
+      print("Error adding meal item: $e");
     }
   }
 
