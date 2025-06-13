@@ -7,6 +7,8 @@ import '../utils/utils.dart';
 import '../widgets/custom_text_form_field.dart';
 import '../widgets/custom_button.dart';
 import 'meals_data_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class CreateFoodScreen extends StatefulWidget {
   const CreateFoodScreen({Key? key}) : super(key: key);
@@ -33,6 +35,7 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
   }
 
   Future<void> _saveFoodData() async {
+    final l10n = AppLocalizations.of(context)!;
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -42,7 +45,7 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
     try {
       final uid = _auth.currentUser?.uid;
       if (uid == null) {
-        Utils().toastMessage('User not logged in!');
+        Utils().toastMessage(l10n.noUserLoggedIn);
         setState(() {
           _isLoading = false;
         });
@@ -100,7 +103,7 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
             .doc(finalDocId)
             .set(foodData);
 
-        Utils().toastMessage('Successfully added food!');
+        Utils().toastMessage(l10n.successfully_added_food);
 
         // Refresh meals data
         WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -109,10 +112,10 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
 
         Navigator.pop(context);
       } else {
-        Utils().toastMessage('User not found in any collection!');
+        Utils().toastMessage(l10n.user_not_found_in_collection);
       }
     } catch (e) {
-      Utils().toastMessage('Error adding food: $e');
+      Utils().toastMessage('${l10n.error_adding_food} $e');
       print('Error: $e');
     } finally {
       setState(() {
@@ -123,6 +126,7 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
@@ -133,7 +137,7 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Create Food',
+          l10n.create_food,
           style: TextStyle(
             color: Colors.white,
             fontSize: 22.sp,
@@ -152,11 +156,11 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
               children: [
                 CustomTextFormField(
                   controller: _nameController,
-                  hintText: 'Enter food name',
-                  labelText: 'Food Name',
+                  hintText: l10n.food_name_label,
+                  labelText: l10n.food_name_label,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a food name';
+                      return l10n.please_enter_food_name;
                     }
                     return null;
                   },
@@ -164,15 +168,15 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
                 SizedBox(height: 16.h),
                 CustomTextFormField(
                   controller: _caloriesController,
-                  hintText: 'Enter calories',
-                  labelText: 'Calories',
+                  hintText: l10n.enter_calories,
+                  labelText: l10n.calories_label,
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter calories';
+                      return l10n.please_enter_calories;
                     }
                     if (int.tryParse(value.trim()) == null || int.parse(value.trim()) <= 0) {
-                      return 'Please enter a valid calorie value';
+                      return l10n.please_enter_valid_calorie_value;
                     }
                     return null;
                   },
@@ -180,11 +184,11 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
                 SizedBox(height: 16.h),
                 CustomTextFormField(
                   controller: _quantityController,
-                  hintText: 'Enter quantity',
-                  labelText: 'Quantity',
+                  hintText: l10n.enter_quantity,
+                  labelText: l10n.quantity_label,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a quantity';
+                      return l10n.please_enter_quantity;
                     }
                     return null;
                   },
@@ -192,7 +196,7 @@ class _CreateFoodScreenState extends State<CreateFoodScreen> {
                 SizedBox(height: 24.h),
                 CustomButton(
                   onTap: _saveFoodData,
-                  buttonText: 'Save Food',
+                  buttonText: l10n.save_food,
                   loading: _isLoading,
                 ),
               ],

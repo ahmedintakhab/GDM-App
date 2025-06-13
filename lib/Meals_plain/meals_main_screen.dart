@@ -6,6 +6,7 @@ import 'add_calories.dialogbox.dart';
 import 'meals_data_provider.dart';
 import 'meals_tabbar_screen.dart';
 import 'meal_container.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MealsMainScreen extends StatefulWidget {
   const MealsMainScreen({Key? key}) : super(key: key);
@@ -17,9 +18,18 @@ class MealsMainScreen extends StatefulWidget {
 class _MealsMainScreenState extends State<MealsMainScreen> {
   final GlobalKey<_MealsMainScreenState> _mealsMainScreenKey = GlobalKey<_MealsMainScreenState>();
 
+  // Map localized meal names to English keys
+  String _getEnglishMealType(String localizedMealType, AppLocalizations l10n) {
+    if (localizedMealType == l10n.breakfast) return 'Breakfast';
+    if (localizedMealType == l10n.lunch) return 'Lunch';
+    if (localizedMealType == l10n.dinner) return 'Dinner';
+    if (localizedMealType == l10n.snacks) return 'Snacks';
+    return localizedMealType; // Fallback
+  }
+
   int _calculateCalories(String mealType) {
     final mealsProvider = Provider.of<MealsProvider>(context, listen: false);
-    return mealsProvider.mealItems[mealType]!.fold<int>(0, (sum, item) => sum + (item['calories'] as num).toInt());
+    return mealsProvider.mealItems[mealType]?.fold<int>(0, (sum, item) => sum + (item['calories'] as num).toInt()) ?? 0;
   }
 
   @override
@@ -32,6 +42,7 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Color(0xFF5AA189),
@@ -54,7 +65,7 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                     title: Text(
-                      'Meals Plan',
+                      l10n.meals_plan,
                       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.sp),
                     ),
                     flexibleSpace: Container(
@@ -71,108 +82,108 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                       children: [
                         MealHeaderContainer(mealsMainScreenKey: _mealsMainScreenKey),
                         MealContainer(
-                          mainText: 'Breakfast',
-                          subText: '${_calculateCalories('Breakfast')} Cal',
-                          items: mealsProvider.mealItems['Breakfast']!,
+                          mainText: l10n.breakfast,
+                          subText: '${_calculateCalories('Breakfast')} ${l10n.cal}',
+                          items: mealsProvider.mealItems['Breakfast'] ?? [],
                           onTap: (mainText, subText) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MealsTabBarScreen(
-                                  mealType: mainText,
-                                  recommendedCalories: _calculateCalories(mainText),
+                                  mealType: _getEnglishMealType(mainText, l10n),
+                                  recommendedCalories: _calculateCalories(_getEnglishMealType(mainText, l10n)),
                                   onAddItem: (item) {
-                                    mealsProvider.addMealItem(mainText, item);
+                                    mealsProvider.addMealItem(_getEnglishMealType(mainText, l10n), item);
                                   },
                                 ),
                               ),
                             );
                           },
                           onRemoveItem: (mainText, item) async {
-                            await mealsProvider.removeMealItem(mainText, {
+                            await mealsProvider.removeMealItem(_getEnglishMealType(mainText, l10n), {
                               'foodName': item['foodName'],
-                              'calories': item['calories'] ~/ (item['count'] as int), // Use original calories
+                              'calories': item['calories'] ~/ (item['count'] as int),
                               'quantity': item['quantity'],
                               'timestamp': item['timestamp'],
                             });
                           },
                         ),
                         MealContainer(
-                          mainText: 'Lunch',
-                          subText: '${_calculateCalories('Lunch')} Cal',
-                          items: mealsProvider.mealItems['Lunch']!,
+                          mainText: l10n.lunch,
+                          subText: '${_calculateCalories('Lunch')} ${l10n.cal}',
+                          items: mealsProvider.mealItems['Lunch'] ?? [],
                           onTap: (mainText, subText) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MealsTabBarScreen(
-                                  mealType: mainText,
-                                  recommendedCalories: _calculateCalories(mainText),
+                                  mealType: _getEnglishMealType(mainText, l10n),
+                                  recommendedCalories: _calculateCalories(_getEnglishMealType(mainText, l10n)),
                                   onAddItem: (item) {
-                                    mealsProvider.addMealItem(mainText, item);
+                                    mealsProvider.addMealItem(_getEnglishMealType(mainText, l10n), item);
                                   },
                                 ),
                               ),
                             );
                           },
                           onRemoveItem: (mainText, item) async {
-                            await mealsProvider.removeMealItem(mainText, {
+                            await mealsProvider.removeMealItem(_getEnglishMealType(mainText, l10n), {
                               'foodName': item['foodName'],
-                              'calories': item['calories'] ~/ (item['count'] as int), // Use original calories
+                              'calories': item['calories'] ~/ (item['count'] as int),
                               'quantity': item['quantity'],
                               'timestamp': item['timestamp'],
                             });
                           },
                         ),
                         MealContainer(
-                          mainText: 'Dinner',
-                          subText: '${_calculateCalories('Dinner')} Cal',
-                          items: mealsProvider.mealItems['Dinner']!,
+                          mainText: l10n.dinner,
+                          subText: '${_calculateCalories('Dinner')} ${l10n.cal}',
+                          items: mealsProvider.mealItems['Dinner'] ?? [],
                           onTap: (mainText, subText) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MealsTabBarScreen(
-                                  mealType: mainText,
-                                  recommendedCalories: _calculateCalories(mainText),
+                                  mealType: _getEnglishMealType(mainText, l10n),
+                                  recommendedCalories: _calculateCalories(_getEnglishMealType(mainText, l10n)),
                                   onAddItem: (item) {
-                                    mealsProvider.addMealItem(mainText, item);
+                                    mealsProvider.addMealItem(_getEnglishMealType(mainText, l10n), item);
                                   },
                                 ),
                               ),
                             );
                           },
                           onRemoveItem: (mainText, item) async {
-                            await mealsProvider.removeMealItem(mainText, {
+                            await mealsProvider.removeMealItem(_getEnglishMealType(mainText, l10n), {
                               'foodName': item['foodName'],
-                              'calories': item['calories'] ~/ (item['count'] as int), // Use original calories
+                              'calories': item['calories'] ~/ (item['count'] as int),
                               'quantity': item['quantity'],
                               'timestamp': item['timestamp'],
                             });
                           },
                         ),
                         MealContainer(
-                          mainText: 'Snacks',
-                          subText: '${_calculateCalories('Snacks')} Cal',
-                          items: mealsProvider.mealItems['Snacks']!,
+                          mainText: l10n.snacks,
+                          subText: '${_calculateCalories('Snacks')} ${l10n.cal}',
+                          items: mealsProvider.mealItems['Snacks'] ?? [],
                           onTap: (mainText, subText) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MealsTabBarScreen(
-                                  mealType: mainText,
-                                  recommendedCalories: _calculateCalories(mainText),
+                                  mealType: _getEnglishMealType(mainText, l10n),
+                                  recommendedCalories: _calculateCalories(_getEnglishMealType(mainText, l10n)),
                                   onAddItem: (item) {
-                                    mealsProvider.addMealItem(mainText, item);
+                                    mealsProvider.addMealItem(_getEnglishMealType(mainText, l10n), item);
                                   },
                                 ),
                               ),
                             );
                           },
                           onRemoveItem: (mainText, item) async {
-                            await mealsProvider.removeMealItem(mainText, {
+                            await mealsProvider.removeMealItem(_getEnglishMealType(mainText, l10n), {
                               'foodName': item['foodName'],
-                              'calories': item['calories'] ~/ (item['count'] as int), // Use original calories
+                              'calories': item['calories'] ~/ (item['count'] as int),
                               'quantity': item['quantity'],
                               'timestamp': item['timestamp'],
                             });
@@ -198,10 +209,11 @@ class MealHeaderContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<MealsProvider>(
       builder: (context, mealsProvider, child) {
         final eatenCalories = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'].fold(0, (sum, mealType) {
-          return sum + mealsProvider.mealItems[mealType]!.fold(0, (s, item) => s + (item['calories'] as num).toInt());
+          return sum + (mealsProvider.mealItems[mealType]?.fold(0, (s, item) => s! + (item['calories'] as num).toInt()) ?? 0);
         });
         final remainingCalories = mealsProvider.dailyCalories - eatenCalories;
         final containerColor = eatenCalories > mealsProvider.dailyCalories ? Colors.red : const Color(0xFF5AA189);
@@ -217,19 +229,19 @@ class MealHeaderContainer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Eaten',
+                        l10n.eaten_label,
                         style: TextStyle(color: Colors.white, fontSize: 18.sp),
                       ),
                       Text(
-                        '$eatenCalories Cal',
+                        '$eatenCalories ${l10n.cal}',
                         style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'Remaining',
+                        l10n.remaining,
                         style: TextStyle(color: Colors.white, fontSize: 18.sp),
                       ),
                       Text(
-                        '$remainingCalories Cal',
+                        '$remainingCalories ${l10n.cal}',
                         style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -246,7 +258,7 @@ class MealHeaderContainer extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      'Total Cal: ${mealsProvider.dailyCalories}',
+                      '${l10n.total_cal}: ${mealsProvider.dailyCalories}',
                       style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: 8.w),

@@ -6,7 +6,7 @@ import 'food_list_screen.dart';
 import 'recent_tab_screen.dart';
 import 'my_food_tab_screen.dart';
 import 'meals_data_provider.dart';
-import 'package:gdm_app/utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MealsTabBarScreen extends StatefulWidget {
   final String mealType;
@@ -28,6 +28,22 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   bool _isSearching = false;
+
+  // Map English mealType to localized string
+  String _getLocalizedMealType(String mealType, AppLocalizations l10n) {
+    switch (mealType) {
+      case 'Breakfast':
+        return l10n.breakfast;
+      case 'Lunch':
+        return l10n.lunch;
+      case 'Dinner':
+        return l10n.dinner;
+      case 'Snacks':
+        return l10n.snacks;
+      default:
+        return mealType; // Fallback
+    }
+  }
 
   final List<Map<String, dynamic>> _foodItems = [
     // Traditional Emirati Dishes
@@ -306,6 +322,7 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<MealsProvider>(
       builder: (context, mealsProvider, child) {
         final recentItems = mealsProvider.mealItems[widget.mealType] ?? [];
@@ -340,12 +357,12 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          widget.mealType,
+                          _getLocalizedMealType(widget.mealType, l10n),
                           style: TextStyle(color: Colors.white, fontSize: 24.sp),
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          '$currentCalories/${widget.recommendedCalories} Cal',
+                          '$currentCalories/${widget.recommendedCalories} ${l10n.cal}',
                           style: TextStyle(color: Colors.white, fontSize: 14.sp),
                         ),
                       ],
@@ -384,7 +401,7 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Search for a food',
+                    hintText: l10n.search_for_a_food,
                     prefixIcon: const Icon(Icons.search, color: Colors.grey),
                     suffixIcon: _isSearching
                         ? IconButton(
@@ -430,9 +447,9 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
                           fontSize: 16.sp,
                           fontWeight: FontWeight.normal,
                         ),
-                        tabs: const [
-                          Tab(text: 'Recent'),
-                          Tab(text: 'My food'),
+                        tabs: [
+                          Tab(text: l10n.recent),
+                          Tab(text: l10n.my_food),
                         ],
                       ),
                     ),

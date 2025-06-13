@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'meals_data_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class AddCaloriesDialogBox extends StatefulWidget {
   const AddCaloriesDialogBox({Key? key}) : super(key: key);
@@ -26,6 +28,8 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
   }
 
   Future<void> _saveCaloriesData() async {
+    final l10n = AppLocalizations.of(context)!;
+
     setState(() {
       _isLoading = true;
     });
@@ -33,7 +37,7 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
     try {
       final uid = _auth.currentUser?.uid;
       if (uid == null) {
-        Utils().toastMessage('User not logged in!');
+        Utils().toastMessage(l10n.noUserLoggedIn);
         setState(() {
           _isLoading = false;
         });
@@ -45,7 +49,7 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
       if (userDoc.exists) {
         final calories = int.tryParse(_caloriesController.text);
         if (calories == null || calories <= 0) {
-          Utils().toastMessage('Please enter a valid calorie value!');
+          Utils().toastMessage(l10n.please_enter_valid_calorie_value);
           setState(() {
             _isLoading = false;
           });
@@ -63,7 +67,7 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
             .collection('Meals Plain')
             .add(calorieData);
 
-        Utils().toastMessage('Successfully added Daily Calories data!');
+        Utils().toastMessage(l10n.successfully_added_daily_calories);
 
         // Refresh meals data
         WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -72,10 +76,10 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
 
         Navigator.pop(context);
       } else {
-        Utils().toastMessage('User not found in any collection!');
+        Utils().toastMessage(l10n.user_not_found_in_collection);
       }
     } catch (e) {
-      Utils().toastMessage('Error adding calories: $e');
+      Utils().toastMessage('${l10n.error_adding_calories} $e');
       print('Error: $e');
     } finally {
       setState(() {
@@ -86,10 +90,11 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AlertDialog(
       title: Center(
         child: Text(
-          'Set Calories',
+          l10n.set_calories,
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
@@ -104,7 +109,7 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
             controller: _caloriesController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              hintText: 'Set daily Cal',
+              hintText: l10n.set_daily_cal,
               hintStyle: TextStyle(color: Colors.grey),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Color(0xFF5AA189), width: 2.0),
@@ -130,7 +135,7 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                child: Text('Cancel'),
+                child: Text(l10n.cancel),
               ),
               ElevatedButton(
                 onPressed: _isLoading ? null : _saveCaloriesData,
@@ -142,7 +147,7 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                child: Text('Add Cal'),
+                child: Text(l10n.add_cal),
               ),
             ],
           ),

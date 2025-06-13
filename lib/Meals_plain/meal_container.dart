@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/utils/utils.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 
 class MealContainer extends StatelessWidget {
@@ -42,6 +44,7 @@ class MealContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Group items to handle duplicates
     final groupedItems = _groupItemsByFoodName(items);
 
@@ -61,7 +64,7 @@ class MealContainer extends StatelessWidget {
                 style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                '$subText eaten',
+                '$subText ${l10n.eaten}',
                 style: TextStyle(fontSize: 14.sp, color: Colors.grey),
               ),
               trailing: IconButton(
@@ -102,7 +105,7 @@ class MealContainer extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '${item['calories']} Cal',
+                                '${item['calories']} ${l10n.cal}',
                                 style: TextStyle(fontSize: 14.sp),
                               ),
                               SizedBox(width: 8.w),
@@ -113,8 +116,7 @@ class MealContainer extends StatelessWidget {
                                     // Call the onRemoveItem function to handle Firestore deletion and provider update
                                     await onRemoveItem(mainText, item);
                                   } catch (e) {
-                                    Utils().toastMessage('Error deleting food: $e');
-                                  }
+                                    Utils().toastMessage('${l10n.error_deleting_food} $e');                                  }
                                 },
                               ),
                             ],

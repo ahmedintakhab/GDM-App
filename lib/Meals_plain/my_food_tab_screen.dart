@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'create_food_screen.dart';
 import 'meals_data_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class MyFoodTabScreen extends StatefulWidget {
   final String mealType;
@@ -29,6 +31,7 @@ class _MyFoodTabScreenState extends State<MyFoodTabScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -40,7 +43,7 @@ class _MyFoodTabScreenState extends State<MyFoodTabScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Food',
+                    l10n.food,
                     style: TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
@@ -62,7 +65,7 @@ class _MyFoodTabScreenState extends State<MyFoodTabScreen> {
                       size: 20.sp,
                     ),
                     label: Text(
-                      'Create Food',
+                      l10n.create_food,
                       style: TextStyle(
                         color: const Color(0xFF5AA189),
                         fontSize: 16.sp,
@@ -82,7 +85,7 @@ class _MyFoodTabScreenState extends State<MyFoodTabScreen> {
                     return Center(child: Text(mealsProvider.errorMessage!));
                   }
                   if (mealsProvider.foodsData.isEmpty) {
-                    return const Center(child: Text('No foods available'));
+                    return  Center(child: Text(l10n.no_foods_available));
                   }
                   return ListView.builder(
                     shrinkWrap: true,
@@ -106,7 +109,7 @@ class _MyFoodTabScreenState extends State<MyFoodTabScreen> {
                             ),
                           ),
                           subtitle: Text(
-                            'Quantity: ${food['quantity']}',
+                            '${l10n.quantity_label}: ${food['quantity']}',
                             style: TextStyle(fontSize: 14.sp),
                           ),
                           trailing: Row(
@@ -127,7 +130,7 @@ class _MyFoodTabScreenState extends State<MyFoodTabScreen> {
                                   await Provider.of<MealsProvider>(context, listen: false)
                                       .addMealItem(widget.mealType, foodItem);
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('${food['foodName']} added to ${widget.mealType}')),
+                                    SnackBar(content: Text('${food['foodName']} ${l10n.added_to} ${widget.mealType}')),
                                   );
                                   Navigator.pop(context);
                                 },

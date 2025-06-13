@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'meals_data_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class RecentTabScreen extends StatelessWidget {
   final String mealType;
@@ -10,11 +12,12 @@ class RecentTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Consumer<MealsProvider>(
       builder: (context, mealsProvider, child) {
         final recentItems = mealsProvider.mealItems[mealType] ?? [];
         return recentItems.isEmpty
-            ? Center(child: Text('No recent items',
+            ? Center(child: Text(l10n.no_recent_items,
             style: TextStyle(fontSize: 18.sp)))
             : ListView.builder(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
