@@ -441,6 +441,15 @@
             "search_for_a_food": "Search for a food",
             "recent": "Recent",
             "my_food": "My food",
+            "deleteAccount": "Delete My Account",
+              "deleteAccountConfirmation": "Are you sure you want to delete your account? This action cannot be undone.",
+              "deleteAccountSuccess": "Account deleted successfully.",
+              "noUserSignedIn": "No user is currently signed in.",
+              "reauthenticate": "Re-authenticate",
+              "reauthenticatePrompt": "Please enter your password to confirm account deletion.",
+              "reauthenticationFailed": "Re-authentication failed",
+              "invalidCredentials": "Please enter valid credentials.",
+              "failedToDeleteAccount": "Failed to delete account",
 
   "@appTitle": {
     "description": "The title of the application"

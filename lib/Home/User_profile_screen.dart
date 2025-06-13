@@ -10,6 +10,7 @@ import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:gdm_app/weight/add_weight_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import '../Register/delete_account_dialog.dart';
 import '../Register/login_screen.dart';
 import '../Register/logout_dialog_widget.dart';
 import '../controller/language_change_controller.dart';
@@ -60,6 +61,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Utils().toastMessage('${l10n.failedToLogout}$e');
           }
         },
+      ),
+    );
+  }
+  void _handleDeleteAccount(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => DeleteAccountDialog(
+        reminderService: widget.reminderService,
       ),
     );
   }
@@ -226,18 +235,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Column(
                         children: [
-                          // CustomMenuItem(
-                          //   icon: Icons.add_alarm,
-                          //   text: 'Set Reminder',
-                          //   onTap: () {
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //         builder: (context) => AddReminders(reminderService: ReminderService()),
-                          //       ),
-                          //     );
-                          //   },
-                          // ),
                           CustomMenuItem(
                             icon: Icons.list,
                             text: l10n.reminders,
@@ -282,6 +279,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             textColor: Colors.red,
                             iconColor: Colors.red,
                             onTap: () => _handleLogout(context),
+                          ),
+                          CustomMenuItem(
+                            icon: Icons.delete,
+                            text: l10n.deleteAccount,
+                            textColor: Colors.red,
+                            iconColor: Colors.red,
+                            onTap: () => _handleDeleteAccount(context),
                           ),
                         ],
                       ),

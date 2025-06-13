@@ -5,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
-
 class MealsProvider extends ChangeNotifier {
   List<Map<String, dynamic>> _mealsData = [];
   List<Map<String, dynamic>> _foodsData = [];
@@ -75,9 +73,7 @@ class MealsProvider extends ChangeNotifier {
             .doc(uid)
             .collection('Meals Plain')
             .doc('data')
-            .collection
-
-          ('Foods')
+            .collection('Foods')
             .orderBy('timestamp', descending: true)
             .get();
 
@@ -224,6 +220,21 @@ class MealsProvider extends ChangeNotifier {
       _safeNotifyListeners();
       print("Error removing meal item: $e");
     }
+  }
+
+  void resetUserData() {
+    _mealsData = [];
+    _foodsData = [];
+    _mealItems = {
+      'Breakfast': [],
+      'Lunch': [],
+      'Dinner': [],
+      'Snacks': [],
+    };
+    _dailyCalories = 0;
+    _isLoading = false;
+    _errorMessage = null;
+    _safeNotifyListeners();
   }
 
   void _safeNotifyListeners() {

@@ -78,7 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       await userProvider.fetchUserData();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen(reminderService: widget.reminderService)));
+          context, MaterialPageRoute(builder: (context) =>
+          HomeScreen(reminderService: widget.reminderService)));
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       switch (e.code) {
