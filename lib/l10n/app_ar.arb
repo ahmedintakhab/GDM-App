@@ -6,7 +6,7 @@
   "pleaseEnterEmail": "أدخل البريد الإلكتروني",
   "pleaseEnterPassword": "أدخل كلمة المرور",
   "loginSuccess": "تم تسجيل دخول المستخدم بنجاح!",
-   "loginfailedTryAgain_ar": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+   "loginfailedTryAgain": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
   "userNotFound": "لم يتم العثور على مستخدم لهذا البريد الإلكتروني.",
   "wrongPassword": "كلمة المرور غير صحيحة. حاول مرة أخرى.",
   "invalidEmail": "تنسيق البريد الإلكتروني غير صالح. أدخل بريدًا إلكترونيًا صالحًا.",
@@ -15,7 +15,7 @@
   "invalidCredential": "بيانات اعتماد غير صالحة. تحقق من بريدك الإلكتروني وكلمة المرور.",
   "operationNotAllowed": "تسجيل الدخول باستخدام البريد الإلكتروني/كلمة المرور غير مفعل.",
   "genericError": "حدث خطأ غير متوقع. حاول مرة أخرى.",
-  "signUpPrompt": "ليس لديك حساب؟ اشترك",
+  "signUpPrompt": "ليس لديك حساب؟",
   "forgotPassword": "نسيت كلمة المرور؟",
   "signUp": "اشتراك",
   "createAccount": "إنشاء حساب!",
@@ -450,6 +450,9 @@
             "reauthenticationFailed": "فشل إعادة التوثيق",
             "invalidCredentials": "يرجى إدخال بيانات اعتماد صالحة.",
             "failedToDeleteAccount": "فشل في حذف الحساب",
+            "dailyCalories": "السعرات الحرارية اليومية",
+              "calories": "سعرات حرارية",
+
 
 "@appTitle": {
     "description": "عنوان التطبيق"

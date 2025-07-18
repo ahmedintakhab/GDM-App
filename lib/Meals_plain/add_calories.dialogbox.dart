@@ -7,7 +7,6 @@ import 'package:gdm_app/utils/utils.dart';
 import 'meals_data_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class AddCaloriesDialogBox extends StatefulWidget {
   const AddCaloriesDialogBox({Key? key}) : super(key: key);
 
@@ -22,9 +21,42 @@ class _AddCaloriesDialogBoxState extends State<AddCaloriesDialogBox> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _fetchCurrentCalories();
+  }
+
+  @override
   void dispose() {
     _caloriesController.dispose();
     super.dispose();
+  }
+
+  Future<void> _fetchCurrentCalories() async {
+    try {
+      final uid = _auth.currentUser?.uid;
+      if (uid == null) return;
+
+      final mealsSnapshot = await _firestore
+          .collection('Users')
+          .doc(uid)
+          .collection('Meals Plain')
+          .orderBy('timestamp', descending: true)
+          .limit(1)
+          .get();
+
+      if (mealsSnapshot.docs.isNotEmpty) {
+        final data = mealsSnapshot.docs.first.data();
+        final currentCalories = data['Daily Calories'] ?? 0;
+        if (mounted) {
+          setState(() {
+            _caloriesController.text = currentCalories.toString();
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching current calories: $e');
+    }
   }
 
   Future<void> _saveCaloriesData() async {

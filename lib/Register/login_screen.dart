@@ -210,9 +210,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
 
-                    SizedBox(height: 15.h),
-                    forgotpassword(),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 25.h),
+                    // forgotpassword(),
+                    // SizedBox(height: 20.h),
 
                     CustomButton(
                       onTap: Login,

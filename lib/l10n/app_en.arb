@@ -15,7 +15,7 @@
   "invalidCredential": "Invalid credentials. Please check your email and password.",
   "operationNotAllowed": "Email/password login is not enabled.",
   "genericError": "An unexpected error occurred. Please try again.",
-  "signUpPrompt": "Don't have an account? Sign up",
+  "signUpPrompt": "Don't have an account?",
   "forgotPassword": "Forgot password?",
   "signUp": "Sign Up",
   "createAccount": "Create an Account!",
@@ -415,7 +415,6 @@
             "successfully_added_food": "Successfully added food!",
             "error_adding_food": "Error adding food:",
             "eaten": "eaten",
-            "cal": "Cal",
             "error_deleting_food": "Error deleting food:",
             "meals_plan": "Meals Plan",
             "breakfast": "Breakfast",
@@ -450,6 +449,8 @@
               "reauthenticationFailed": "Re-authentication failed",
               "invalidCredentials": "Please enter valid credentials.",
               "failedToDeleteAccount": "Failed to delete account",
+              "dailyCalories": "Daily Calories",
+                "calories": "Calories",
 
   "@appTitle": {
     "description": "The title of the application"

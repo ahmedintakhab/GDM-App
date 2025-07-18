@@ -105,7 +105,7 @@ class MealContainer extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '${item['calories']} ${l10n.cal}',
+                                '${item['calories']} ${l10n.calories}',
                                 style: TextStyle(fontSize: 14.sp),
                               ),
                               SizedBox(width: 8.w),

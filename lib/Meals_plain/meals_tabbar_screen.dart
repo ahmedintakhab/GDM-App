@@ -362,7 +362,7 @@ class _MealsTabBarScreenState extends State<MealsTabBarScreen> with SingleTicker
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          '$currentCalories/${widget.recommendedCalories} ${l10n.cal}',
+                          '$currentCalories/${widget.recommendedCalories} ${l10n.calories}',
                           style: TextStyle(color: Colors.white, fontSize: 14.sp),
                         ),
                       ],

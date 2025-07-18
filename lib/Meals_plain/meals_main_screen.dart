@@ -83,7 +83,7 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                         MealHeaderContainer(mealsMainScreenKey: _mealsMainScreenKey),
                         MealContainer(
                           mainText: l10n.breakfast,
-                          subText: '${_calculateCalories('Breakfast')} ${l10n.cal}',
+                          subText: '${_calculateCalories('Breakfast')} ${l10n.calories}',
                           items: mealsProvider.mealItems['Breakfast'] ?? [],
                           onTap: (mainText, subText) {
                             Navigator.push(
@@ -110,7 +110,7 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                         ),
                         MealContainer(
                           mainText: l10n.lunch,
-                          subText: '${_calculateCalories('Lunch')} ${l10n.cal}',
+                          subText: '${_calculateCalories('Lunch')} ${l10n.calories}',
                           items: mealsProvider.mealItems['Lunch'] ?? [],
                           onTap: (mainText, subText) {
                             Navigator.push(
@@ -137,7 +137,7 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                         ),
                         MealContainer(
                           mainText: l10n.dinner,
-                          subText: '${_calculateCalories('Dinner')} ${l10n.cal}',
+                          subText: '${_calculateCalories('Dinner')} ${l10n.calories}',
                           items: mealsProvider.mealItems['Dinner'] ?? [],
                           onTap: (mainText, subText) {
                             Navigator.push(
@@ -164,7 +164,7 @@ class _MealsMainScreenState extends State<MealsMainScreen> {
                         ),
                         MealContainer(
                           mainText: l10n.snacks,
-                          subText: '${_calculateCalories('Snacks')} ${l10n.cal}',
+                          subText: '${_calculateCalories('Snacks')} ${l10n.calories}',
                           items: mealsProvider.mealItems['Snacks'] ?? [],
                           onTap: (mainText, subText) {
                             Navigator.push(
@@ -233,7 +233,7 @@ class MealHeaderContainer extends StatelessWidget {
                         style: TextStyle(color: Colors.white, fontSize: 18.sp),
                       ),
                       Text(
-                        '$eatenCalories ${l10n.cal}',
+                        '$eatenCalories ${l10n.calories}',
                         style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold),
                       ),
                       Text(
@@ -241,7 +241,7 @@ class MealHeaderContainer extends StatelessWidget {
                         style: TextStyle(color: Colors.white, fontSize: 18.sp),
                       ),
                       Text(
-                        '$remainingCalories ${l10n.cal}',
+                        '$remainingCalories ${l10n.calories}',
                         style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -258,7 +258,7 @@ class MealHeaderContainer extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      '${l10n.total_cal}: ${mealsProvider.dailyCalories}',
+                      '${l10n.dailyCalories}: ${mealsProvider.dailyCalories}',
                       style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: 8.w),

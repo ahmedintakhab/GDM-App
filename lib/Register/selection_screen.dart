@@ -56,9 +56,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   // Map of option keys to their localized display values
   Map<String, String> getOptionLabels(AppLocalizations l10n) => {
-    'pregnant': l10n.pregnant,
-    'notPregnant': l10n.notPregnant,
-    'doctor': l10n.doctor,
+    'Pregnant': l10n.pregnant,
+    'Not Pregnant': l10n.notPregnant,
+    'Doctor': l10n.doctor,
   };
 
   Future<void> saveSelectedOption(String optionKey) async {
@@ -96,7 +96,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
     // Navigate to the respective screen based on the selected option key
     switch (_selectedOptionKey) {
-      case 'pregnant':
+      case 'Pregnant':
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -107,7 +107,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
           ),
         );
         break;
-      case 'notPregnant':
+      case 'Not Pregnant':
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -118,7 +118,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
           ),
         );
         break;
-      case 'doctor':
+      case 'Doctor':
         Navigator.push(
           context,
           MaterialPageRoute(
