@@ -6,7 +6,7 @@ import 'food_list_screen.dart';
 import 'recent_tab_screen.dart';
 import 'my_food_tab_screen.dart';
 import 'meals_data_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 class MealsTabBarScreen extends StatefulWidget {
   final String mealType;

@@ -6,7 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import '../utils/onboarding_data_model.dart';
 import '../utils/pref_data.dart';
 import '../utils/screen_size.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final ReminderService reminderService;

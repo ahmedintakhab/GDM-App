@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import 'add_reminders_screen.dart';
 import 'reminder_item_widget.dart';
 
@@ -77,6 +77,12 @@ class _AllRemindersState extends State<AllReminders> {
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ),
       body: StreamBuilder<List<Reminder>>(

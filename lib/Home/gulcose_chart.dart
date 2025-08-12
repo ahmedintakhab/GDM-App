@@ -1,7 +1,7 @@
 // weekly_glucose_chart.dart
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 class WeeklyGlucoseChart extends StatelessWidget {
   final Map<String, double> weeklyData;

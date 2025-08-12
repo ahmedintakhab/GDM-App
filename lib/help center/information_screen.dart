@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/help%20center/information_dialogbox.dart';
 import 'information_card.dart'; // Import the second file
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 // Static data for card titles and their details using ARB keys

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
 import '../Home/user_data_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 class MonthlyTab extends StatelessWidget {
@@ -20,7 +20,7 @@ class MonthlyTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAverageGlucoseCard(monthlyAverage, mood, userProvider,localizations),
+          // _buildAverageGlucoseCard(monthlyAverage, mood, userProvider,localizations),
           SizedBox(height: 24),
           _buildGlucoseLevelsCard(monthlyData,localizations),
         ],
@@ -282,7 +282,8 @@ class MonthlyTab extends StatelessWidget {
                 ),
               ],
             )
-                : Center(child: Text(localizations.noWeightData)),          ),
+                : Center(child: Text(localizations.noWeightData)),
+          ),
         ],
       ),
     );

@@ -6,7 +6,7 @@ import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/weight/add_weight_dialogbox.dart';
 import 'package:gdm_app/weight/view_weight_summary.dart';
 import 'package:gdm_app/weight/weight_graph.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 import 'generate_weight_pdf.dart';

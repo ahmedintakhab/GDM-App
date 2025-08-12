@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gdm_app/glucose_screen/monthly_tab.dart';
 import 'package:gdm_app/glucose_screen/today_tab.dart';
 import 'package:gdm_app/glucose_screen/weekly_tab.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 class GlucoseDetailsScreen extends StatelessWidget {

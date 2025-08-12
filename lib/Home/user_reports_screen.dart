@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../meals/meals_plan_tab.dart';
 import '../meals/my_meal_tab.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 class MealsScreen extends StatefulWidget {

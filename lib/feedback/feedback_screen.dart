@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gdm_app/feedback/success_dialog.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/custom_button.dart';
 import 'question_container.dart';
 

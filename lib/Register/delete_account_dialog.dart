@@ -6,7 +6,7 @@ import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:gdm_app/utils/utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../Meals_plain/meals_data_provider.dart';

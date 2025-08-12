@@ -3,14 +3,15 @@ const admin = require('firebase-admin');
 const moment = require('moment-timezone');
 
 admin.initializeApp();
+console.log('Firebase Admin SDK initialized successfully');
 
 const SERVICE_ACCOUNT_EMAIL = 'custom-compute-618746563893@gdm-app-85a42.iam.gserviceaccount.com';
 
 exports.scheduleReminders = functions
   .region('us-central1')
   .runWith({
-    memory: '256MB',
-    timeoutSeconds: 120,
+    memory: '512MB',
+    timeoutSeconds: 300,
     serviceAccountEmail: SERVICE_ACCOUNT_EMAIL,
   })
   .pubsub.schedule('every 1 minutes')
@@ -138,16 +139,23 @@ exports.scheduleReminders = functions
                           },
                         },
                         apns: {
+                        headers: {
+                                'apns-priority': '10',
+                                                  },
                           payload: {
                             aps: {
                               sound: 'default',
-                              badge: 1,
+                               badge: 1,
+                                'content-available': 1,
+                                'mutable-content': 1,
+                               'category': 'FLUTTER_NOTIFICATION_CLICK',
                             },
                           },
                         },
                         data: {
                           reminderType: 'GDM Test',
                           reminderId: reminder.id,
+                          click_action: 'FLUTTER_NOTIFICATION_CLICK',
                         },
                       };
 
@@ -225,7 +233,7 @@ exports.scheduleReminders = functions
               const minutesUntil = reminderTime.diff(nowInUserTz, 'minutes');
               console.log(`Reminder ${reminder.id}: ${reminderTime.format()} (${timezone}), Minutes until: ${minutesUntil}`);
 
-              if (minutesUntil === -1) {
+               if (minutesUntil === -1) {
                 console.log(`SENDING NOTIFICATION for reminder ${reminder.id}: ${reminder.type}`);
 
                 await reminderDoc.ref.update({
@@ -249,11 +257,17 @@ exports.scheduleReminders = functions
                       tag: reminder.id,
                     },
                   },
-                  apns: {
+               apns: {
+                    headers: {
+                      'apns-priority': '10',
+                    },
                     payload: {
                       aps: {
                         sound: 'default',
                         badge: 1,
+                        'content-available': 1,
+                        'mutable-content': 1,
+                        'category': 'FLUTTER_NOTIFICATION_CLICK',
                       },
                     },
                   },
@@ -261,6 +275,7 @@ exports.scheduleReminders = functions
                     reminderType: reminder.type,
                     reminderTime: reminder.time,
                     reminderId: reminder.id,
+                    click_action: 'FLUTTER_NOTIFICATION_CLICK',
                   },
                 };
 
@@ -336,8 +351,14 @@ exports.scheduleReminders = functions
       console.log(`Total notification promises: ${notificationPromises.length}`);
       console.log('Waiting for all notification promises');
       try {
-        await Promise.all(notificationPromises);
-        console.log('All notifications processed');
+await Promise.all(
+    notificationPromises.map(promise =>
+      promise.catch(error => {
+        console.error('Individual notification promise failed:', error.message);
+        return null; // Continue with other promises
+      })
+    )
+  );        console.log('All notifications processed');
       } catch (error) {
         console.error('Error resolving notification promises:', error.message);
       }
@@ -358,7 +379,7 @@ async function retryFcmSend(message, retries) {
       console.log(`FCM send successful: ${response}`);
       return response;
     } catch (error) {
-      console.warn(`FCM send attempt ${attempt} failed: ${error.message}`);
+      console.error(`FCM send attempt ${attempt} failed: ${error.message}, Code: ${error.code}, Details: ${JSON.stringify(error.details)}`);
       if (attempt === retries) {
         console.error('All FCM send attempts failed:', error);
         throw error;
@@ -494,12 +515,23 @@ exports.sendReminderNotification = functions
             sound: 'default',
           },
         },
-        apns: {
+     apns: {
+          headers: {
+            'apns-priority': '10',
+          },
           payload: {
             aps: {
               sound: 'default',
+              badge: 1,
+              'content-available': 1,
+              'mutable-content': 1,
+              'category': 'FLUTTER_NOTIFICATION_CLICK',
             },
           },
+        },
+        data: {
+          reminderId: 'test-notification',
+          click_action: 'FLUTTER_NOTIFICATION_CLICK',
         },
       };
 

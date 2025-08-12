@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:gdm_app/utils/utils.dart';
 import '../Home/user_data_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 class TodayTab extends StatefulWidget {
   @override
@@ -99,7 +99,7 @@ class _TodayTabState extends State<TodayTab> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildAverageGlucoseCard(userProvider),
+                  // _buildAverageGlucoseCard(userProvider),
                   SizedBox(height: 24),
                   _buildGlucoseLevelsCard(userProvider),
 

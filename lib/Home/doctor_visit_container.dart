@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:gdm_app/utils/utils.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 import '../dialogbox/doctor_visit_dialogbox.dart';
 

@@ -10,7 +10,7 @@ import 'package:gdm_app/Register/users_signup_screen.dart';
 import 'package:gdm_app/Register/without_pregnancy_signup.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 import '../Home/user_data_provider.dart';
 import '../reminder/reminder_service_implementation.dart';

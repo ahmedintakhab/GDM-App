@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gdm_app/Home/gulcose_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:gdm_app/Home/user_data_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 class WeeklyTab extends StatelessWidget {
@@ -17,11 +17,11 @@ class WeeklyTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAverageGlucoseCard(
-            userProvider.getWeeklyAverage(),
-            userProvider.getWeeklyMood(),
-            userProvider,context,
-          ),
+          // _buildAverageGlucoseCard(
+          //   userProvider.getWeeklyAverage(),
+          //   userProvider.getWeeklyMood(),
+          //   userProvider,context,
+          // ),
           SizedBox(height: 24),
           Container(
             padding: EdgeInsets.all(16),

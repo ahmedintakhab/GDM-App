@@ -5,7 +5,7 @@ import '../widgets/custom_text_form_field.dart';
 import '../widgets/dropdown_widget.dart';
 import 'all_reminders_screen.dart';
 import 'dart:math';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import 'package:gdm_app/utils/utils.dart';
 
 

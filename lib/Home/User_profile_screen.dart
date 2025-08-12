@@ -8,7 +8,7 @@ import 'package:gdm_app/Home/user_data_provider.dart';
 import 'package:gdm_app/reminder/all_reminders_screen.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:gdm_app/weight/add_weight_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../Register/delete_account_dialog.dart';
 import '../Register/login_screen.dart';

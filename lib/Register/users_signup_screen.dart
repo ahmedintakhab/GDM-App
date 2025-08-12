@@ -7,7 +7,7 @@ import 'package:gdm_app/Register/login_screen.dart';
 import 'package:gdm_app/Register/selection_screen.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:get/get.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 import '../reminder/reminder_service_implementation.dart';
 import '../widgets/custom_button.dart';

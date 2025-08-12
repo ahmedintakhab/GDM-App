@@ -113,10 +113,37 @@ class ReminderService {
         updateFCMToken();
       });
       FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+      FirebaseMessaging.onMessageOpenedApp.listen((message) {
+        print('Notification opened from background: ${message.data}');
+        if (message.data['reminderId'] != null) {
+          onGdmReminderTapped?.call(message.data['reminderId']);
+        }
+      });
+
+      RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+      if (initialMessage != null) {
+        print('App opened from terminated state: ${initialMessage.data}');
+        if (initialMessage.data['reminderId'] != null) {
+          onGdmReminderTapped?.call(initialMessage.data['reminderId']);
+        }
+      }
 
       const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-      const iosInit = DarwinInitializationSettings();
-      const initSettings = InitializationSettings(android: androidInit, iOS: iosInit);
+      final iosInit = DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+        notificationCategories: [
+          DarwinNotificationCategory(
+            'FLUTTER_NOTIFICATION_CLICK',
+            actions: [
+              DarwinNotificationAction.plain('done', 'Done', options: {}),
+              DarwinNotificationAction.plain('snooze', 'Snooze', options: {}),
+            ],
+          ),
+        ],
+      );
+      final initSettings = InitializationSettings(android: androidInit, iOS: iosInit);
       await _localNotifications.initialize(
         initSettings,
         onDidReceiveNotificationResponse: _handleNotificationResponse,
@@ -164,10 +191,11 @@ class ReminderService {
     try {
       if (_auth.currentUser != null) {
         print('Current user UID: ${_auth.currentUser!.uid}');
+
+        // Retrieve FCM token for all platforms
         String? token = await _messaging.getToken();
-        print('Retrieved FCM token: $token');
         if (token != null) {
-          print('Writing FCM token to Firestore for user: ${_auth.currentUser!.uid}');
+          print('Retrieved FCM token: $token');
           await _firestore.collection('Users').doc(_auth.currentUser!.uid).set({
             'fcmToken': token,
             'timezone': 'Asia/Karachi',
@@ -177,12 +205,23 @@ class ReminderService {
         } else {
           print('FCM token is null');
         }
+
+        // Log APNs token for iOS (optional, for debugging)
+        String? apnsToken = await _messaging.getAPNSToken();
+        if (apnsToken != null) {
+          print('APNs token retrieved: $apnsToken');
+        } else {
+          print('APNs token not available (expected on Android)');
+        }
       } else {
         print('No user signed in');
       }
     } catch (e) {
       print('Error updating FCM token: $e');
+      // Optionally rethrow or handle the error based on your app's needs
+      // rethrow;
     }
+    print('FCM token update process completed');
   }
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
@@ -196,7 +235,11 @@ class ReminderService {
         importance: Importance.max,
         priority: Priority.high,
       );
-      const iosDetails = DarwinNotificationDetails();
+      const iosDetails = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
       const notificationDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
       await _localNotifications.show(
         0,

@@ -6,7 +6,7 @@ import 'add_calories.dialogbox.dart';
 import 'meals_data_provider.dart';
 import 'meals_tabbar_screen.dart';
 import 'meal_container.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 class MealsMainScreen extends StatefulWidget {
   const MealsMainScreen({Key? key}) : super(key: key);

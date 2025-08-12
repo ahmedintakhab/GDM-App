@@ -7,7 +7,7 @@ import 'package:gdm_app/utils/utils.dart';
 import '../dialogbox/due_date_dialogbox.dart';
 import '../reminder/gdm_response_dialog.dart';
 import '../reminder/reminder_service_implementation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 class LinearProgressContainer extends StatefulWidget {

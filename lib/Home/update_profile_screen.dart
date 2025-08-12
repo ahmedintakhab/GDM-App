@@ -7,7 +7,7 @@ import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:provider/provider.dart';
 import '../reminder/reminder_service_implementation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 class UpdateProfile extends StatefulWidget {
   final ReminderService reminderService;

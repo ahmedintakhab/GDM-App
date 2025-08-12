@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/reminder/reminder_service_implementation.dart';
 import 'package:provider/provider.dart';
 import '../Home/user_data_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 class GdmResponseDialog extends StatelessWidget {

@@ -6,7 +6,7 @@ import 'package:gdm_app/widgets/custom_text_form_field.dart';
 import 'package:gdm_app/widgets/custom_button.dart';
 import 'package:gdm_app/utils/utils.dart';
 import 'package:gdm_app/Register/weight_input_field.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 class AddWeightDialogBox extends StatefulWidget {

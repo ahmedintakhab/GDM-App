@@ -20,7 +20,7 @@ import 'bottom_navigation_bar.dart';
 import 'glucose_card_widget.dart';
 import 'gulcose_chart.dart';
 import 'notification_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 
 class HomeScreen extends StatefulWidget {
