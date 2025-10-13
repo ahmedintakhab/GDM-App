@@ -141,6 +141,7 @@ exports.scheduleReminders = functions
                         apns: {
                         headers: {
                                 'apns-priority': '10',
+                                 'apns-push-type': 'alert',
                                                   },
                           payload: {
                             aps: {
@@ -260,6 +261,7 @@ exports.scheduleReminders = functions
                apns: {
                     headers: {
                       'apns-priority': '10',
+                      'apns-push-type': 'alert',
                     },
                     payload: {
                       aps: {
@@ -518,6 +520,7 @@ exports.sendReminderNotification = functions
      apns: {
           headers: {
             'apns-priority': '10',
+            'apns-push-type': 'alert',
           },
           payload: {
             aps: {

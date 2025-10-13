@@ -81,6 +81,7 @@ class NotificationRecord {
 }
 
 class ReminderService {
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -101,16 +102,13 @@ class ReminderService {
 
     try {
       print('Requesting notification permission');
-      await _requestNotificationPermission();
-      print('Setting FCM auto-init');
-      await _messaging.setAutoInitEnabled(true);
-      print('Updating FCM token');
-      await updateFCMToken();
+      // print('Setting FCM auto-init');
+      // await _messaging.setAutoInitEnabled(true);
+      // print('Updating FCM token');
 
       print('Setting up listeners');
       _messaging.onTokenRefresh.listen((token) {
         print('Token refreshed: $token');
-        updateFCMToken();
       });
       FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
@@ -162,66 +160,6 @@ class ReminderService {
   void setGdmReminderTappedCallback(Function(String) callback) {
     print('Updating onGdmReminderTapped callback');
     this.onGdmReminderTapped = callback;
-  }
-
-  Future<void> _requestNotificationPermission() async {
-    print('Entering _requestNotificationPermission()');
-    final settings = await _messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-    print('Notification permission settings: $settings');
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted notification permission');
-    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      print('User granted provisional notification permission');
-    } else {
-      print('User declined notification permission');
-    }
-  }
-
-  Future<void> updateFCMToken() async {
-    print('Entering updateFCMToken()');
-    try {
-      if (_auth.currentUser != null) {
-        print('Current user UID: ${_auth.currentUser!.uid}');
-
-        // Retrieve FCM token for all platforms
-        String? token = await _messaging.getToken();
-        if (token != null) {
-          print('Retrieved FCM token: $token');
-          await _firestore.collection('Users').doc(_auth.currentUser!.uid).set({
-            'fcmToken': token,
-            'timezone': 'Asia/Karachi',
-            'updatedAt': FieldValue.serverTimestamp(),
-          }, SetOptions(merge: true));
-          print('Successfully updated FCM token and set timezone to Asia/Karachi');
-        } else {
-          print('FCM token is null');
-        }
-
-        // Log APNs token for iOS (optional, for debugging)
-        String? apnsToken = await _messaging.getAPNSToken();
-        if (apnsToken != null) {
-          print('APNs token retrieved: $apnsToken');
-        } else {
-          print('APNs token not available (expected on Android)');
-        }
-      } else {
-        print('No user signed in');
-      }
-    } catch (e) {
-      print('Error updating FCM token: $e');
-      // Optionally rethrow or handle the error based on your app's needs
-      // rethrow;
-    }
-    print('FCM token update process completed');
   }
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
@@ -280,7 +218,6 @@ class ReminderService {
       rethrow;
     }
   }
-
   Future<void> addReminder(Reminder reminder) async {
     print('Entering addReminder() with reminder: ${reminder.toMap()}');
     try {

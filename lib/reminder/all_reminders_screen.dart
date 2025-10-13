@@ -43,7 +43,7 @@ class _AllRemindersState extends State<AllReminders> {
     final l10n = AppLocalizations.of(context)!;
 
     try {
-      await widget.reminderService.updateReminderStatus(id, value);
+     // await widget.reminderService.updateReminderStatus(id, value);
 
       // Show confirmation snackbar
       ScaffoldMessenger.of(context).showSnackBar(

@@ -47,7 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
      regenerateFcmToken(BuildContext context) async {
     print('Regenerating FCM token');
     await FirebaseMessaging.instance.deleteToken();
-    await Provider.of<ReminderService>(context, listen: false).updateFCMToken();
     print('FCM token regeneration completed');
   }
 

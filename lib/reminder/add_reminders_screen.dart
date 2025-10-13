@@ -228,13 +228,17 @@ class _AddRemindersState extends State<AddReminders> {
           content: Text('${l10n.failedToAddReminder} ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
+
       );
+      print('Enter in All reminders screen error${e.toString()}');
+
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

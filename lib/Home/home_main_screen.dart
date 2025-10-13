@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Home/chat_container.dart';
 import 'package:gdm_app/Home/doctor_visit_container.dart';
@@ -12,8 +16,10 @@ import 'package:gdm_app/feedback/feedback_screen.dart';
 import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
 import 'package:gdm_app/help%20center/information_screen.dart';
 import 'package:gdm_app/reminder/add_reminders_screen.dart';
+import 'package:gdm_app/utils/onboarding_data_model.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import '../reminder/notification_services.dart';
 import '../reminder/reminder_service_implementation.dart';
 import 'User_profile_screen.dart';
 import 'bottom_navigation_bar.dart';
@@ -42,9 +48,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  NotificationController notificationController = NotificationController();
+
+
   @override
   void initState() {
     super.initState();
+    notificationController.requestNotificationPermission();
+    notificationController.firebaseInit(context);
+    notificationController.forGroundMessage();
+    notificationController.setupInteractedMessage(context);
+
+    notificationController.getDeviceToken().then((value){
+      print('device token');
+      print(value);
+      Clipboard.setData(ClipboardData(text: value));
+      updateFCMToken(value) ;
+    });
     _screens = [
       HomeContent(reminderService: widget.reminderService), // Pass reminderService
       NotificationScreen(),
@@ -59,6 +79,52 @@ class _HomeScreenState extends State<HomeScreen> {
       userProvider.fetchGlucoseData();
     });
   }
+
+
+  Future<void> updateFCMToken(String token) async {
+
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+
+    print('Entering updateFCMToken()');
+
+    try {
+
+      if (_auth.currentUser != null) {
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text('uid'+_auth.currentUser!.uid),
+        //   ),
+        // );
+        await _firestore.collection('Users').doc(_auth.currentUser!.uid).set({
+          'fcmToken': token,
+          'timezone': 'Asia/Karachi',
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      } else {
+        print('No user signed in');
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text('User not sign in '),
+        //   ),
+        // );
+      }
+    } catch (e) {
+      print('Error updating FCM token: $e');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('This is a SnackBar'+'Error updating FCM token: $e'),
+        ),
+      );
+
+      // Optionally rethrow or handle the error based on your app's needs
+      // rethrow;
+    }
+    print('FCM token update process completed');
+  }
+
 
   @override
   Widget build(BuildContext context) {

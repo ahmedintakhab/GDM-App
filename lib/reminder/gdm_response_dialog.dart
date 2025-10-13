@@ -51,7 +51,7 @@ class GdmResponseDialog extends StatelessWidget {
             );
 
             if (snoozeDuration != null) {
-              await reminderService.handleGdmReminderResponse(reminderId, 'snooze', snoozeDuration: snoozeDuration);
+             // await reminderService.handleGdmReminderResponse(reminderId, 'snooze', snoozeDuration: snoozeDuration);
               Navigator.pop(context);
             }
           },
