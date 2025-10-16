@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gdm_app/Home/chat_container.dart';
@@ -14,6 +15,7 @@ import 'package:gdm_app/help%20center/information_screen.dart';
 import 'package:gdm_app/reminder/add_reminders_screen.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import '../reminder/notification_services.dart';
 import '../reminder/reminder_service_implementation.dart';
 import 'User_profile_screen.dart';
 import 'bottom_navigation_bar.dart';
@@ -41,10 +43,23 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
     });
   }
+  NotificationServices notificationServices = NotificationServices();
 
   @override
   void initState() {
     super.initState();
+    notificationServices.requestNotificationPermission();
+    notificationServices.forgroundMessage();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
+
+    notificationServices.getDeviceToken().then((value){
+      if (kDebugMode) {
+        print('device token');
+        print(value);
+      }
+    });
     _screens = [
       HomeContent(reminderService: widget.reminderService), // Pass reminderService
       NotificationScreen(),

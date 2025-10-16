@@ -14,37 +14,47 @@ import 'Splash Screen/splash_screen.dart';
 import 'controller/language_change_controller.dart';
 
 // Background message handler
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp();
+//   print('Handling background message: ${message.messageId}');
+//   if (message.notification != null) {
+//     final FlutterLocalNotificationsPlugin localNotifications = FlutterLocalNotificationsPlugin();
+//     const androidDetails = AndroidNotificationDetails(
+//       'reminder_channel',
+//       'Reminder Notifications',
+//       channelDescription: 'Notifications for reminders',
+//       importance: Importance.max,
+//       priority: Priority.high,
+//     );
+//     const iosDetails = DarwinNotificationDetails(
+//       presentAlert: true,
+//       presentBadge: true,
+//       presentSound: true,
+//     );
+//     const notificationDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
+//     await localNotifications.show(
+//       0,
+//       message.notification!.title,
+//       message.notification!.body,
+//       notificationDetails,
+//       payload: message.data['reminderId'],
+//     );
+//   }
+// }
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
-  print('Handling background message: ${message.messageId}');
-  if (message.notification != null) {
-    final FlutterLocalNotificationsPlugin localNotifications = FlutterLocalNotificationsPlugin();
-    const androidDetails = AndroidNotificationDetails(
-      'reminder_channel',
-      'Reminder Notifications',
-      channelDescription: 'Notifications for reminders',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-    const iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-    const notificationDetails = NotificationDetails(android: androidDetails, iOS: iosDetails);
-    await localNotifications.show(
-      0,
-      message.notification!.title,
-      message.notification!.body,
-      notificationDetails,
-      payload: message.data['reminderId'],
-    );
-  }
 }
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // Print Firebase project info and FCM token
+  // final app = Firebase.app();
+  // print('projectId=${app.options.projectId}  senderId=${app.options.messagingSenderId}');
+  // final token = await FirebaseMessaging.instance.getToken();
+  // print('FCM token: $token');
+
   // Register background message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   // Initialize Firebase Analytics
