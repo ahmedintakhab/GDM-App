@@ -29,6 +29,13 @@ class _AddRemindersState extends State<AddReminders> {
   bool _reminderAddedSuccessfully = false;
   bool _showCustomFrequencySection = false;
 
+  @override
+  void initState() {
+    super.initState();
+    // Reset state when screen is initialized (when navigating back)
+    _resetState();
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -207,13 +214,14 @@ class _AddRemindersState extends State<AddReminders> {
       //     backgroundColor: Color(0xFF5AA189),
       //   ),
       // );
+      _resetState();
 
       setState(() {
         _reminderAddedSuccessfully = true;
       });
 
       Future.delayed(Duration(seconds: 1), () {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => AllReminders(
@@ -247,10 +255,12 @@ class _AddRemindersState extends State<AddReminders> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0xFF5AA189),
         title: Text(
           l10n.addReminder,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+
         ),
       ),
       body: SingleChildScrollView(

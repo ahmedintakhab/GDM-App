@@ -70,6 +70,7 @@ class _AllRemindersState extends State<AllReminders> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0XFF5AA189),
         title: Text(
           l10n.allReminders,
@@ -78,13 +79,14 @@ class _AllRemindersState extends State<AllReminders> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        // leading: IconButton(
+        //   icon: Icon(Icons.arrow_back, color: Colors.white),
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        // ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       body: StreamBuilder<List<Reminder>>(
           stream: widget.reminderService.getReminders(),
           builder: (context, snapshot) {

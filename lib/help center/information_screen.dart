@@ -127,13 +127,31 @@ class _InformationScreenState extends State<InformationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                l10n.helpCenter,
-                style: TextStyle(
-                  fontSize: 26.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0XFF5AA189),
-                ),
+              Row(
+                children: [
+                  // Back Arrow - Minimal Icon Only
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 24.w,
+                      color: Color(0XFF5AA189),
+                    ),
+                  ),
+                  SizedBox(width: 30.w),
+
+                  // Title
+                  Expanded(
+                    child: Text(
+                      l10n.helpCenter,
+                      style: TextStyle(
+                        fontSize: 26.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0XFF5AA189),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 16.h),
               TextField(

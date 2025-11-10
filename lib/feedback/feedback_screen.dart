@@ -135,6 +135,7 @@ class FeedbackScreen extends StatelessWidget {
           ),
         ),
         backgroundColor: const Color(0xFF5AA189),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Stack(
         children: [

@@ -16,6 +16,7 @@ import 'package:gdm_app/feedback/feedback_screen.dart';
 import 'package:gdm_app/glucose_screen/glucose_details_screen.dart';
 import 'package:gdm_app/help%20center/information_screen.dart';
 import 'package:gdm_app/reminder/add_reminders_screen.dart';
+import 'package:gdm_app/reminder/all_reminders_screen.dart';
 import 'package:gdm_app/utils/onboarding_data_model.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -68,8 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _screens = [
       HomeContent(reminderService: widget.reminderService), // Pass reminderService
       NotificationScreen(),
-      AddReminders(reminderService: widget.reminderService),
       MealsMainScreen(),
+      AllReminders(reminderService: widget.reminderService),
       ProfileScreen(reminderService: widget.reminderService),
     ];
 

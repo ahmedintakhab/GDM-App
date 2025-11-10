@@ -231,7 +231,7 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                     // Confirm Password Field with Eye Icon Toggle
                     CustomTextFormField(
                       controller: _confirmpasswordController,
-                      hintText: _l10n!.passwordLabel,
+                      hintText: _l10n!.confirmPasswordLabel,
                       isPasswordField: true,
                       obscureText: isConfirmPasswordHidden,
                       validator: (val) {
@@ -269,7 +269,7 @@ class _UsersSignupScreenState extends State<UsersSignupScreen> {
                             TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  Get.to( LoginScreen(reminderService: widget.reminderService));
+                                  Get.off( LoginScreen(reminderService: widget.reminderService));
                                 },
                           // ..onTap = () {
                           //         Get.to( SelectionScreen(reminderService: widget.reminderService));

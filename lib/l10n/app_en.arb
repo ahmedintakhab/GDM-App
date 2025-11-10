@@ -3,6 +3,7 @@
   "login": "Login",
   "emailLabel": "Email",
   "passwordLabel": "Password",
+   "confirmPasswordLabel": "Confirm Password",
   "pleaseEnterEmail": "Enter the email",
   "pleaseEnterPassword": "Enter the password",
   "loginSuccess": "User Login Successfully!",

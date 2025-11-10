@@ -163,6 +163,7 @@ class _ChatGPTScreenState extends State<ChatGPTScreen> {
           l10n.gdmAssistantChat,
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: <Widget>[

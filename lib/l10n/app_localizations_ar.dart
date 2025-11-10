@@ -21,6 +21,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get passwordLabel => 'كلمة المرور';
 
   @override
+  String get confirmPasswordLabel => 'تأكيد كلمة المرور';
+
+  @override
   String get pleaseEnterEmail => 'أدخل البريد الإلكتروني';
 
   @override

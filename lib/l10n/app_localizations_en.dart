@@ -21,6 +21,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordLabel => 'Password';
 
   @override
+  String get confirmPasswordLabel => 'Confirm Password';
+
+  @override
   String get pleaseEnterEmail => 'Enter the email';
 
   @override

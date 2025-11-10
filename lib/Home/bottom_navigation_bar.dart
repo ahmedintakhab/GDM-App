@@ -29,15 +29,16 @@ class BottomNavigation extends StatelessWidget {
           icon: Icon(Icons.notifications),
           label: l10n.notification,
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.no_meals),
+          label: l10n.meals,
+        ),
 
         BottomNavigationBarItem(
           icon: Icon(Icons.alarm_add),
           label: l10n.reminder,
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.no_meals),
-          label: l10n.meals,
-        ),
+
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: l10n.profile,

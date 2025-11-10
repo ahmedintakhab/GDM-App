@@ -3,6 +3,7 @@
   "login": "تسجيل الدخول",
   "emailLabel": "البريد الإلكتروني",
   "passwordLabel": "كلمة المرور",
+   "confirmPasswordLabel": "تأكيد كلمة المرور",
   "pleaseEnterEmail": "أدخل البريد الإلكتروني",
   "pleaseEnterPassword": "أدخل كلمة المرور",
   "loginSuccess": "تم تسجيل دخول المستخدم بنجاح!",
